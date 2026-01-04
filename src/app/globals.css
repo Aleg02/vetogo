@@ -1,0 +1,138 @@
+/* ----------------------------------------------------
+   🌐 Global CSS – PediaGo
+   ---------------------------------------------------- */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------------
+   🔧 RESET & BASE STYLES
+   ---------------------------------------------------- */
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter",
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: #1f2937;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  outline: none;
+}
+
+/* ----------------------------------------------------
+   🌀 Scroll smoothing
+   ---------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ----------------------------------------------------
+   🎨 Scrollbar (optionnel)
+   ---------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ----------------------------------------------------
+   💬 Animations bulles ACR
+   ---------------------------------------------------- */
+
+@keyframes acrBubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes acrBubbleOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+}
+
+.bubble-animate-in {
+  animation: acrBubbleIn 160ms ease-out forwards;
+}
+
+.bubble-animate-out {
+  animation: acrBubbleOut 160ms ease-in forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* ----------------------------------------------------
+   📱 Safe bottom padding (iOS Safari)
+   ---------------------------------------------------- */
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}

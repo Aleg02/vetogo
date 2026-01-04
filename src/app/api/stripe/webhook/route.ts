@@ -1,0 +1,207 @@
+import { NextResponse } from "next/server";
+import {
+  retrieveStripeSubscription,
+  type StripeSubscription,
+} from "@/lib/stripeServer";
+import { verifyStripeSignature } from "@/lib/stripeWebhook";
+import { getSupabaseAdminClient } from "@/lib/supabaseAdmin";
+import type { Database } from "@/types/database";
+import { StripeEventSchema } from "@/lib/stripeTypes";
+
+const PREMIUM_PLAN_CODE =
+  process.env.STRIPE_PREMIUM_PLAN_CODE ?? "premium-monthly";
+
+export const runtime = "nodejs";
+
+function normalizeStatus(status: string) {
+  switch (status) {
+    case "trialing":
+      return { status: "trialing", tier: "premium" } as const;
+    case "active":
+      return { status: "active", tier: "premium" } as const;
+    case "past_due":
+      return { status: "past_due", tier: "free" } as const;
+    default:
+      return { status: "inactive", tier: "free" } as const;
+  }
+}
+
+function secondsToIso(value: number | null | undefined) {
+  if (!value) {
+    return null;
+  }
+  return new Date(value * 1000).toISOString();
+}
+
+function normalizeMetadata(
+  ...records: Array<Record<string, string | null | undefined> | undefined>
+) {
+  const result: Record<string, string> = {};
+  for (const record of records) {
+    if (!record) continue;
+
+    for (const [key, value] of Object.entries(record)) {
+      if (typeof value === "string" && value.length > 0 && result[key] == null) {
+        result[key] = value;
+      }
+    }
+  }
+  return result;
+}
+
+async function persistSubscription(
+  subscription: StripeSubscription,
+  fallbackMetadata?: Record<string, string>,
+) {
+  const metadata = normalizeMetadata(subscription.metadata, fallbackMetadata);
+  const userId = metadata.supabase_user_id;
+
+  if (!userId) {
+    console.warn(
+      "Stripe webhook: utilisateur Supabase manquant",
+      subscription.id,
+    );
+    return;
+  }
+
+  const planCode = metadata.plan_code ?? PREMIUM_PLAN_CODE;
+  const currentPeriodEnd = secondsToIso(subscription.current_period_end);
+  const cancelAt = secondsToIso(subscription.cancel_at);
+  const { status, tier } = normalizeStatus(subscription.status);
+  const supabase = getSupabaseAdminClient() as unknown as {
+    from: (table: string) => any;
+  };
+  type SubscriptionInsert = Database["public"]["Tables"]["subscriptions"]["Insert"];
+  const subscriptionPayload: SubscriptionInsert = {
+    profile_id: userId,
+    provider: "stripe",
+    provider_customer_id: subscription.customer ?? null,
+    plan_code: planCode,
+    status,
+    current_period_end: currentPeriodEnd,
+    cancel_at: cancelAt,
+    metadata,
+  };
+
+  const { error: subscriptionError } = await supabase
+    .from("subscriptions")
+    .upsert(subscriptionPayload, { onConflict: "profile_id,provider,plan_code" });
+
+  if (subscriptionError) {
+    console.error("Erreur Supabase subscriptions", subscriptionError);
+  }
+
+  type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+  const profilePayload: ProfileUpdate = {
+    subscription_status: status,
+    subscription_tier: tier === "premium" ? "premium" : "free",
+    expires_at: currentPeriodEnd,
+  };
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update(profilePayload)
+    .eq("id", userId);
+
+  if (profileError) {
+    console.error("Erreur Supabase profiles", profileError);
+  }
+}
+
+async function syncSubscriptionById(
+  subscriptionId: string,
+  fallbackMetadata?: Record<string, string>,
+) {
+  try {
+    const subscription = await retrieveStripeSubscription(subscriptionId);
+    await persistSubscription(subscription, fallbackMetadata);
+  } catch (error) {
+    console.error(
+      "Impossible de synchroniser l'abonnement Stripe",
+      error,
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!webhookSecret) {
+    return NextResponse.json(
+      { error: "Webhook Stripe non configuré" },
+      { status: 500 },
+    );
+  }
+
+  // Récupération du payload brut (obligatoire pour Stripe)
+  const payload = await request.text();
+
+  // Utilisation directe des headers de la requête
+  const signature = request.headers.get("stripe-signature");
+
+  if (!signature) {
+    return NextResponse.json(
+      { error: "Signature Stripe manquante" },
+      { status: 400 },
+    );
+  }
+
+  if (!verifyStripeSignature(payload, signature, webhookSecret)) {
+    return NextResponse.json(
+      { error: "Signature Stripe invalide" },
+      { status: 400 },
+    );
+  }
+
+  // Validation Zod
+  const json = JSON.parse(payload);
+  const parseResult = StripeEventSchema.safeParse(json);
+
+  if (!parseResult.success) {
+    console.error("Stripe webhook validation error:", parseResult.error);
+    return NextResponse.json(
+      { error: "Format d'événement Stripe invalide" },
+      { status: 400 },
+    );
+  }
+
+  const event = parseResult.data;
+
+  try {
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const checkout = event.data.object;
+        const subscriptionId = checkout.subscription;
+        if (subscriptionId) {
+          // metadata peut être undefined dans le type Zod, on gère le fallback
+          const meta = checkout.metadata as Record<string, string> | undefined;
+          await syncSubscriptionById(subscriptionId, meta);
+        }
+        break;
+      }
+      case "customer.subscription.created":
+      case "customer.subscription.updated":
+      case "customer.subscription.deleted": {
+        // On caste vers StripeSubscription car notre type Zod est compatible
+        // mais persistSubscription attend le type de stripeServer.ts
+        // Idéalement on unifierait les types, mais ici le cast est sûr.
+        await persistSubscription(event.data.object as StripeSubscription);
+        break;
+      }
+      case "invoice.payment_succeeded": {
+        const invoice = event.data.object;
+        if (invoice.subscription) {
+          await syncSubscriptionById(invoice.subscription);
+        }
+        break;
+      }
+    }
+  } catch (error) {
+    console.error("Erreur lors du traitement du webhook Stripe", error);
+    return NextResponse.json(
+      { error: "Webhook Stripe en erreur" },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({ received: true });
+}
