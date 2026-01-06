@@ -15,21 +15,21 @@ const PREMIUM_PLANS: {
   price: string;
   priceDetail: string;
 }[] = [
-  {
-    id: "monthly",
-    name: "Premium mensuel",
-    badge: "Le plus flexible",
-    price: "4,90 € TTC / mois",
-    priceDetail: "Sans engagement, résilier à tout moment.",
-  },
-  {
-    id: "yearly",
-    name: "Premium annuel",
-    badge: "Le plus économique",
-    price: "29,90 € TTC / an",
-    priceDetail: "Sans engagement, résilier à tout moment.",
-  },
-];
+    {
+      id: "monthly",
+      name: "Premium mensuel",
+      badge: "Le plus flexible",
+      price: "4,90 € TTC / mois",
+      priceDetail: "Sans engagement, résilier à tout moment.",
+    },
+    {
+      id: "yearly",
+      name: "Premium annuel",
+      badge: "Le plus économique",
+      price: "29,90 € TTC / an",
+      priceDetail: "Sans engagement, résilier à tout moment.",
+    },
+  ];
 
 const PREMIUM_PERKS = [
   "Accès illimité à tous les protocoles",
@@ -147,19 +147,18 @@ export default function SubscribePage() {
             Passer en Premium
           </h1>
           <p className="text-base text-slate-600">
-            Débloquez l’ensemble des fiches critiques PediaGo+ et laissez
+            Débloquez l’ensemble des fiches critiques VetoGo+ et laissez
             l’application calculer les posologies pour vous, avec des outils
-            avancés adaptés à l’urgence pédiatrique.
+            avancés adaptés à l’urgence vétérinaire.
           </p>
         </header>
 
         {(successMessage || cancelMessage) && (
           <div
-            className={`rounded-2xl border px-5 py-4 text-sm ${
-              successMessage
+            className={`rounded-2xl border px-5 py-4 text-sm ${successMessage
                 ? "border-emerald-200 bg-emerald-50 text-emerald-900"
                 : "border-amber-200 bg-amber-50 text-amber-900"
-            }`}
+              }`}
           >
             {successMessage
               ? "Paiement confirmé par Stripe. Votre accès sera rafraîchi automatiquement sous quelques secondes."
@@ -270,7 +269,7 @@ export default function SubscribePage() {
                             19,90 €
                           </span>
                           <span className="ml-3 text-sm text-slate-500">
-                            
+
                           </span>
                         </p>
 

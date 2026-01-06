@@ -9,8 +9,11 @@ import SupabaseProvider from '@/components/SupabaseProvider';
 
 // Métadonnées et police restent inchangées...
 export const metadata: Metadata = {
-  title: 'PediaGo',
-  description: 'Le bon geste, maintenant !',
+  title: 'VetoGo',
+  description: 'Protocoles et urgences vétérinaires',
+  icons: {
+    icon: '/favicon_large.png',
+  },
 };
 
 // Remplace createServerComponentClient(...)

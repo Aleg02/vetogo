@@ -2,19 +2,23 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
-import AgeWeightPicker from "@/components/AgeWeightPicker";
+import { motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "@supabase/auth-helpers-react";
+import Fuse from "fuse.js";
+
+import { PROTOCOLS, type Protocol } from "@/data/protocols";
+import { useAppStore } from "@/store/useAppStore";
+import { fetchCardsList } from "@/lib/cardsClient";
+import { useUserEntitlements } from "@/hooks/useUserEntitlements";
+
 import SearchBar from "@/components/SearchBar";
 import ProtocolCard from "@/components/ProtocolCard";
-import Fuse from "fuse.js";
-import { PROTOCOLS, type Protocol } from "@/data/protocols";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useAppStore } from "@/store/useAppStore";
 import Disclaimer from "@/components/Disclaimer";
-import { fetchCardsList } from "@/lib/cardsClient";
-import { useSession } from "@supabase/auth-helpers-react";
-import { useUserEntitlements } from "@/hooks/useUserEntitlements";
 import PremiumAccessDialog from "@/components/PremiumAccessDialog";
-import QuickActions from "@/components/QuickActions";
+import { SpeciesSelector } from "@/components/SpeciesSelector";
+import WeightInput from "@/components/WeightInput";
+import { CategoryGrid } from "@/components/CategoryGrid";
 
 export default function HomePage() {
   const router = useRouter();
@@ -22,50 +26,55 @@ export default function HomePage() {
   const session = useSession();
   const { canViewPremium } = useUserEntitlements();
 
-  // store global
-  const ageLabel = useAppStore((s) => s.ageLabel);
-  const weightKg = useAppStore((s) => s.weightKg);
-  const setAgeLabel = useAppStore((s) => s.setAgeLabel);
-  const setWeightKg = useAppStore((s) => s.setWeightKg);
+  // Global Store
+  const { species, weightKg, setWeightKg, setSpecies } = useAppStore();
 
-  // état page
+  // Page State
+  const categoryParam = searchParams.get("category");
   const [searchMode, setSearchMode] = useState(
-    () => searchParams.get("mode") === "search"
+    () => searchParams.get("mode") === "search" || !!categoryParam
   );
   const [query, setQuery] = useState("");
   const [protocols, setProtocols] = useState<Protocol[]>(PROTOCOLS);
   const [cardsLoading, setCardsLoading] = useState(true);
   const [cardsError, setCardsError] = useState<string | null>(null);
+
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const searchModeTrigger = useRef<"button" | null>(null);
+
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
 
-  // valeurs par défaut
+  // Defaults (optional)
   useEffect(() => {
-    if (ageLabel == null && weightKg == null) {
-      setAgeLabel("10 mois");
-      setWeightKg(10);
-    }
-  }, [ageLabel, weightKg, setAgeLabel, setWeightKg]);
+    // If needed, we could set default species here, but it's better to let user choose
+  }, []);
 
-  // focus / scroll lors de l’activation du mode recherche par le CTA
+  // Sync SearchMode if category param changes
+  useEffect(() => {
+    if (categoryParam) {
+      setSearchMode(true);
+      // Optional: scroll to results
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [categoryParam]);
+
+  // Focus management
   useEffect(() => {
     if (searchMode && searchModeTrigger.current === "button") {
       const raf = requestAnimationFrame(() => {
         searchInputRef.current?.focus();
-        resultsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         searchModeTrigger.current = null;
       });
       return () => cancelAnimationFrame(raf);
     }
   }, [searchMode]);
 
-  // sortie du mode recherche
+  // Exit search mode cleanup
   useEffect(() => {
     if (!searchMode) {
       searchModeTrigger.current = null;
@@ -73,42 +82,13 @@ export default function HomePage() {
     }
   }, [searchMode]);
 
-  // Scroll-to-search : bascule automatique si on scrolle vers le bas
-  useEffect(() => {
-    if (searchMode) return;
-
-    const handleScroll = () => {
-      // Seuil de déclenchement (40px)
-      if (window.scrollY > 40) {
-        setSearchMode(true);
-      }
-    };
-
-    // Gestion du scroll souris même si la page ne scrolle pas (contenu court)
-    const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY > 30) {
-        setSearchMode(true);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("wheel", handleWheel, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, [searchMode]);
-
+  // Load Data
   useEffect(() => {
     let active = true;
-
     const loadCards = async () => {
       setCardsLoading(true);
       const { data, error } = await fetchCardsList();
-      if (!active) {
-        return;
-      }
+      if (!active) return;
       if (error) {
         console.warn("Supabase cards fetch error", error);
         setCardsError(error.message);
@@ -123,14 +103,13 @@ export default function HomePage() {
       setCardsError(null);
       setCardsLoading(false);
     };
-
     loadCards();
     return () => {
       active = false;
     };
   }, []);
 
-  // index Fuse
+  // Search & Filter Logic
   const fuse = useMemo(
     () =>
       new Fuse(protocols, {
@@ -142,14 +121,31 @@ export default function HomePage() {
   );
 
   const hits: Protocol[] = useMemo(() => {
-    if (trimmedQuery.length === 0) {
-      return [...protocols].sort((a, b) =>
+    let results = protocols;
+
+    // 1. Text Search
+    if (trimmedQuery.length > 0) {
+      results = fuse.search(trimmedQuery).map((r) => r.item);
+    } else {
+      results = [...protocols].sort((a, b) =>
         a.title.localeCompare(b.title, "fr", { sensitivity: "base" })
       );
     }
-    return fuse.search(trimmedQuery).map((r) => r.item);
-  }, [fuse, trimmedQuery, protocols]);
 
+    // 2. Category Filter
+    if (categoryParam) {
+      results = results.filter((p) => p.category === categoryParam);
+    }
+
+    // 3. Species Filter
+    if (species) {
+      results = results.filter((p) => !p.species || p.species === "both" || p.species === species);
+    }
+
+    return results;
+  }, [fuse, trimmedQuery, protocols, categoryParam, species]);
+
+  // Premium / Auth
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [pendingPremiumTitle, setPendingPremiumTitle] = useState<string | null>(null);
 
@@ -173,80 +169,75 @@ export default function HomePage() {
     setSearchMode(false);
     searchModeTrigger.current = null;
     searchInputRef.current?.blur();
+    searchInputRef.current?.blur();
+    // setWeightKg(null); // Removed to persist weight as per request
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Logo click handler (uses your existing reset behavior)
+  const onLogoClick = () => {
+    resetHomepage();
+  };
+
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      {/* fine barre de couleur en haut comme accent */}
-      <div className="h-1 w-full bg-gradient-to-r from-[#8b5cf6] via-[#3b82f6] to-[#22c55e]" />
+    <main className="min-h-screen bg-white text-slate-900 font-sans">
+      {/* Accent Bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-[#009EF0] via-[#27C3DD] to-[#009EF0]" />
 
       <div className="flex min-h-[calc(100vh-4px)] flex-col items-center">
-        {/* HEADER : logo + titre + formulaire de recherche */}
-        <header
-          className={`w-full ${searchMode
-            ? "sticky top-0 z-20 bg-white/0 px-4 pt-3 pb-3 backdrop-blur"
-            : "px-6 pt-10"
-            }`}
-        >
-          {/* Carte interne avec bords arrondis en mode recherche */}
-          <div
-            className={`mx-auto max-w-[420px] text-center transition-shadow ${searchMode
-              ? "rounded-3xl bg-white/95 px-6 py-4 shadow-[0_8px_30px_rgba(15,23,42,0.16)]"
-              : ""
-              }`}
-          >
-            <button
-              type="button"
-              onClick={resetHomepage}
-              className="mx-auto flex w-full max-w-[320px] flex-col items-center text-center focus:outline-none"
-              aria-label="Revenir à l’accueil"
-            >
-              {!searchMode && (
-                <Image
-                  src="/logo.svg"
-                  alt="PediaGo"
-                  width={160}
-                  height={160}
-                  priority
-                  className="mx-auto h-20 w-auto"
-                />
-              )}
-              <h1
-                className={`${searchMode ? "text-3xl" : "text-[56px]"
-                  } flex items-center justify-center gap-2 leading-none font-bold tracking-tight text-slate-900 transition-all duration-300`}
+        {/* HEADER */}
+        <header className="w-full max-w-[420px] px-6 pt-6 pb-2">
+          <div className="flex justify-center items-center mb-2 relative">
+            {/* Logo (clickable + spring animation) */}
+            <div className="flex-1 flex justify-center">
+              <motion.button
+                type="button"
+                onClick={onLogoClick}
+                aria-label="Retour à l’accueil"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 320, damping: 18 }}
+                className="
+                  inline-flex items-center justify-center
+                  rounded-2xl
+                  focus:outline-none focus-visible:ring-2
+                  focus-visible:ring-[#009EF0] focus-visible:ring-offset-2
+                "
               >
-                {searchMode && (
-                  <Image
-                    src="/logo.svg"
-                    alt="PediaGo"
-                    width={40}
-                    height={40}
-                    className="h-8 w-auto"
-                  />
-                )}
-                <span>Pedia</span>
-                <span className="text-[#ef4444]">Go</span>
-              </h1>
-            </button>
-            <p
-              className={`${searchMode ? "mt-1" : "mt-4"
-                } text-base font-medium text-slate-500`}
-            >
-              Urgences pédiatriques & protocoles
-            </p>
+                <Image
+                  src="/vetogologo.png"
+                  alt="VetoGo"
+                  width={1400}
+                  height={560}
+                  priority
+                  className="
+                    w-full
+                    h-auto object-contain
+                  "
+                />
+              </motion.button>
+            </div>
+            {/* Hamburger removed as per request */}
+          </div>
 
-            <div className={`${searchMode ? "mt-4" : "mt-10"} space-y-4`}>
-              {/* Âge / Poids : le composant interne gère déjà le layout */}
-              <AgeWeightPicker
-                ageLabel={ageLabel}
-                setAgeLabel={setAgeLabel}
-                weightKg={weightKg}
-                setWeightKg={setWeightKg}
-                className="max-w-none"
-              />
+          <p className="text-center text-lg font-medium text-slate-500 mb-4 relative z-10">
+            Urgences vétérinaires & protocoles
+          </p>
 
-              <div className={searchMode ? "mt-4" : "mt-8"}>
+          <div className="mt-4 space-y-4 transition-all">
+            {/* VetoGo Specific Inputs: Species & Weight */}
+            {!searchMode && (
+              <div className="animate-fade-in-up space-y-4">
+                <SpeciesSelector />
+                {/* WeightInput container needs to align with SearchBar below */}
+                <div className="px-1">
+                  <WeightInput />
+                </div>
+              </div>
+            )}
+
+            <div className={searchMode ? "mt-2" : "mt-6"}>
+              <div className="px-1">
                 <SearchBar
                   onFocus={() => {
                     searchModeTrigger.current = null;
@@ -254,71 +245,89 @@ export default function HomePage() {
                   }}
                   onChange={(value) => {
                     setQuery(value);
-                    if (value.trim().length === 0) {
-                      setSearchMode(false);
+                    if (value.trim().length === 0 && !categoryParam) {
+                      // Only exit search mode if no category param
                     } else {
                       setSearchMode(true);
                     }
                   }}
                   onClear={() => {
                     setQuery("");
-                    setSearchMode(false);
+                    if (!categoryParam) setSearchMode(false);
                   }}
                   autoFocus={false}
                   value={query}
-                  className="mt-1"
+                  className="mt-1 shadow-sm border-slate-200"
                   inputRef={searchInputRef}
+                  placeholder="Rechercher un protocole..."
                 />
-                {/* En mode recherche sticky, on ne garde QUE PediaGo + slogan + Age/Poids + barre de recherche */}
-                {!searchMode && (
-                  <QuickActions
-                    className="mt-8"
-                    onSelect={(q) => {
-                      setQuery(q);
-                      setSearchMode(true);
-                      // On ne force PAS le focus pour éviter l'ouverture du clavier sur mobile
-                      searchModeTrigger.current = null;
-                    }}
-                  />
-                )}
               </div>
+
+              {/* Categories Grid - Only when NOT in search mode */}
+              {!searchMode && (
+                <div className="mt-2">
+                  <CategoryGrid />
+                </div>
+              )}
             </div>
           </div>
         </header>
 
-        {/* CONTENU PRINCIPAL */}
+        {/* MAIN CONTENT */}
         <section className="w-full max-w-[420px] flex-1 px-6 pb-14">
           {cardsError && (
             <div className="mt-4 rounded-2xl border border-rose-200/70 bg-rose-50/80 px-4 py-3 text-sm text-rose-700">
-              Impossible de charger les fiches depuis Supabase. Affichage des données locales.
+              Erreur chargement Supabase. Mode hors ligne.
             </div>
           )}
-          {cardsLoading && !cardsError && (
-            <p className="mt-4 text-center text-xs uppercase tracking-[0.3em] text-slate-400">
-              Synchronisation Supabase…
-            </p>
-          )}
-          {/* HOME : disclaimer + CTA */}
-          {!searchMode && (
-            <>
-              <Disclaimer className="mt-5" />
 
-            </>
-          )}
+          {/* Disclaimer on Home */}
+          {!searchMode && <Disclaimer className="mt-10" />}
 
-          {/* MODE RECHERCHE : résultats sous les champs */}
+          {/* RESULTS LIST */}
           {searchMode && (
-            <div ref={resultsRef} className="mt-10 space-y-4">
+            <div ref={resultsRef} className="mt-6 space-y-4">
+              {/* Active Filters Display */}
+              {(categoryParam || species || weightKg) && (
+                <div className="flex flex-wrap gap-2 justify-center mb-4">
+                  {species && (
+                    <span className="px-3 py-1 rounded-full bg-[#eefaff] text-[#009EF0] text-sm font-medium flex items-center gap-1 border border-[#009EF0]/20">
+                      {species === "chien" ? "🐶" : "🐱"} {species === "chien" ? "Chien" : "Chat"}
+                      <button onClick={() => setSpecies(null)} className="ml-1 hover:text-blue-700">
+                        ×
+                      </button>
+                    </span>
+                  )}
+                  {categoryParam && (
+                    <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-sm font-medium flex items-center gap-1 border border-slate-200">
+                      📂 {categoryParam}
+                      <button
+                        onClick={() => router.push("/")}
+                        className="ml-1 hover:text-slate-900"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
+                  {weightKg && (
+                    <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-sm font-medium flex items-center gap-1 border border-slate-200">
+                      ⚖️ {weightKg} kg
+                      <button onClick={() => setWeightKg(null)} className="ml-1 hover:text-slate-900">
+                        ×
+                      </button>
+                    </span>
+                  )}
+                </div>
+              )}
+
               <div className="flex flex-col gap-1 rounded-2xl border border-slate-200/60 bg-white/80 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 <span>
-                  {hasQuery
+                  {hasQuery || categoryParam
                     ? `Résultats (${hits.length})`
                     : `Tous les protocoles (${hits.length})`}
                 </span>
                 {hasQuery && (
-                  <span className="text-[13px] normal-case text-[#2563eb]">
-                    « {trimmedQuery} »
-                  </span>
+                  <span className="text-[13px] normal-case text-[#009EF0]">« {trimmedQuery} »</span>
                 )}
               </div>
 
@@ -326,11 +335,8 @@ export default function HomePage() {
                 hits.map((p, index) => (
                   <div
                     key={p.slug}
-                    className="animate-fade-in-up opacity-0"
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                      animationFillMode: "forwards",
-                    }}
+                    className="animate-fade-in-up"
+                    style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
                   >
                     <ProtocolCard
                       item={p}
@@ -342,18 +348,15 @@ export default function HomePage() {
                 ))
               ) : (
                 <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center text-sm text-slate-500">
-                  Aucun protocole ne correspond à « {query} ».
+                  Aucun protocole trouvé.
                 </div>
               )}
 
-              <div className="text-center">
+              <div className="text-center pt-6">
                 <button
                   type="button"
-                  onClick={() => {
-                    setSearchMode(false);
-                    setQuery("");
-                  }}
-                  className="mt-2 text-sm font-medium text-slate-600 underline underline-offset-4"
+                  onClick={resetHomepage}
+                  className="mt-2 text-sm font-medium text-slate-600 underline underline-offset-4 hover:text-[#009EF0]"
                 >
                   Quitter le mode recherche
                 </button>
@@ -362,14 +365,17 @@ export default function HomePage() {
           )}
         </section>
 
-        {/* MODE RECHERCHE : disclaimer collé en bas */}
-        {searchMode && (
-          <footer className="w-full max-w-[420px] px-6 pb-8">
-            <Disclaimer className="mt-0" />
-          </footer>
-        )}
-      </div>
+        {/* Footer Disclaimer in Search Mode */}
+        {
+          searchMode && (
+            <footer className="w-full max-w-[420px] px-6 pb-8">
+              <Disclaimer className="mt-0" />
+            </footer>
+          )
+        }
+      </div >
+
       <PremiumAccessDialog open={authDialogOpen} title={pendingPremiumTitle} onClose={closePremiumDialog} />
-    </main>
+    </main >
   );
 }

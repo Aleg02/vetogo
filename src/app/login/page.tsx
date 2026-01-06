@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import LoginForm from "./LoginForm";
 
 export const metadata: Metadata = {
-  title: "Connexion | PediaGo",
-  description: "Connexion sécurisée à PediaGo.",
+  title: "Connexion | VetoGo",
+  description: "Connexion sécurisée à VetoGo.",
 };
 
 export default function LoginPage() {

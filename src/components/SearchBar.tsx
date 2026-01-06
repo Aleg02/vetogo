@@ -9,6 +9,7 @@ type Props = {
   value?: string;
   className?: string;
   inputRef?: RefObject<HTMLInputElement | null>;
+  placeholder?: string;
 };
 
 export default function SearchBar({
@@ -19,6 +20,7 @@ export default function SearchBar({
   value,
   className,
   inputRef,
+  placeholder,
 }: Props) {
   const [internalValue, setInternalValue] = useState(value ?? "");
   const isControlled = value !== undefined;
@@ -32,7 +34,7 @@ export default function SearchBar({
           ref={inputRef}
           type="search"
           className="w-full bg-transparent px-5 py-4 pl-12 text-[16px] font-medium leading-6 text-slate-900 placeholder:text-slate-400 focus:outline-none"
-          placeholder="Rechercher un protocole..."
+          placeholder={placeholder ?? "Rechercher un protocole..."}
           value={inputValue}
           autoFocus={autoFocus}
           onFocus={onFocus}

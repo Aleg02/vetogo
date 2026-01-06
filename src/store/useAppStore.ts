@@ -6,19 +6,24 @@ import { persist, createJSONStorage } from "zustand/middleware";
 // 👇 utilitaire: on est côté client ?
 const isClient = typeof window !== "undefined";
 
+export type Species = "chien" | "chat" | null;
+
 type AppState = {
   weightKg: number | null;
   setWeightKg: (v: number | null) => void;
 
-  ageLabel: string | null;
-  setAgeLabel: (v: string) => void;
+  species: Species;
+  setSpecies: (v: Species) => void;
 
-  // ... garde ici les autres champs de ton store
+  /** @deprecated Kept for legacy PediaGo protocols compatibility */
+  ageLabel: string | null;
+  setAgeLabel: (v: string | null) => void;
 };
 
-const INITIAL_STATE: Pick<AppState, "weightKg" | "ageLabel"> = {
-  weightKg: 10,
-  ageLabel: "",
+const INITIAL_STATE: Pick<AppState, "weightKg" | "species" | "ageLabel"> = {
+  weightKg: null,
+  species: null, // Par défaut, pas d'espèce sélectionnée
+  ageLabel: null,
 };
 
 export const useAppStore = create<AppState>()(
@@ -27,12 +32,11 @@ export const useAppStore = create<AppState>()(
       ...INITIAL_STATE,
 
       setWeightKg: (v) => set({ weightKg: v }),
+      setSpecies: (v) => set({ species: v }),
       setAgeLabel: (v) => set({ ageLabel: v }),
-
-      // ... tes autres actions
     }),
     {
-      name: "pediago-store",
+      name: "vetogo-store",
       /**
        * ⚠️ IMPORTANT :
        * - côté client → on utilise localStorage
@@ -41,9 +45,6 @@ export const useAppStore = create<AppState>()(
       storage: isClient
         ? createJSONStorage(() => window.localStorage)
         : undefined,
-
-      // (optionnel) utile si tu écoutes l’hydratation
-      // skipHydration: true,
     }
   )
 );

@@ -25,13 +25,14 @@ export default function Disclaimer({ className }: DisclaimerProps) {
       <div
         role="note"
         aria-label="Avertissement"
-        className="rounded-2xl border border-yellow-200 bg-yellow-50 px-3 py-2 text-[11px] leading-4 text-slate-600 sm:text-xs"
+        className="rounded-2xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-xs leading-5 text-slate-700 sm:text-sm flex items-start gap-2"
       >
-        <p className="text-center">
-          ⚠️ PediaGo est une aide à la décision et ne remplace pas le jugement clinique.{" "}
+        <span className="text-lg">⚠️</span>
+        <p>
+          VetoGo est une aide à la décision et ne remplace pas le jugement clinique.{" "}
           <button
             type="button"
-            className="font-semibold text-[#7c3aed] underline underline-offset-2"
+            className="font-semibold text-blue-600 underline underline-offset-2 hover:text-blue-800"
             onClick={() => setShowModal(true)}
           >
             Lire les CGU
@@ -76,20 +77,20 @@ export default function Disclaimer({ className }: DisclaimerProps) {
               <section>
                 <h3 className="font-semibold text-slate-900">1. Objet de l’Application</h3>
                 <p className="mt-2">
-                  PediaGo est une application d’aide à la décision et de support opérationnel destinée exclusivement aux professionnels de santé habilités à prendre en charge des situations d’urgence pédiatrique. Elle propose des protocoles d’urgence, un affichage structuré des conduites à tenir et un calcul automatisé des dosages basés sur l’âge et/ou le poids.
+                  VetoGo est une application d’aide à la décision et de support opérationnel destinée exclusivement aux vétérinaires et professionnels de santé animale. Elle propose des protocoles d’urgence, un affichage structuré des conduites à tenir et un calcul automatisé des dosages basés sur le poids et l'espèce.
                 </p>
-                <p className="mt-2">PediaGo n’est pas un dispositif médical et ne remplace pas le jugement clinique.</p>
+                <p className="mt-2">VetoGo n’est pas un dispositif médical et ne remplace pas le jugement clinique vétérinaire.</p>
               </section>
               <section>
                 <h3 className="font-semibold text-slate-900">2. Champ d’application</h3>
                 <p className="mt-2">
-                  Les présentes CGU s’appliquent à toutes les interfaces éditées par PediaSquare (web, Android, iOS et futures extensions). Toute utilisation implique l’adhésion pleine et entière aux CGU.
+                  Les présentes CGU s’appliquent à toutes les interfaces éditées par VetoGo (web, Android, iOS et futures extensions). Toute utilisation implique l’adhésion pleine et entière aux CGU.
                 </p>
               </section>
               <section>
                 <h3 className="font-semibold text-slate-900">3. Accès et utilisateurs autorisés</h3>
                 <p className="mt-2">
-                  L’application est réservée aux médecins, infirmiers diplômés d’État, paramédicaux habilités, étudiants en santé sous supervision et à tout personnel formé à l’urgence pédiatrique. Toute utilisation hors de ce cadre engage exclusivement l’utilisateur.
+                  L’application est réservée aux vétérinaires, ASV, étudiants vétérinaires sous supervision et à tout personnel formé à l’urgence vétérinaire. Toute utilisation hors de ce cadre engage exclusivement l’utilisateur.
                 </p>
               </section>
               <section>
@@ -107,7 +108,7 @@ export default function Disclaimer({ className }: DisclaimerProps) {
               <section>
                 <h3 className="font-semibold text-slate-900">6. Exactitude et mise à jour</h3>
                 <p className="mt-2">
-                  Les protocoles sont élaborés à partir de recommandations officielles et de publications scientifiques. PediaSquare ne peut toutefois garantir l’absence d’erreur ou l’actualisation permanente des contenus. L’utilisateur vérifie systématiquement la validité des informations.
+                  Les protocoles sont élaborés à partir de recommandations officielles et de publications scientifiques vétérinaires. VetoGo ne peut toutefois garantir l’absence d’erreur ou l’actualisation permanente des contenus. L’utilisateur vérifie systématiquement la validité des informations.
                 </p>
               </section>
               <section>
@@ -119,13 +120,13 @@ export default function Disclaimer({ className }: DisclaimerProps) {
               <section>
                 <h3 className="font-semibold text-slate-900">8. Obligations de l’utilisateur</h3>
                 <p className="mt-2">
-                  L’utilisateur s’engage à utiliser PediaGo dans un cadre professionnel, à saisir des données exactes, à ne pas détourner l’usage prévu et à respecter l’ensemble des lois en vigueur.
+                  L’utilisateur s’engage à utiliser VetoGo dans un cadre professionnel, à saisir des données exactes, à ne pas détourner l’usage prévu et à respecter l’ensemble des lois en vigueur.
                 </p>
               </section>
               <section>
                 <h3 className="font-semibold text-slate-900">9. Propriété intellectuelle</h3>
                 <p className="mt-2">
-                  Les contenus, protocoles, algorithmes, interface et identité PediaGo sont la propriété exclusive de PediaSquare. Toute reproduction ou adaptation sans autorisation est interdite.
+                  Les contenus, protocoles, algorithmes, interface et identité VetoGo sont la propriété exclusive de VetoGo. Toute reproduction ou adaptation sans autorisation est interdite.
                 </p>
               </section>
               <section>
@@ -155,17 +156,17 @@ export default function Disclaimer({ className }: DisclaimerProps) {
               <section>
                 <h3 className="font-semibold text-slate-900">14. Droit applicable</h3>
                 <p className="mt-2">
-                  Les CGU sont régies par le droit français. En cas de litige, seul le tribunal compétent du ressort du siège de PediaSquare est compétent.
+                  Les CGU sont régies par le droit français. En cas de litige, seul le tribunal compétent du ressort du siège de VetoGo est compétent.
                 </p>
               </section>
               <section>
                 <h3 className="font-semibold text-slate-900">15. Contact</h3>
                 <p className="mt-2">
-                  Pour toute question relative aux CGU ou à l’application : <a className="font-semibold text-[#2563eb]" href="mailto:contact@pediasquare.com">contact@pediago.app</a>.
+                  Pour toute question relative aux CGU ou à l’application : <a className="font-semibold text-[#2563eb]" href="mailto:contact@vetogo.app">contact@vetogo.app</a>.
                 </p>
               </section>
               <p className="text-[13px] italic text-slate-600">
-                PediaGo est un outil d’aide, non un outil de décision. L’utilisateur reste responsable de son acte de soin.
+                VetoGo est un outil d’aide, non un outil de décision. Le vétérinaire reste responsable de son acte de soin.
               </p>
             </div>
           </div>

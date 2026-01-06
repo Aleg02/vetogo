@@ -12,7 +12,7 @@ import type { Database } from "@/types/database";
 // Menu pour utilisateur non connecté
 const MENU_ITEMS_LOGGED_OUT = [
   {
-    label: "À propos de PediaGo",
+    label: "À propos de VetoGo",
     description: "Présentation, objectifs, conditions d'utilisation, contact",
     href: "/a-propos",
   },
@@ -21,7 +21,7 @@ const MENU_ITEMS_LOGGED_OUT = [
 // Menu pour utilisateur connecté (la carte supérieure propose déjà Mon compte)
 const MENU_ITEMS_LOGGED_IN = [
   {
-    label: "À propos de PediaGo",
+    label: "À propos de VetoGo",
     description: "Présentation, objectifs, conditions d'utilisation, contact",
     href: "/a-propos",
   },
@@ -145,7 +145,7 @@ export default function TopMenu() {
                       Passer Premium
                     </Link>
                   )}
-                    <Link
+                  <Link
                     href="/mon-compte"
                     onClick={() => setIsOpen(false)}
                     className="inline-flex flex-1 items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-center text-xs font-semibold text-slate-700 transition hover:border-slate-300"
@@ -164,7 +164,7 @@ export default function TopMenu() {
               </div>
             ) : (
               <div className="mb-3 rounded-xl border border-slate-200 bg-slate-50/80 p-3 text-sm text-slate-700">
-                <p className="font-semibold text-slate-900">Bienvenue sur PediaGo</p>
+                <p className="font-semibold text-slate-900">Bienvenue sur VetoGo</p>
                 <p className="mt-1 text-xs text-slate-600">Connectez-vous pour retrouver vos protocoles et votre abonnement.</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Link

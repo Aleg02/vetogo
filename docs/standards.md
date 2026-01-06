@@ -1,6 +1,6 @@
-# Standards d’ingénierie PediaGo
+# Standards d’ingénierie Vetogo
 
-Ce document rassemble les règles et conventions à respecter lors du développement de PediaGo. Il complète le fichier `ia-context.md` en détaillant les pratiques de qualité et de sécurité qui s’appliquent à tout changement du code.
+Ce document rassemble les règles et conventions à respecter lors du développement de Vetogo. Il complète le fichier `ia-context.md` en détaillant les pratiques de qualité et de sécurité qui s’appliquent à tout changement du code.
 
 ## TypeScript strict
 

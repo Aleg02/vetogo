@@ -8,19 +8,19 @@ import type { Database } from "@/types/database";
 
 export const metadata: Metadata = {
   title: "Mon compte / Abonnement",
-  description: "Gérez votre abonnement PediaGo+ et vos accès premium",
+  description: "Gérez votre abonnement VetoGo+ et vos accès premium",
 };
 
 type AccountPageProps = {
   searchParams?:
-    | Promise<{
-        reason?: string;
-        slug?: string;
-      }>
-    | {
-        reason?: string;
-        slug?: string;
-      };
+  | Promise<{
+    reason?: string;
+    slug?: string;
+  }>
+  | {
+    reason?: string;
+    slug?: string;
+  };
 };
 
 const statusLabels: Record<string, string> = {
@@ -170,7 +170,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
           ← Retour à l’accueil
         </Link>
         <header className="mt-6 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">PediaGo</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">VetoGo</p>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Mon compte / Abonnement</h1>
           <p className="text-base text-slate-600">
             Centralisation des informations liées à l’abonnement professionnel et aux licences.
@@ -184,8 +184,8 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
               {canViewPremium
                 ? "Votre abonnement est actif. Vous pouvez rouvrir la fiche demandée."
                 : redirectedSlug
-                  ? `Pour consulter la fiche « ${redirectedSlug} », connectez-vous avec un compte abonné ou souscrivez à PediaGo+.`
-                  : "Connectez-vous avec un compte abonné ou souscrivez à PediaGo+ pour débloquer les fiches premium."}
+                  ? `Pour consulter la fiche « ${redirectedSlug} », connectez-vous avec un compte abonné ou souscrivez à VetoGo+.`
+                  : "Connectez-vous avec un compte abonné ou souscrivez à VetoGo+ pour débloquer les fiches premium."}
             </p>
           </div>
         )}
@@ -218,7 +218,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
                   href="/subscribe"
                   className="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-slate-400"
                 >
-                  Découvrir PediaGo+
+                  Découvrir VetoGo+
                 </Link>
               </div>
             </div>
@@ -258,7 +258,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
                     href="/subscribe"
                     className="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white shadow hover:bg-slate-800"
                   >
-                    Passer à PediaGo+ Premium
+                    Passer à VetoGo+ Premium
                   </Link>
                 )}
 
@@ -270,7 +270,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
                 )}
 
                 <Link
-                  href="mailto:contact@pediago.app"
+                  href="mailto:contact@vetogo.app"
                   className="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-slate-400"
                 >
                   Besoin d’aide ?

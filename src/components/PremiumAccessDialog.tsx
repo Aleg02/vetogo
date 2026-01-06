@@ -43,10 +43,10 @@ export default function PremiumAccessDialog({ open, onClose, title }: PremiumAcc
             <p className="mt-1 text-sm text-slate-600">
               {title ? (
                 <>
-                  La fiche <span className="font-semibold">{title}</span> est réservée aux abonnés PediaGo+.
+                  La fiche <span className="font-semibold">{title}</span> est réservée aux abonnés VetoGo+.
                 </>
               ) : (
-                "Connectez-vous ou créez un compte pour débloquer les fiches premium PediaGo+."
+                "Connectez-vous ou créez un compte pour débloquer les fiches premium VetoGo+."
               )}
             </p>
           </div>
