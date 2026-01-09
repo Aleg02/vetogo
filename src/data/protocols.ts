@@ -9,6 +9,8 @@ export type Protocol = {
   sources?: { label: string; url?: string; type?: "external" | "protocol" }[];
   species?: "chien" | "chat" | "both";
   category?: "Cardio" | "Toxico" | "Perfusion" | "Parasites" | "Trauma" | "Fièvre" | "Neurologie" | "Respiratoire" | "Digestif" | "Urologie" | "Metabolique" | "Reproduction" | "Autre";
+  keywords?: string[]; // Synonymes pour la recherche (ex: "crise", "convulsion" pour Status) 
+  relatedProtocols?: string[]; // Slugs des protocoles liés
 };
 
 export const PROTOCOLS: Protocol[] = [
@@ -26,6 +28,8 @@ export const PROTOCOLS: Protocol[] = [
       { label: "ACVECC Guidelines", url: "https://www.acvecc.org" },
       { label: "VECCS Recommandations", url: "https://veccs.org", type: "external" },
     ],
+    keywords: ["choc hémmoragique", "déshydratation", "voluven"],
+    relatedProtocols: ["fluidotherapie", "hemorragie-aigue"],
   },
   {
     slug: "anaphylaxie",
@@ -55,6 +59,8 @@ export const PROTOCOLS: Protocol[] = [
     sources: [
       { label: "ACVIM Consensus 2024", url: "https://www.acvim.org/consensus-statements", type: "external" },
     ],
+    keywords: ["épilepsie", "convulsion", "midazolam", "diazepam", "phenobarbital", "levetiracetam"],
+    relatedProtocols: ["hypoglycemie", "intoxication", "syndrome-vestibulaire"],
   },
   {
     slug: "hypoglycemie",
@@ -69,6 +75,8 @@ export const PROTOCOLS: Protocol[] = [
     sources: [
       { label: "Plumb's", url: "https://plumbs.com/", type: "external" },
     ],
+    keywords: ["sucre", "glucose", "insuline", "faiblesse"],
+    relatedProtocols: ["status-epilepticus", "acidocetose-diabetique"],
   },
   {
     slug: "detresse-respiratoire",

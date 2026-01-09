@@ -142,6 +142,14 @@ export const Hypoglycemia = () => {
                                             <Syringe size={20} /> Bolus Glucose IV
                                         </h4>
                                         <DosageCard
+                                            title="Bolus Glucose 30%"
+                                            value="0.5-1 ml/kg"
+                                            unit="IV Lent"
+                                            subtitle="Diluer 1:1 avec NaCl (pour faire 15%)"
+                                            color="red"
+                                            dosageRange={[0.5, 1]}
+                                        />
+                                        <DosageCard
                                             title="Volume de Glucose 50% (G50)"
                                             value={`${g50DoseMin} - ${g50DoseMax}`}
                                             unit="ml"

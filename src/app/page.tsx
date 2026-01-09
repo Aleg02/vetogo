@@ -113,7 +113,7 @@ export default function HomePage() {
   const fuse = useMemo(
     () =>
       new Fuse(protocols, {
-        keys: ["title", "slug"],
+        keys: ["title", "slug", "keywords"],
         threshold: 0.35,
         ignoreLocation: true,
       }),

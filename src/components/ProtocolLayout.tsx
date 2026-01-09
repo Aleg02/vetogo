@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import { PROTOCOLS } from "@/data/protocols";
 
 type Tab = "general" | "examens" | "traitements" | "liens";
 
@@ -16,6 +17,13 @@ interface ProtocolLayoutProps {
 
 export const ProtocolLayout = ({ title, children, hasExamens = true }: ProtocolLayoutProps) => {
     const router = useRouter();
+    const params = useParams();
+    const slug = params?.slug as string;
+
+    // Find current protocol and related data
+    const currentProtocol = PROTOCOLS.find(p => p.slug === slug);
+    const relatedProtocols = currentProtocol?.relatedProtocols?.map(s => PROTOCOLS.find(p => p.slug === s)).filter(Boolean);
+
     const { species, weightKg, setSpecies, setWeightKg } = useAppStore();
 
     // Tab state
@@ -195,6 +203,31 @@ export const ProtocolLayout = ({ title, children, hasExamens = true }: ProtocolL
                                 transition={{ duration: 0.2 }}
                             >
                                 {children(activeTab)}
+
+                                {/* Automated "Voir aussi" / Related Protocols Section in Liens tab */}
+                                {activeTab === "liens" && relatedProtocols && relatedProtocols.length > 0 && (
+                                    <section className="mt-8 pt-8 border-t border-slate-200">
+                                        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                            🔍 Voir aussi
+                                        </h3>
+                                        <div className="grid gap-3">
+                                            {relatedProtocols.map((p) => p && (
+                                                <button
+                                                    key={p.slug}
+                                                    onClick={() => router.push(`/protocols/${p.slug}`)}
+                                                    className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all text-left group"
+                                                >
+                                                    <span className="text-2xl p-2 bg-slate-50 rounded-xl">{p.icon}</span>
+                                                    <div className="flex-1">
+                                                        <div className="font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{p.title}</div>
+                                                        <div className="text-xs text-slate-500 uppercase font-semibold">{p.category}</div>
+                                                    </div>
+                                                    <span className="text-slate-300 group-hover:text-blue-400">→</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </section>
+                                )}
                             </motion.div>
                         </AnimatePresence>
                     </div>

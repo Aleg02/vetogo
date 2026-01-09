@@ -154,9 +154,9 @@ export const StatusEpilepticus = () => {
                                             <Syringe size={20} /> Diazepam (Alternative)
                                         </h4>
                                         <DosageCard
-                                            title="Diazepam IV / IR"
-                                            value={valiumDose}
-                                            unit="mg"
+                                            title="1. Diazepam"
+                                            value="0.5-1 mg/kg"
+                                            unit="IV / IR"
                                             subtitle={
                                                 <span>
                                                     Volume : <strong>{valiumVol} ml</strong> (Standard 5 mg/ml)
@@ -166,7 +166,9 @@ export const StatusEpilepticus = () => {
                                                     ⚠️ <strong>Chat :</strong> Risque nécrose hépatique PO (IV unique OK en urgence).
                                                 </span>
                                             }
-                                            color="slate"
+                                            color="blue"
+                                            dosageRange={[0.5, 1]}
+                                            concentration={5}
                                         />
                                     </div>
                                 </div>

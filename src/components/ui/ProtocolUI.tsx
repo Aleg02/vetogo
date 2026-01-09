@@ -25,6 +25,8 @@ export const Section = ({ title, children, icon }: { title: string; children: Re
 
 // --- CARDS & DOSAGES ---
 
+import { useAppStore } from "@/store/useAppStore";
+
 interface DosageCardProps {
     title: string;
     value: string;
@@ -32,9 +34,14 @@ interface DosageCardProps {
     subtitle?: React.ReactNode;
     color?: "blue" | "slate" | "red" | "purple" | "green";
     icon?: string;
+    dosage?: number; // Dosage en mg/kg (ou autre unité/kg)
+    dosageRange?: [number, number]; // Plage de dosage
+    concentration?: number; // Concentration en mg/mL
 }
 
-export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon }: DosageCardProps) => {
+export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon, dosage, dosageRange, concentration }: DosageCardProps) => {
+    const { weightKg } = useAppStore();
+
     const colorStyles = {
         blue: "bg-gradient-to-br from-blue-50 to-indigo-50/50 border-blue-100 text-blue-900 ring-blue-100",
         slate: "bg-gradient-to-br from-slate-50 to-gray-50/50 border-slate-200 text-slate-900 ring-slate-100",
@@ -51,6 +58,55 @@ export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon 
         green: "text-green-600",
     }[color];
 
+    // Calculs automatiques
+    let calculatedDisplay: React.ReactNode = null;
+
+    if (weightKg && weightKg > 0) {
+        let totalDoseMin = 0;
+        let totalDoseMax = 0;
+        const hasRange = !!dosageRange;
+
+        if (hasRange && dosageRange) {
+            totalDoseMin = dosageRange[0] * weightKg;
+            totalDoseMax = dosageRange[1] * weightKg;
+        } else if (dosage) {
+            totalDoseMin = dosage * weightKg;
+            totalDoseMax = totalDoseMin;
+        }
+
+        if (totalDoseMin > 0) {
+            // Si on a une concentration, on affiche aussi les mL
+            let volumeMin = 0;
+            let volumeMax = 0;
+            if (concentration && concentration > 0) {
+                volumeMin = totalDoseMin / concentration;
+                volumeMax = totalDoseMax / concentration;
+            }
+
+            calculatedDisplay = (
+                <div className="mt-3 pt-3 border-t border-black/5 flex flex-col gap-1">
+                    <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold uppercase opacity-60">Pour {weightKg} kg :</span>
+                    </div>
+                    <div>
+                        <div className={`text-2xl font-black ${accentColor}`}>
+                            {hasRange ? `${totalDoseMin.toFixed(1)} - ${totalDoseMax.toFixed(1)}` : totalDoseMin.toFixed(1)}
+                            <span className="text-sm font-bold ml-1 text-slate-500/80">{unit.replace("/kg", "").replace("kg", "")}</span>
+                        </div>
+                        {concentration && concentration > 0 && (
+                            <div className="text-sm font-semibold text-slate-700 mt-1">
+                                ou <span className="font-bold bg-white/50 px-1 py-0.5 rounded border border-black/5">
+                                    {hasRange ? `${volumeMin.toFixed(2)} - ${volumeMax.toFixed(2)}` : volumeMin.toFixed(2)} mL
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+    }
+
+
     return (
         <div className={`relative rounded-3xl p-5 border shadow-sm ring-1 ring-inset ${colorStyles}`}>
             <div className="flex justify-between items-start mb-3">
@@ -64,6 +120,8 @@ export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon 
                 </span>
                 <span className="text-lg font-bold opacity-70">{unit}</span>
             </div>
+
+            {calculatedDisplay}
 
             {subtitle && (
                 <div className="text-sm font-medium opacity-80 border-t border-black/5 pt-2 mt-2">
