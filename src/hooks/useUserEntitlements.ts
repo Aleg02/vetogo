@@ -27,7 +27,7 @@ export function useUserEntitlements() {
   const session = useSession();
   const sessionUser = (session as { user?: { id?: string } } | null)?.user;
   const userId = sessionUser?.id ?? null;
-  const supabase = useSupabaseClient() as unknown as SupabaseClient<Database>;
+  const supabase = useSupabaseClient<Database>() as SupabaseClient<Database>;
   const [state, setState] = useState<EntitlementsState>(initialState);
 
   const fetchEntitlements = useCallback(async () => {
