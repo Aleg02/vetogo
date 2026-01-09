@@ -18,7 +18,26 @@ export async function middleware(req: NextRequest) {
     return res;
   }
 
-  // 2. Protected Routes (require login)
+  // 2. Coming Soon Gate (Cookie Check)
+  // Allow: /coming-soon, /api/stripe, static files
+  const isComingSoonPage = pathname === '/coming-soon';
+  const previewCookie = req.cookies.get('vetogo_preview_auth');
+
+  // If not on coming-soon page AND no valid cookie -> Redirect to /coming-soon
+  if (!isComingSoonPage && previewCookie?.value !== '1') {
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = '/coming-soon';
+
+    // Preserve original destination to redirect back after login
+    // BUT avoid redirect loops if the user was already going to /coming-soon implies logic above handles it
+    if (pathname !== '/') {
+      redirectUrl.searchParams.set('from', pathname);
+    }
+
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // 3. Protected Routes (require login)
   const protectedRoutes = ['/mon-compte', '/dashboard'];
   const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
 
@@ -29,7 +48,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // 3. Auth Routes (redirect to account if already logged in)
+  // 4. Auth Routes (redirect to account if already logged in)
   // Optional: prevent logged-in users from seeing /login or /signup
   if (session && (pathname === '/login' || pathname === '/signup')) {
     const redirectUrl = req.nextUrl.clone();
