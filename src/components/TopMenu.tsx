@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import type SupabaseClient from "@supabase/supabase-js/dist/module/SupabaseClient";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { useUserEntitlements } from "@/hooks/useUserEntitlements";
 import { logoutAction } from "@/app/actions/auth";
 import type { Database } from "@/types/database";
