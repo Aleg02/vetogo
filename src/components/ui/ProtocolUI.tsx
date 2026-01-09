@@ -188,33 +188,38 @@ export const CriticalList = ({ items, title }: { items: string[]; title?: string
 export const LinkList = ({ links }: { links: { label: string; url?: string; type?: "protocol" | "external" }[] }) => (
     <div className="grid gap-2">
         {links.map((link, idx) => {
-            const Wrapper = link.url ? "a" : "div";
-            const props = link.url ? { href: link.url, target: "_blank", rel: "noopener noreferrer" } : {};
-            const isClickable = !!link.url;
+            // Logic: Use provided URL, or generate Google Search URL
+            const isProtocol = link.type === "protocol";
+            const targetUrl = link.url ? link.url : `https://www.google.com/search?q=${encodeURIComponent(link.label + " veterinary guidelines")}`;
+
+            // Always clickable now
+            const isClickable = true;
 
             return (
-                <Wrapper
+                <a
                     key={idx}
-                    {...props}
-                    className={`group flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-all ${isClickable ? "hover:bg-white hover:shadow-md cursor-pointer active:scale-[0.98]" : "opacity-80 cursor-default"}`}
+                    href={targetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:bg-white hover:shadow-md cursor-pointer active:scale-[0.98]"
                 >
                     <div className="flex items-center gap-3">
                         <span className="text-xl p-2 bg-white rounded-xl shadow-sm">
-                            {link.type === "protocol" ? "📄" : "🔗"}
+                            {isProtocol ? "📄" : "🔗"}
                         </span>
                         <div className="flex flex-col">
-                            <span className={`font-semibold text-slate-700 ${isClickable ? "group-hover:text-blue-600" : ""} transition-colors`}>
+                            <span className="font-semibold text-slate-700 group-hover:text-blue-600 transition-colors">
                                 {link.label}
                             </span>
-                            {!isClickable && (
-                                <span className="text-xs text-slate-400 font-medium font-italic">
-                                    (Source non cliquable)
+                            {!link.url && (
+                                <span className="text-xs text-blue-400 font-medium font-italic flex items-center gap-1">
+                                    Rechercher sur Google ↗
                                 </span>
                             )}
                         </div>
                     </div>
-                    {isClickable && <span className="text-slate-300 group-hover:text-blue-400">→</span>}
-                </Wrapper>
+                    <span className="text-slate-300 group-hover:text-blue-400">→</span>
+                </a>
             );
         })}
     </div>
