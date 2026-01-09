@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import type SupabaseClient from "@supabase/supabase-js/dist/module/SupabaseClient";
 import type { Database } from "@/types/database";
 import { logoutAction } from "@/app/actions/auth";
 
@@ -34,7 +33,10 @@ export default function UserMenu() {
   const session = useSession();
   const sessionUser = (session as { user?: { id?: string; email?: string | null } } | null)?.user;
   const router = useRouter();
-  const supabase = useSupabaseClient() as unknown as SupabaseClient<Database>;
+
+  // ✅ Typed Supabase client (no internal import, no cast)
+  const supabase = useSupabaseClient<Database>();
+
   const [profile, setProfile] = useState<Database["public"]["Tables"]["profiles"]["Row"] | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -82,7 +84,7 @@ export default function UserMenu() {
     return () => {
       isMounted = false;
     };
-  }, [session, supabase]);
+  }, [session, supabase, sessionUser?.id]);
 
   // Close the dropdown when clicking outside of it.
   useEffect(() => {
