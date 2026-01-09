@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "À propos de PediaGo",
-  description: "Présentation, objectifs et conditions d'utilisation de PediaGo",
+  title: "À propos de VetoGo",
+  description: "Présentation, objectifs et conditions d'utilisation de VetoGo",
 };
 
 const sections = [
@@ -12,14 +12,13 @@ const sections = [
     content: (
       <>
         <p>
-          PediaGo est une application dédiée aux professionnels de santé intervenant en contexte d’urgence pédiatrique. Elle offre
+          VetoGo est une application dédiée aux vétérinaires et ASV intervenant en contexte d’urgence. Elle offre
           un accès rapide, structuré et ergonomique aux principaux protocoles d’urgence, avec un calcul automatique des posologies
-          fondé sur l’âge et/ou le poids de l’enfant.
+          adapté à l'espèce (Chien/Chat) et au poids de l'animal.
         </p>
         <p className="mt-3">
           L’outil a été conçu pour améliorer la réactivité, la sécurité et la standardisation de la prise en charge lors de situations
-          critiques où chaque seconde compte. Il s’adresse aux médecins urgentistes, pédiatres, anesthésistes-réanimateurs,
-          infirmiers, paramédicaux et à tout personnel habilité.
+          critiques où chaque seconde compte. Il s’adresse aux vétérinaires urgentistes, généralistes, ASV et étudiants.
         </p>
       </>
     ),
@@ -28,11 +27,11 @@ const sections = [
     title: "2. Objectifs de l’application",
     content: (
       <ul className="list-disc space-y-2 pl-6">
-        <li>Faciliter l’accès immédiat aux protocoles d’urgence pédiatrique sur mobile.</li>
-        <li>Réduire le risque d’erreurs de calcul concernant les posologies dépendantes du poids ou de l’âge.</li>
-        <li>Standardiser les pratiques grâce aux recommandations officielles en vigueur.</li>
-        <li>Offrir un support opérationnel utilisable pendant l’action ou en préparation.</li>
-        <li>Garantir une expérience fluide même en environnement clinique difficile.</li>
+        <li>Faciliter l’accès immédiat aux protocoles d’urgence vétérinaire sur mobile.</li>
+        <li>Réduire le risque d’erreurs de calcul (posologies mg/kg → ml).</li>
+        <li>Standardiser les pratiques grâce aux recommandations officielles (AAHA, ACVECC, etc.).</li>
+        <li>Offrir un support opérationnel utilisable en pleine action.</li>
+        <li>Garantir une expérience fluide même en clinique de garde.</li>
       </ul>
     ),
   },
@@ -40,23 +39,22 @@ const sections = [
     title: "3. Fonctionnement",
     content: (
       <ul className="list-disc space-y-2 pl-6">
-        <li>Sélection rapide de l’âge ou du poids.</li>
+        <li>Sélection rapide de l'espèce et du poids.</li>
         <li>Accès instantané aux protocoles pertinents.</li>
-        <li>Calcul automatisé des doses et volumes selon les référentiels disponibles.</li>
-        <li>Structuration en blocs adaptés aux situations d’urgence.</li>
+        <li>Calcul automatisé des doses et volumes selon les concentraions usuelles.</li>
+        <li>Structuration en blocs adaptés aux situations d’urgence (déchocage, anesthésie, etc.).</li>
       </ul>
     ),
   },
   {
-    title: "4. Atouts de PediaGo",
+    title: "4. Atouts de VetoGo",
     content: (
       <ul className="list-disc space-y-2 pl-6">
-        <li>Interface pensée par et pour les cliniciens.</li>
+        <li>Interface pensée par et pour les praticiens.</li>
         <li>Lisibilité optimisée sur mobile.</li>
-        <li>Mises à jour régulières des protocoles.</li>
+        <li>Mises à jour régulières basées sur l'EBM (Evidence-Based Medicine).</li>
         <li>Simplicité d’usage sans navigation complexe.</li>
-        <li>Ergonomie d’urgence (codes couleur, blocs logiques, dosage automatique).</li>
-        <li>Accès hors connexion (selon les évolutions futures de l’architecture).</li>
+        <li>Ergonomie d’urgence (mode sombre, gros boutons, alertes visuelles).</li>
       </ul>
     ),
   },
@@ -64,12 +62,12 @@ const sections = [
     title: "5. Limites d’utilisation",
     content: (
       <>
-        <p>PediaGo est un outil d’aide et ne remplace jamais :</p>
+        <p>VetoGo est un outil d’aide et ne remplace jamais :</p>
         <ul className="mt-2 list-disc space-y-2 pl-6">
-          <li>le jugement clinique ;</li>
-          <li>l’expertise médicale ;</li>
-          <li>les protocoles internes à l’établissement ;</li>
-          <li>la responsabilité du professionnel de santé.</li>
+          <li>le jugement clinique du vétérinaire ;</li>
+          <li>l’examen physique complet de l'animal ;</li>
+          <li>les protocoles internes à la clinique ou au CHV ;</li>
+          <li>la responsabilité du praticien prescripteur.</li>
         </ul>
       </>
     ),
@@ -81,37 +79,30 @@ const sections = [
         <div>
           <h4 className="font-semibold text-slate-900">6.1 Absence de responsabilité médicale</h4>
           <p className="mt-2">
-            PediaGo ne fournit ni avis médical, ni diagnostic, ni prise en charge personnalisée. L’application ne se substitue pas
-            à une décision clinique prise par un professionnel compétent.
+            VetoGo ne fournit ni diagnostic, ni téléconsultation. L’application ne se substitue pas
+            à une décision clinique prise par un vétérinaire diplômé.
           </p>
         </div>
         <div>
           <h4 className="font-semibold text-slate-900">6.2 Exactitude des données</h4>
           <p className="mt-2">
-            Malgré la rigueur rédactionnelle, PediaGo ne peut garantir l’exhaustivité, l’absence d’erreur ou l’actualisation
-            permanente des informations. Le professionnel reste responsable de l’interprétation, de la vérification des posologies,
-            de la conformité aux protocoles internes et de la décision thérapeutique finale.
+            Malgré la rigueur rédactionnelle, VetoGo ne peut garantir l’exhaustivité, l’absence d’erreur ou l’actualisation
+            permanente des informations. Le vétérinaire reste responsable de la vérification des posologies et
+            de la décision thérapeutique.
           </p>
         </div>
         <div>
           <h4 className="font-semibold text-slate-900">6.3 Usage réservé aux professionnels</h4>
           <p className="mt-2">
-            L’application est destinée exclusivement à des utilisateurs qualifiés, formés et habilités. Toute utilisation en dehors
-            de ce cadre engage l’utilisateur, pas PediaGo.
+            L’application est destinée exclusivement aux professionnels de la santé animale. Toute utilisation en dehors
+            de ce cadre engage la responsabilité de l’utilisateur.
           </p>
         </div>
         <div>
           <h4 className="font-semibold text-slate-900">6.4 Limites techniques</h4>
           <p className="mt-2">
-            PediaGo ne pourra être tenue responsable en cas de dysfonctionnement technique, d’absence de réseau, de données erronées
-            saisies par l’utilisateur ou de tout incident résultant d’un usage inapproprié.
-          </p>
-        </div>
-        <div>
-          <h4 className="font-semibold text-slate-900">6.5 Absence de responsabilité légale</h4>
-          <p className="mt-2">
-            En utilisant PediaGo, vous acceptez que l’équipe ne puisse être tenue responsable des conséquences directes ou indirectes
-            liées à l’utilisation de l’application. L’utilisateur reste seul responsable de ses actes médicaux.
+            VetoGo ne pourra être tenue responsable en cas de dysfonctionnement technique, d’absence de réseau, ou de données erronées
+            saisies par l’utilisateur (ex: erreur de poids).
           </p>
         </div>
       </div>
@@ -121,9 +112,9 @@ const sections = [
     title: "7. Engagement qualité",
     content: (
       <ul className="list-disc space-y-2 pl-6">
-        <li>Amélioration continue de l’ergonomie.</li>
-        <li>Veille scientifique régulière.</li>
-        <li>Mises à jour des contenus selon les recommandations accessibles.</li>
+        <li>Amélioration continue de l’expérience utilisateur.</li>
+        <li>Veille scientifique vétérinaire.</li>
+        <li>Mises à jour des contenus selon les consensus (ACVECC/ECVECC).</li>
       </ul>
     ),
   },
@@ -132,8 +123,8 @@ const sections = [
     content: (
       <p>
         Pour toute remarque, correction ou suggestion :
-        <a className="ml-1 font-semibold text-[#2563eb]" href="mailto:contact@pediago.app">
-          contact@pediago.app
+        <a className="ml-1 font-semibold text-[#2563eb]" href="mailto:contact@vetogo.app">
+          contact@vetogo.app
         </a>
       </p>
     ),
@@ -149,8 +140,8 @@ export default function AboutPage() {
           ← Retour à l’accueil
         </Link>
         <header className="mt-6 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">PediaGo</p>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">À propos de PediaGo</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">VetoGo</p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">À propos de VetoGo</h1>
           <p className="text-base text-slate-600">Présentation, objectifs et conditions d’utilisation.</p>
         </header>
 

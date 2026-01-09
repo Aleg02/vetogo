@@ -11,9 +11,10 @@ type Tab = "general" | "examens" | "traitements" | "liens";
 interface ProtocolLayoutProps {
     title: string;
     children: (tab: Tab) => React.ReactNode;
+    hasExamens?: boolean;
 }
 
-export const ProtocolLayout = ({ title, children }: ProtocolLayoutProps) => {
+export const ProtocolLayout = ({ title, children, hasExamens = true }: ProtocolLayoutProps) => {
     const router = useRouter();
     const { species, weightKg, setSpecies, setWeightKg } = useAppStore();
 
@@ -30,12 +31,14 @@ export const ProtocolLayout = ({ title, children }: ProtocolLayoutProps) => {
         setIsEditing(false);
     };
 
-    const tabs: { id: Tab; label: string; icon: string; color: string }[] = [
+    const allTabs: { id: Tab; label: string; icon: string; color: string }[] = [
         { id: "general", label: "Général", icon: "📋", color: "text-blue-600" },
         { id: "examens", label: "Examens", icon: "🩺", color: "text-purple-600" },
         { id: "traitements", label: "Traitements", icon: "💉", color: "text-red-600" },
         { id: "liens", label: "Liens", icon: "🔗", color: "text-slate-600" },
     ];
+
+    const tabs = allTabs.filter(t => t.id !== "examens" || hasExamens);
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center font-sans text-slate-900">

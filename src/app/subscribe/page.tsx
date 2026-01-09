@@ -156,8 +156,8 @@ export default function SubscribePage() {
         {(successMessage || cancelMessage) && (
           <div
             className={`rounded-2xl border px-5 py-4 text-sm ${successMessage
-                ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                : "border-amber-200 bg-amber-50 text-amber-900"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+              : "border-amber-200 bg-amber-50 text-amber-900"
               }`}
           >
             {successMessage
@@ -274,7 +274,7 @@ export default function SubscribePage() {
                         </p>
 
                         <p className="text-sm text-slate-500">
-                          Soit ~1,66 € TTC / ans, payé en une fois.
+                          Soit ~1,66 € TTC / mois, payé en une fois.
                         </p>
                         <p className="mt-1 text-xs text-slate-500">
                           {plan.priceDetail}
@@ -327,7 +327,7 @@ export default function SubscribePage() {
         {/* Avantages détaillés */}
         <section className="rounded-3xl border border-dashed border-slate-200/80 bg-white/70 p-6 text-sm text-slate-600">
           <p className="font-semibold text-slate-900">
-            Ce que vous débloquez avec PediaGo+ Premium
+            Ce que vous débloquez avec VetoGo+ Premium
           </p>
           <ul className="mt-3 space-y-2">
             {PREMIUM_PERKS.map((perk) => (
@@ -346,9 +346,9 @@ export default function SubscribePage() {
             Besoin d’aide ? Contactez{" "}
             <a
               className="font-semibold text-[#2563eb]"
-              href="mailto:contact@pediago.app"
+              href="mailto:contact@vetogo.app"
             >
-              contact@pediago.app
+              contact@vetogo.app
             </a>
             .
           </p>

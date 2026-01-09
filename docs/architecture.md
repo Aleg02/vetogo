@@ -1,38 +1,61 @@
 # Architecture de VetoGo
 
-Ce document décrit l’architecture applicative de VetoGo (fork de PediaGo).
+Ce document décrit l’architecture applicative de **VetoGo** (fork de PediaGo adapté à la médecine vétérinaire).
 
-## Présentation générale
+## 1. Vue d'ensemble
 
-VetoGo est un assistant de prise en charge pour les urgences vétérinaires (Chiens/Chats). Il fournit des **protocoles** et **calculs de posologie** en fonction de l'espèce et du poids de l'animal.
+VetoGo est une PWA (Progressive Web App) d'aide à la décision clinique pour les vétérinaires. Elle fournit des protocoles d'urgence et des calculateurs de doses adaptés à l'espèce (**Chien** ou **Chat**) et au poids.
 
-### Répertoires principaux
+### Stack Technique
+- **Frontend** : Next.js 16 (App Router), React 19, TypeScript.
+- **Styling** : Tailwind CSS 4, Lucide React (icônes).
+- **State Management** : Zustand (Persist storage pour `species` et `weightKg`).
+- **Backend / Auth** : Supabase (PostgreSQL, Auth).
+- **Paiements** : Stripe (Abonnements VetoGo+).
+- **Tests** : Playwright (E2E).
 
-| Dossier | Rôle |
-|--------|------|
-| `src/app` | Pages App Router. `/`, `/protocols/[slug]`, etc. |
-| `src/components` | UI: `SpeciesSelector`, `WeightInput`, `CategoryGrid`, `ProtocolCard`, `PremiumAccessDialog`, etc. |
-| `src/data` | Données: `protocols.ts` (étendus avec species/category), `drugs.ts`. |
-| `src/store` | Zustand (`useAppStore`): `species` ("chien"|"chat") et `weightKg`. |
-| `src/lib` | Utilitaires: Supabase, Stripe, Calculations. |
+## 2. Structure du projet
 
-### Schéma simplifié
+| Répertoire | Description |
+|------------|-------------|
+| `src/app` | Pages (App Router). Routes dynamiques `[slug]` pour les protocoles. |
+| `src/components` | Composants UI réutilisables (`ui/`) et composants métier (`protocols/`). |
+| `src/data` | Base de données statique : définitions des médicaments (`drugs.ts`) et protocoles (`protocols.ts`). |
+| `src/store` | Gestion d'état global (`useAppStore`). |
+| `src/lib` | Utilitaires (calculs de doses, formatage, clients Supabase/Stripe). |
+| `src/types` | Définitions TypeScript partagées. |
+| `docs` | Documentation technique et contextuelle. |
 
-User -> Home (Select Species -> Input Weight -> Select Category/Search) -> Protocol List -> Protocol Detail.
+## 3. Flux de Données
 
-## Fonctionnement détaillé
+### 3.1. Sélection du Contexte (Store)
+L'application repose sur deux variables globales persistées :
+1.  **`species`** : `"chien" | "chat"` (détermine les protocoles affichés et les règles de calcul).
+2.  **`weightKg`** : `number` (base unique pour tous les calculs de dose).
 
-### Authentification & Premium
-Via Supabase Auth et Stripe (VetoGo+). Droits gérés par `user_entitlements`.
+### 3.2. Système de Protocoles
+Les protocoles sont définis dans `src/data/protocols.ts`.
+Chaque protocole peut être :
+- Spécifique à une espèce (ex: calculs différents chien/chat).
+- Générique mais avec des overrides de doses.
+- Restreint aux abonnés Premium (`accessLevel: "premium"`).
 
-### Chargement des protocoles
-`fetchCardsList` récupère les protocoles. Le filtrage se fait par :
-1. **Recherche texte** (Fuse.js)
-2. **Catégorie** (URL param `?category=...`)
-3. **Espèce** (Store `species`)
+### 3.3. Moteur de Calcul (Dosing)
+Les médicaments (`src/data/drugs.ts`) possèdent des règles de calcul (`DosingRule`) :
+- **Per kg** : `mg_per_kg * weight`.
+- **Fixed** : Dose fixe peu importe le poids.
+- **Overrides** : Tableaux de valeurs pré-calculées pour des plages de poids spécifiques (sécurité maximale).
 
-### Posologie
-Basée sur le poids (`weightKg`) et l'espèce (si applicable dans les données).
+## 4. Services Externes
 
-## Variables d'environnement
-Identiques à PediaGo (SUPABASE, STRIPE).
+### Supabase
+- **Auth** : Gestion des utilisateurs (Email/Password, OAuth).
+- **Database** : Table `user_entitlements` pour gérer les droits d'accès (Premium).
+
+### Stripe
+- Gestion des abonnements (Mensuel/Annuel).
+- Webhooks pour synchroniser le statut d'abonnement avec Supabase.
+
+## 5. Déploiement
+- Hébergement : Vercel (Recommandé) ou tout hébergeur Node.js.
+- CI/CD : GitHub Actions (Build & Test).

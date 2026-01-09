@@ -1,95 +1,39 @@
 ---
-description: Automated pipeline to research, code, and integrate a new medical protocol into PediaGo.
+description: Pipeline automatisé pour rechercher, coder et intégrer un nouveau protocole médical dans VetoGo.
 ---
 
-# Protocol Factory Workflow
+# Workflow "Protocol Factory" (VetoGo)
 
-This workflow automates the creation of a new medical protocol for PediaGo. It proceeds in 4 strict steps.
+Ce workflow automatise la création de nouveaux protocoles vétérinaires. Il suit une logique stricte de "Recherche → Génération → Intégration".
 
-## Step 1: Batch Initialization
+## Étape 1 : Initialisation & Lecture
+1.  Lire le fichier `docs/protocol_to_create`.
+2.  Pour CHAQUE ligne (Nom du protocole), exécuter les étapes 2, 3 et 4.
 
-**Goal**: Load the list of protocols to create.
+## Étape 2 : Recherche Médicale (Expert ACVECC)
+**Objectif** : Obtenir les données cliniques structurées.
 
-**Instructions**:
-1.  Read the file `.agent/protocols_to_create.txt`.
-2.  **LOOP**: For **EACH** protocol name found in the list, you must perform **Steps 2, 3, 4, and 5** sequentially before moving to the next protocol.
-3.  **CRITICAL**: Do not stop until all protocols in the list have been processed.
+1.  Utiliser le prompt : `docs/protocol_research_prompt.md`.
+2.  Remplacer `[NOM DU PROTOCOLE]` par le protocole courant.
+3.  Effectuer une recherche Web (Search Web) ciblée sur les sources vétérinaires (ACVECC, AAHA, Plumb's).
+4.  **Sortie attendue** : Un rapport texte complet avec Doses, Signes, Algorithme, Spécificités Chien/Chat.
 
-## Step 2: Medical Research (The Expert)
+## Étape 3 : Implémentation du Composant (Dev React)
+**Objectif** : Coder le fichier `.tsx`.
 
-**Role**: Medical Expert & Clinical Auditor.
-**Goal**: Produce a structured JSON-like specification for the **CURRENT PROTOCOL** in the loop.
+1.  Utiliser le prompt : `docs/protocol_generation_prompt.md`.
+2.  Fournir en entrée le rapport de l'Étape 2.
+3.  Générer le code complet du composant dans `src/components/protocols/[NomPascalCase].tsx`.
+4.  **Standards** :
+    -   Utiliser `ProtocolLayout` et `ProtocolContainer`.
+    -   Utiliser `useAppStore` (species, weightKg).
+    -   Utiliser les composants UI (`Section`, `DosageCard`, `AlertBox`...).
 
-**Instructions**:
-1.  Take the current protocol name from the list.
-2.  Execute the following prompt to generate the content:
+## Étape 4 : Intégration Système
+**Objectif** : Rendre le protocole accessible dans l'app.
 
-```markdown
-🛑 **RÈGLES IMPÉRATIVES DE SÉCURITÉ MÉDICALE** 🛑
-1. **Zéro Invention** : Interdiction formelle d'inventer. Si pas de reco, dire "Donnée indisponible".
-2. **Sources Obligatoires** : Chaque affirmation doit être sourcée (HAS, SFP, NICE, AAP).
-3. **Primum Non Nocere** : Privilégier la sécurité.
+1.  **Enregistrement** : Ajouter l'entrée dans `src/data/protocols.ts` (Slug, Titre, Icone, Tags).
+2.  **Routing** : Mapper le slug vers le composant dans `src/app/protocols/[slug]/ProtocolClientPage.tsx`.
 
-**TÂCHE :**
-Générer le contenu structuré pour le protocole : **[NOM DU PROTOCOLE]**
-
-**STRUCTURE DE SORTIE (Optimisée pour React) :**
-
-1. **Méta-données**
-   - Titre exact & Sous-titre.
-   - Tags (ex: Urgence, Endo).
-   - Couleur & Icône.
-   - **Sources** : Liste (Label + URL).
-
-2. **Logique de Calcul (Formules Brutes)**
-   - Format : `Nom_Variable = Poids_kg * X` (Préciser Max).
-
-3. **Contenu Clinique par Blocs**
-   - **Bloc A : Reconnaissance** (Signes clés).
-   - **Bloc B : Red Flags** (Gravité).
-   - **Bloc C : Prise en charge** (Gestes).
-   - **Bloc D : Thérapeutique** (Médicaments, Doses).
-   - **Bloc E : Orientation** (Critères Hospit/Réa).
-
-4. **Arbre Décisionnel**
-   - Logique : "Si [Condition] ALORS [Action]".
-```
-
-## Step 3: Component Implementation (The Developer)
-
-**Role**: Senior React Developer.
-**Goal**: Create the `ProtocolFlowX.tsx` component for the **CURRENT PROTOCOL**.
-
-**Instructions**:
-1.  Take the output from Step 2.
-2.  Create a new file in `src/components/` named `ProtocolFlow[Slug].tsx`.
-3.  **Strict Coding Rules**:
-    *   Copy structure from `src/components/ProtocolFlowComa.tsx`.
-    *   Use `AgeWeightPicker`, `FlowBlock`, `FlowRibbon`, `FlowChevron`.
-    *   Implement `clampWeight` and `formatMg`.
-    *   **NO Custom CSS**. Use Tailwind classes from the template.
-
-## Step 4: System Integration (The Integrator)
-
-**Role**: System Integrator.
-**Goal**: Wire the new component into the app.
-
-**Instructions**:
-1.  **Register**: Add the protocol entry in `src/data/protocols.ts` (Slug, Title, Tags, Sources).
-2.  **Route**:
-    *   Edit `src/app/protocols/[slug]/ProtocolClientPage.tsx`.
-    *   Import the new component.
-    *   Add it to the `FlowBySlug` map.
-
-## Step 5: Verification (The Auditor)
-
-**Role**: Safety Auditor.
-**Goal**: Verify the code before "shipping".
-
-**Instructions**:
-1.  **Read** the created file `ProtocolFlow[Slug].tsx`.
-2.  **Check**:
-    *   Are all doses capped (`Math.min`)?
-    *   Is `formatMg` used for display?
-    *   Are there any `any` types? (Forbidden).
-3.  **Report**: "Protocol [Name] is ready for deployment." or "Issues found: ..."
+## Étape 5 : Vérification
+1.  Vérifier que les doses sont sécurisées ("--" si pas de poids).

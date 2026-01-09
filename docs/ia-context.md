@@ -1,49 +1,51 @@
 # Contexte et directives pour l'intelligence artificielle – VetoGo
 
-Ce document sert de **base permanente** pour toute IA de développement qui travaille sur VetoGo (anciennement PediaGo). Il décrit l'architecture du projet, les règles d'ingénierie, les pratiques de qualité et les responsabilités réglementaires. Il doit être consulté avant toute intervention automatisée.
+Ce document sert de **base permanente** pour toute IA de développement travaillant sur VetoGo. Il définit le contexte vétérinaire, les règles de sécurité et les standards techniques.
 
-## 1. Contexte du projet
+## 1. Contexte du Projet
 
-VetoGo est une application d’aide à la décision destinée aux vétérinaires et professionnels de santé animale. Elle fournit des **protocoles d’urgences vétérinaires** et des informations cliniques adaptées aux espèces (Chiens, Chats) et au poids de l'animal.
+VetoGo est une application mobile (PWA) d'aide à la décision pour les vétérinaires urgentistes.
+Elle remplace les "calculs de tête" ou l'usage de fichiers Excel par une interface sécurisée et validée.
 
-### Architecture technique
+### Domaines Clés
+- **Espèces** : Chien et Chat exclusivement.
+- **Poids** : La variable centrale (3 kg à 80 kg).
+- **Public** : Vétérinaires, ASV (Auxiliaires Spécialisés), Étudiants.
 
-- **Frontend :** Next.js 16 (App Router) avec TypeScript et React. Interface stylisée avec Tailwind CSS.
-- **Backend :** Supabase (Auth + Postgres).
-- **Paiement :** Abonnement premium (**VetoGo +**) via Stripe Checkout.
-- **Données métier :**
-  - Protocoles dans `src/data/protocols.ts` (étendus avec `species` et `category`).
-  - Calculs de doses basés sur le poids (`weightKg`).
-- **État global :** Espèce (`species`) et poids (`weightKg`) gérés via Zustand (`useAppStore`). 
+## 2. Règles d'Or (Sécurité Médicale)
 
-## 2. Standards d’ingénierie
+1.  **Distinction d'Espèce** :
+    - Ne jamais supposer qu'un médicament est safe pour le Chat s'il l'est pour le Chien (ex: paracétamol = mortel chat).
+    - Toujours vérifier le flag `species` dans la logique.
 
-1. **TypeScript strict** : Typer explicitement.
-2. **App Router** : Limiter `"use client"`.
-3. **Logique métier** : Isoler les calculs dans `src/lib`.
-4. **État global** : Utiliser `useAppStore` pour l'espèce et le poids.
-5. **UI/UX** : Interface en français, claire, professionnelle ("soft medical").
-6. **Sécurité et responsabilité** :
-   - Ne jamais inventer de données médicales ou posologies.
-   - Respecter la distinction Chien/Chat.
-   - Ne pas stocker de données identifiantes.
+2.  **Calculs de Doses** :
+    - Utiliser le `weightKg` du store.
+    - Pour les molécules à marge thérapeutique étroite, privilégier les **Overrides** (tableaux de valeurs fixes) plutôt que le calcul dynamique.
 
-## 3. Format attendu des réponses des IA
+3.  **Vocabulaire** :
+    - Utiliser "Patient" ou "Animal".
+    - Ne jamais utiliser "Enfant", "Pédiatrie", "Médecin".
+    - Termes corrects : "Propriétaire" (pas "Parents"), "Clinique" (pas "Hôpital" sauf CHV).
 
-1. Résumé de la tâche.
-2. Liste des fichiers impactés.
-3. Code complet et fonctionnel.
+## 3. Architecture Technique (Resumé)
 
-## 4. Règles spécifiques à VetoGo
+- **Frontend** : Next.js 16 (App Router), Tailwind 4.
+- **State** : `useAppStore` → `species` ("chien"|"chat"), `weightKg` (number).
+- **Data** : `src/data/protocols.ts` et `src/data/drugs.ts`.
 
-- **Langue** : Français.
-- **Espèces** : Toujours prendre en compte l'espèce (Chien ou Chat) dans la logique de filtrage et d'affichage.
-- **Poids** : Seule variable d'entrée pour les calculs (pas d'âge).
-- **Protocoles** : Structurés par catégories (Cardio, Toxico, etc.).
+## 4. Instructions pour l'IA
 
-## 5. Procédure de réponse recommandée
+Lors de la réponse à une tâche :
 
-1. Analyser l'impact (UI, Store, Data).
-2. Consulter la doc technique.
-3. Proposer une solution complète.
-4. Signaler les risques (notamment confusion d'espèces).
+1.  **Analyser le contexte** : S'agit-il d'une fonctionnalité spécifique à une espèce ?
+2.  **Vérifier l'existant** : Ne pas recréer de composants UI si `src/components/ui` contient déjà ce qu'il faut (ex: `DosageCard`, `Section`).
+3.  **Code** : Fournir du code TypeScript strict.
+4.  **UX** : Privilégier la rapidité de lecture (Situation d'urgence).
+
+## 5. Checklist de Validation
+
+Avant de proposer du code :
+- [ ] Le code prend-il en compte l'espèce sélectionnée ?
+- [ ] Les textes sont-ils en français ?
+- [ ] Les posologies (si modifiées) citent-elles une source (ACVECC, etc.) ?
+- [ ] Le style respecte-t-il la charte Tailwind (Clean, Medical, Modern) ?

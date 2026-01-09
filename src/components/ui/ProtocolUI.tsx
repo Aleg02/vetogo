@@ -30,7 +30,7 @@ interface DosageCardProps {
     value: string;
     unit: string;
     subtitle?: React.ReactNode;
-    color?: "blue" | "slate" | "red" | "purple";
+    color?: "blue" | "slate" | "red" | "purple" | "green";
     icon?: string;
 }
 
@@ -40,6 +40,7 @@ export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon 
         slate: "bg-gradient-to-br from-slate-50 to-gray-50/50 border-slate-200 text-slate-900 ring-slate-100",
         red: "bg-gradient-to-br from-red-50 to-orange-50/50 border-red-100 text-red-900 ring-red-100",
         purple: "bg-gradient-to-br from-purple-50 to-fuchsia-50/50 border-purple-100 text-purple-900 ring-purple-100",
+        green: "bg-gradient-to-br from-green-50 to-emerald-50/50 border-green-100 text-green-900 ring-green-100",
     }[color];
 
     const accentColor = {
@@ -47,6 +48,7 @@ export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon 
         slate: "text-slate-700",
         red: "text-red-500",
         purple: "text-purple-600",
+        green: "text-green-600",
     }[color];
 
     return (
@@ -111,31 +113,51 @@ export const CheckList = ({ items }: { items: string[] }) => (
     </ul>
 );
 
-export const CriticalList = ({ items }: { items: string[] }) => (
-    <ul className="space-y-3">
-        {items.map((item, idx) => (
-            <li key={idx} className="flex items-start gap-3 text-rose-800 bg-rose-50/50 p-2 rounded-lg border border-rose-100/50">
-                <span className="text-rose-500 font-bold text-lg leading-none">×</span>
-                <span className="font-medium text-sm">{item}</span>
-            </li>
-        ))}
-    </ul>
+export const CriticalList = ({ items, title }: { items: string[]; title?: string }) => (
+    <div className="space-y-3">
+        {title && <div className="font-bold text-rose-900 mb-2">{title}</div>}
+        <ul className="space-y-3">
+            {items.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-3 text-rose-800 bg-rose-50/50 p-2 rounded-lg border border-rose-100/50">
+                    <span className="text-rose-500 font-bold text-lg leading-none">×</span>
+                    <span className="font-medium text-sm">{item}</span>
+                </li>
+            ))}
+        </ul>
+    </div>
 );
 
 export const LinkList = ({ links }: { links: { label: string; url?: string; type?: "protocol" | "external" }[] }) => (
     <div className="grid gap-2">
-        {links.map((link, idx) => (
-            <div key={idx} className="group flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-md transition-all cursor-pointer active:scale-[0.98]">
-                <div className="flex items-center gap-3">
-                    <span className="text-xl p-2 bg-white rounded-xl shadow-sm">
-                        {link.type === "protocol" ? "📄" : "🔗"}
-                    </span>
-                    <span className="font-semibold text-slate-700 group-hover:text-blue-600 transition-colors">
-                        {link.label}
-                    </span>
-                </div>
-                <span className="text-slate-300 group-hover:text-blue-400">→</span>
-            </div>
-        ))}
+        {links.map((link, idx) => {
+            const Wrapper = link.url ? "a" : "div";
+            const props = link.url ? { href: link.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            const isClickable = !!link.url;
+
+            return (
+                <Wrapper
+                    key={idx}
+                    {...props}
+                    className={`group flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 transition-all ${isClickable ? "hover:bg-white hover:shadow-md cursor-pointer active:scale-[0.98]" : "opacity-80 cursor-default"}`}
+                >
+                    <div className="flex items-center gap-3">
+                        <span className="text-xl p-2 bg-white rounded-xl shadow-sm">
+                            {link.type === "protocol" ? "📄" : "🔗"}
+                        </span>
+                        <div className="flex flex-col">
+                            <span className={`font-semibold text-slate-700 ${isClickable ? "group-hover:text-blue-600" : ""} transition-colors`}>
+                                {link.label}
+                            </span>
+                            {!isClickable && (
+                                <span className="text-xs text-slate-400 font-medium font-italic">
+                                    (Source non cliquable)
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                    {isClickable && <span className="text-slate-300 group-hover:text-blue-400">→</span>}
+                </Wrapper>
+            );
+        })}
     </div>
 );
