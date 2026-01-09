@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import type SupabaseClient from "@supabase/supabase-js/dist/module/SupabaseClient";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 
 type UserEntitlementsRow = Database["public"]["Views"]["user_entitlements"]["Row"];
@@ -108,4 +108,3 @@ export function useUserEntitlements() {
     refreshEntitlements: fetchEntitlements,
   };
 }
-
