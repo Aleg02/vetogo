@@ -61,7 +61,7 @@ export default function UserMenu() {
       // Use limit(1) + maybeSingle to avoid Supabase's "Cannot coerce..." error when duplicates exist.
       const { data, error: queryError } = await supabase
         .from("profiles")
-        .select("id, subscription_tier, subscription_status, expires_at")
+        .select("*")
         .eq("id", userId)
         .limit(1)
         .maybeSingle();

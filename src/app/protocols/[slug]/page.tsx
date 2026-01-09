@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Metadata, ResolvingMetadata } from "next";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getSupabaseAdminClient } from "@/lib/supabaseAdmin";
 import { PROTOCOLS } from "@/data/protocols";
@@ -34,8 +35,7 @@ type CardWithSectionsRow = CardRow & {
   card_sections?: SupabaseCardSectionRow[] | null;
 };
 
-// Mappers (dupliqués de cardsClient.ts car on ne peut pas importer du code client-side facilement si il utilise des hooks ou autre, 
-// mais cardsClient utilise supabaseFetch qui est safe. Cependant, ici on utilise AdminClient).
+// Mappers
 function mapCardRow(row: CardRow): Protocol {
   return {
     slug: row.slug || row.protocol || row.id,
@@ -71,22 +71,9 @@ function extractBullets(row: SupabaseCardSectionRow): string[] {
   return row.body ? [row.body] : [];
 }
 
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
-
-export default async function Page({ params }: PageProps) {
-  const { slug } = await params;
-
-  // 1. Récupérer la session utilisateur (pour vérifier les droits)
-  const supabase = await createServerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
-
-  // 2. Récupérer la fiche via Admin Client (pour contourner RLS et voir si elle est premium)
-  // On utilise Admin car si l'utilisateur n'est pas premium, RLS masquerait la fiche premium,
-  // et on ne pourrait pas distinguer "404" de "403".
+// Shared Data Fetching Logic
+async function getProtocolData(slug: string) {
   const adminClient = getSupabaseAdminClient();
-
   const { data: cards, error } = await adminClient
     .from("cards")
     .select("*, card_sections(*)")
@@ -95,7 +82,7 @@ export default async function Page({ params }: PageProps) {
 
   const cardRow = cards?.[0] as CardWithSectionsRow | undefined;
 
-  // Fallback local si pas de DB ou erreur
+  // Fallback
   const fallbackProtocol = PROTOCOLS.find((p) => p.slug === slug);
   const fallbackSections = PROTOCOL_DETAILS[slug] ?? [];
 
@@ -110,20 +97,66 @@ export default async function Page({ params }: PageProps) {
     sections = fallbackSections;
   }
 
-  // 3. Vérification des droits et Redirection
+  return { protocol, sections, error };
+}
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+// SEO Metadata Generation
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  const { protocol } = await getProtocolData(slug);
+
+  if (!protocol) {
+    return {
+      title: "Protocole introuvable | VetoGo",
+    };
+  }
+
+  const title = `${protocol.title} - Protocole Vétérinaire`;
+  const description = `Protocole vétérinaire pour : ${protocol.title}. ${protocol.tags?.join(", ") || "Urgences et soins intensifs"}. Guide clinique complet sur VetoGo.`;
+
+  return {
+    title: title,
+    description: description,
+    openGraph: {
+      title: title,
+      description: description,
+      // images: protocol.icon ? [...] : [] // Future: dynamic OG image
+    },
+    keywords: protocol.tags,
+  };
+}
+
+import { ProtocolJsonLd } from "@/components/ProtocolJsonLd";
+
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params;
+
+  // 1. Fetch Protocol Data
+  const { protocol, sections, error } = await getProtocolData(slug);
+
+  // 2. Auth Check
+  const supabase = await createServerSupabaseClient();
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // 3. Premium Access Check
   if (protocol?.accessLevel === "premium") {
     let canViewPremium = false;
 
     if (session?.user) {
-      // Vérifier les entitlements via la vue (en utilisant le client authentifié ou admin)
-      // On utilise admin pour être sûr de lire la vue pour cet utilisateur
+      const adminClient = getSupabaseAdminClient();
       const { data } = await adminClient
         .from("user_entitlements")
         .select("can_view_premium")
         .eq("user_id", session.user.id)
         .maybeSingle();
 
-      // Cast explicite pour éviter l'erreur de type 'never' si l'inférence échoue
       const entitlement = data as { can_view_premium: boolean | null } | null;
       canViewPremium = entitlement?.can_view_premium ?? false;
     }
@@ -135,11 +168,14 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <ProtocolClientPage
-      slug={slug}
-      protocol={protocol}
-      sections={sections}
-      error={error?.message}
-    />
+    <>
+      {protocol && <ProtocolJsonLd protocol={protocol} slug={slug} />}
+      <ProtocolClientPage
+        slug={slug}
+        protocol={protocol}
+        sections={sections}
+        error={error?.message}
+      />
+    </>
   );
 }
