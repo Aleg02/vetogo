@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { PROTOCOLS } from "@/data/protocols";
 
@@ -64,14 +65,16 @@ export const ProtocolLayout = ({ title, children, hasExamens = true }: ProtocolL
                         </button>
 
                         {/* LOGO ALWAYS VISIBLE */}
-                        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2 pointer-events-none">
-                            <Image
-                                src="/vetogologo.png"
-                                alt="VetoGo"
-                                width={80}
-                                height={24}
-                                className="h-6 w-auto opacity-90"
-                            />
+                        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+                            <Link href="/">
+                                <Image
+                                    src="/vetogologo.png"
+                                    alt="VetoGo"
+                                    width={80}
+                                    height={24}
+                                    className="h-6 w-auto opacity-90 transition hover:opacity-100"
+                                />
+                            </Link>
                         </div>
 
                         <div className="w-8" /> {/* Spacer */}
@@ -214,7 +217,7 @@ export const ProtocolLayout = ({ title, children, hasExamens = true }: ProtocolL
                                             {relatedProtocols.map((p) => p && (
                                                 <button
                                                     key={p.slug}
-                                                    onClick={() => router.push(`/protocols/${p.slug}`)}
+                                                    onClick={() => router.push(`/ protocols / ${p.slug} `)}
                                                     className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all text-left group"
                                                 >
                                                     <span className="text-2xl p-2 bg-slate-50 rounded-xl">{p.icon}</span>

@@ -23,8 +23,8 @@ export async function middleware(req: NextRequest) {
   const isComingSoonPage = pathname === '/coming-soon';
   const previewCookie = req.cookies.get('vetogo_preview_auth');
 
-  // If not on coming-soon page AND no valid cookie -> Redirect to /coming-soon
-  if (!isComingSoonPage && previewCookie?.value !== '1') {
+  // If not on coming-soon page AND no valid cookie AND not in dev mode -> Redirect to /coming-soon
+  if (process.env.NODE_ENV !== 'development' && !isComingSoonPage && previewCookie?.value !== '1') {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = '/coming-soon';
 

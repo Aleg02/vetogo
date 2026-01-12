@@ -12,8 +12,12 @@ export async function signupAction(
   const email = formData.get("email");
   const password = formData.get("password");
   const confirm = formData.get("confirmPassword");
+  const terms = formData.get("terms");
 
   // Validations basiques
+  if (!terms) {
+    return { status: "error", message: "Vous devez accepter les CGU." };
+  }
   if (typeof email !== "string" || !email) {
     return { status: "error", message: "Email requis." };
   }

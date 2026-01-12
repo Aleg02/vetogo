@@ -142,7 +142,9 @@ export default function AboutPage() {
         <header className="mt-6 space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">VetoGo</p>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">À propos de VetoGo</h1>
-          <p className="text-base text-slate-600">Présentation, objectifs et conditions d’utilisation.</p>
+          <p className="text-base text-slate-600">
+            Présentation, objectifs et <Link href="/cgu" className="text-[#2563eb] hover:underline">conditions d’utilisation</Link>.
+          </p>
         </header>
 
         <div className="mt-10 space-y-10">
