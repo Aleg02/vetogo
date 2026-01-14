@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 
-type PremiumAccessDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  title?: string | null;
-};
+
 
 import { AnimatePresence, motion } from "framer-motion";
 
