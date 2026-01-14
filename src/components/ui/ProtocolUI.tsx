@@ -5,19 +5,21 @@ import { motion } from "framer-motion";
 
 // --- SECTIONS & CONTAINERS ---
 
+// --- SECTIONS & CONTAINERS ---
+
 export const ProtocolContainer = ({ children }: { children: React.ReactNode }) => (
-    <div className="space-y-6 animate-fade-in pb-8 pt-2">
+    <div className="space-y-4 animate-fade-in pb-8 pt-2">
         {children}
     </div>
 );
 
 export const Section = ({ title, children, icon }: { title: string; children: React.ReactNode; icon?: string }) => (
-    <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100/50">
-        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+    <section className="bg-white rounded-lg p-5 shadow-sm border border-slate-200">
+        <h3 className="text-base font-bold text-ink mb-4 flex items-center gap-2 uppercase tracking-wide opacity-80">
             {icon && <span className="text-xl">{icon}</span>}
             {title}
         </h3>
-        <div className="text-slate-600 leading-relaxed">
+        <div className="text-slate-600 leading-relaxed text-sm">
             {children}
         </div>
     </section>
@@ -37,29 +39,34 @@ interface DosageCardProps {
     dosage?: number; // Dosage en mg/kg (ou autre unité/kg)
     dosageRange?: [number, number]; // Plage de dosage
     concentration?: number; // Concentration en mg/mL
+    route?: string; // Voie d'administration (IV, IM...)
+    onShowAlternatives?: () => void; // Action pour afficher les alternatives
+    intentionLabel?: string; // Override du label d'intention (ex: "Antibiotique", "Hémostatique")
 }
 
-export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon, dosage, dosageRange, concentration }: DosageCardProps) => {
+export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon, dosage, dosageRange, concentration, route = "IV", onShowAlternatives, intentionLabel }: DosageCardProps) => {
     const { weightKg } = useAppStore();
 
-    const colorStyles = {
-        blue: "bg-gradient-to-br from-blue-50 to-indigo-50/50 border-blue-100 text-blue-900 ring-blue-100",
-        slate: "bg-gradient-to-br from-slate-50 to-gray-50/50 border-slate-200 text-slate-900 ring-slate-100",
-        red: "bg-gradient-to-br from-red-50 to-orange-50/50 border-red-100 text-red-900 ring-red-100",
-        purple: "bg-gradient-to-br from-purple-50 to-fuchsia-50/50 border-purple-100 text-purple-900 ring-purple-100",
-        green: "bg-gradient-to-br from-green-50 to-emerald-50/50 border-green-100 text-green-900 ring-green-100",
-    }[color];
+    // Map colors to Intentions (approximate for now until data update)
+    const baseIntention = {
+        blue: { label: "1ère Intention", style: "bg-emerald-50 text-emerald-700 border-emerald-100", dot: "bg-emerald-500" },
+        green: { label: "1ère Intention", style: "bg-emerald-50 text-emerald-700 border-emerald-100", dot: "bg-emerald-500" },
+        purple: { label: "Alternative", style: "bg-blue-50 text-blue-700 border-blue-100", dot: "bg-blue-500" },
+        red: { label: "Urgence / Escalade", style: "bg-amber-50 text-amber-800 border-amber-100", dot: "bg-amber-500" },
+        slate: { label: "Info", style: "bg-slate-50 text-slate-600 border-slate-100", dot: "bg-slate-400" },
+    }[color] || { label: "Traitement", style: "bg-slate-50 text-slate-600 border-slate-100", dot: "bg-slate-400" };
 
-    const accentColor = {
-        blue: "text-[#009EF0]",
-        slate: "text-slate-700",
-        red: "text-red-500",
-        purple: "text-purple-600",
-        green: "text-green-600",
-    }[color];
+    const intention = {
+        ...baseIntention,
+        label: intentionLabel || baseIntention.label
+    };
 
     // Calculs automatiques
-    let calculatedDisplay: React.ReactNode = null;
+    let doseDisplay: React.ReactNode = (
+        <span className="text-slate-400 text-sm font-medium italic">Saisir poids...</span>
+    );
+    let volumeDisplay: React.ReactNode = null;
+    let isLegacyMode = false;
 
     if (weightKg && weightKg > 0) {
         let totalDoseMin = 0;
@@ -75,59 +82,108 @@ export const DosageCard = ({ title, value, unit, subtitle, color = "blue", icon,
         }
 
         if (totalDoseMin > 0) {
-            // Si on a une concentration, on affiche aussi les mL
-            let volumeMin = 0;
-            let volumeMax = 0;
-            if (concentration && concentration > 0) {
-                volumeMin = totalDoseMin / concentration;
-                volumeMax = totalDoseMax / concentration;
-            }
+            // Display Dose
+            const unitClean = unit.split("/")[0]; // "mg/kg" -> "mg" roughly
+            doseDisplay = (
+                <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-black text-ink tracking-tight">
+                        {hasRange ? `${totalDoseMin.toFixed(1)}-${totalDoseMax.toFixed(1)}` : totalDoseMin.toFixed(1)}
+                    </span>
+                    <span className="text-lg font-bold text-slate-500">{unitClean}</span>
+                </div>
+            );
 
-            calculatedDisplay = (
-                <div className="mt-3 pt-3 border-t border-black/5 flex flex-col gap-1">
-                    <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold uppercase opacity-60">Pour {weightKg} kg :</span>
+            // Calculate Volume
+            if (concentration && concentration > 0) {
+                const volMin = totalDoseMin / concentration;
+                const volMax = totalDoseMax / concentration;
+                volumeDisplay = (
+                    <div className="flex items-center gap-2 mt-1 p-2 bg-blue-50/50 rounded-lg border border-blue-100/50">
+                        <span className="text-xs font-bold text-blue-800 uppercase tracking-wide">Volume :</span>
+                        <span className="font-bold text-blue-700">
+                            {hasRange ? `${volMin.toFixed(2)} - ${volMax.toFixed(2)}` : volMin.toFixed(2)} mL
+                        </span>
                     </div>
-                    <div>
-                        <div className={`text-2xl font-black ${accentColor}`}>
-                            {hasRange ? `${totalDoseMin.toFixed(1)} - ${totalDoseMax.toFixed(1)}` : totalDoseMin.toFixed(1)}
-                            <span className="text-sm font-bold ml-1 text-slate-500/80">{unit.replace("/kg", "").replace("kg", "")}</span>
-                        </div>
-                        {concentration && concentration > 0 && (
-                            <div className="text-sm font-semibold text-slate-700 mt-1">
-                                ou <span className="font-bold bg-white/50 px-1 py-0.5 rounded border border-black/5">
-                                    {hasRange ? `${volumeMin.toFixed(2)} - ${volumeMax.toFixed(2)}` : volumeMin.toFixed(2)} mL
-                                </span>
-                            </div>
-                        )}
-                    </div>
+                );
+            }
+        } else {
+            // Fallback Legacy: Value is presumed to be the calculated result (old way)
+            isLegacyMode = true;
+            doseDisplay = (
+                <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-black text-ink tracking-tight">
+                        {value}
+                    </span>
+                    <span className="text-lg font-bold text-slate-500">{unit.replace("/kg", "")}</span>
                 </div>
             );
         }
     }
 
-
     return (
-        <div className={`relative rounded-3xl p-5 border shadow-sm ring-1 ring-inset ${colorStyles}`}>
-            <div className="flex justify-between items-start mb-3">
-                <h4 className="font-bold text-sm uppercase tracking-wide opacity-80">{title}</h4>
-                {icon && <span className="text-2xl opacity-90">{icon}</span>}
-            </div>
-
-            <div className="flex items-baseline gap-1 mb-2">
-                <span className={`text-5xl font-black tracking-tighter ${accentColor}`}>
-                    {value}
-                </span>
-                <span className="text-lg font-bold opacity-70">{unit}</span>
-            </div>
-
-            {calculatedDisplay}
-
-            {subtitle && (
-                <div className="text-sm font-medium opacity-80 border-t border-black/5 pt-2 mt-2">
-                    {subtitle}
+        <div className="bg-white rounded-lg p-0 shadow-sm border border-slate-200 overflow-hidden relative group transition-shadow hover:shadow-md">
+            {/* Header: Intention & Title */}
+            <div className={`px-4 py-2 border-b border-slate-50 flex justify-between items-center ${intention.style} bg-opacity-30`}>
+                <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${intention.dot}`} />
+                    <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">{intention.label}</span>
                 </div>
-            )}
+                {/* Icon (optional) */}
+                {icon && <span className="opacity-50 text-lg">{icon}</span>}
+            </div>
+
+            <div className="p-4">
+                {/* Title */}
+                <h4 className="font-bold text-lg text-ink leading-tight mb-3">{title}</h4>
+
+                <div className="flex gap-4 items-start">
+                    {/* Main Dose Area (Left) */}
+                    <div className="flex-1">
+                        {/* Formula (Small) - Only show if NOT in legacy mode (otherwise value IS the result) */}
+                        {!isLegacyMode && (
+                            <div className="text-xs font-medium text-slate-400 mb-1 flex items-center gap-1">
+                                <span>Formule:</span>
+                                <span className="bg-slate-100 px-1.5 rounded text-slate-600 font-mono">{value} {unit}</span>
+                            </div>
+                        )}
+
+                        {/* Calculated Dose (Big) */}
+                        {doseDisplay}
+
+                        {/* Volume (if available) */}
+                        {volumeDisplay}
+                    </div>
+
+                    {/* Meta / Route (Right) */}
+                    <div className="flex flex-col items-end gap-1">
+                        <span className="px-2 py-1 rounded bg-slate-100 text-slate-600 text-xs font-bold uppercase">{route}</span>
+                        {concentration && (
+                            <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">
+                                Conc. {concentration} mg/mL
+                            </span>
+                        )}
+                    </div>
+                </div>
+
+                {/* Subtitle / Notes */}
+                {subtitle && (
+                    <div className="mt-3 text-sm text-slate-600 border-l-2 border-slate-200 pl-3 italic">
+                        {subtitle}
+                    </div>
+                )}
+
+                {/* Footer Actions (Conditional) */}
+                {onShowAlternatives && (
+                    <div className="mt-4 pt-3 border-t border-slate-50 flex justify-end">
+                        <button
+                            onClick={onShowAlternatives}
+                            className="text-xs font-bold text-primary hover:text-primary-dark transition-colors flex items-center gap-1 opacity-0 group-hover:opacity-100"
+                        >
+                            Voir alternatives →
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

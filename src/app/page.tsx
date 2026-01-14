@@ -134,7 +134,11 @@ export default function HomePage() {
 
     // 2. Category Filter
     if (categoryParam) {
-      results = results.filter((p) => p.category === categoryParam);
+      if (categoryParam === "Urgences") {
+        results = results.filter((p) => p.tags?.includes("urgence"));
+      } else {
+        results = results.filter((p) => p.category === categoryParam);
+      }
     }
 
     // 3. Species Filter
@@ -226,15 +230,14 @@ export default function HomePage() {
 
           <div className="mt-4 space-y-4 transition-all">
             {/* VetoGo Specific Inputs: Species & Weight */}
-            {!searchMode && (
-              <div className="animate-fade-in-up space-y-4">
-                <SpeciesSelector />
-                {/* WeightInput container needs to align with SearchBar below */}
-                <div className="px-1">
-                  <WeightInput />
-                </div>
+            {/* VetoGo Specific Inputs: Species & Weight (Check always visible) */}
+            <div className="animate-fade-in-up space-y-4">
+              <SpeciesSelector />
+              {/* WeightInput container needs to align with SearchBar below */}
+              <div className="px-1">
+                <WeightInput />
               </div>
-            )}
+            </div>
 
             <div className={searchMode ? "mt-2" : "mt-6"}>
               <div className="px-1">
@@ -347,8 +350,27 @@ export default function HomePage() {
                   </div>
                 ))
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center text-sm text-slate-500">
-                  Aucun protocole trouvé.
+                <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-slate-50/50 px-6 py-12 text-center">
+                  <div className="text-4xl mb-3 opacity-50">🧐</div>
+                  <h3 className="text-lg font-bold text-slate-700 mb-1">Aucun résultat trouvé</h3>
+                  <p className="text-sm text-slate-500 mb-6 max-w-xs leading-relaxed">
+                    Essayez d'autres mots-clés ou parcourez les catégories.
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <button
+                      onClick={() => { setQuery(""); setSearchMode(false); }}
+                      className="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-full shadow-sm hover:bg-slate-50 transition-colors"
+                    >
+                      Parcourir les catégories
+                    </button>
+                    <button
+                      onClick={() => { setQuery(""); router.push("/?category=Urgences"); }}
+                      className="px-4 py-2 bg-rose-50 border border-rose-100 text-rose-600 text-sm font-semibold rounded-full shadow-sm hover:bg-rose-100 transition-colors"
+                    >
+                      Voir les Urgences
+                    </button>
+                  </div>
                 </div>
               )}
 

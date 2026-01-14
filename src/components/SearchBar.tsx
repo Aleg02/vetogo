@@ -33,7 +33,7 @@ export default function SearchBar({
         <input
           ref={inputRef}
           type="search"
-          className="w-full bg-transparent px-5 py-4 pl-12 text-[16px] font-medium leading-6 text-slate-900 placeholder:text-slate-400 focus:outline-none"
+          className="w-full bg-transparent px-5 py-4 pl-12 text-[16px] font-medium leading-6 text-slate-900 placeholder:text-slate-500 focus:outline-none"
           placeholder={placeholder ?? "Rechercher un protocole..."}
           value={inputValue}
           autoFocus={autoFocus}

@@ -4,21 +4,21 @@ import React from "react";
 import Link from "next/link";
 
 const CATEGORIES = [
-    { label: "Cardio", slug: "Cardio", emoji: "❤️", color: "bg-blue-50" },
+    { label: "Urgences", slug: "Urgences", emoji: "🚨", color: "bg-red-50" },
     { label: "Toxico", slug: "Toxico", emoji: "🧪", color: "bg-green-50" },
-    { label: "Perfusion", slug: "Perfusion", emoji: "💧", color: "bg-yellow-50" },
-    { label: "Parasites", slug: "Parasites", emoji: "🦠", color: "bg-blue-50" },
     { label: "Trauma", slug: "Trauma", emoji: "🤕", color: "bg-orange-50" },
-    { label: "Fièvre", slug: "Fièvre", emoji: "🌡️", color: "bg-red-50" },
-    { label: "Neurologie", slug: "Neurologie", emoji: "🧠", color: "bg-purple-50" },
     { label: "Respiratoire", slug: "Respiratoire", emoji: "🫁", color: "bg-cyan-50" },
+    { label: "Neurologie", slug: "Neurologie", emoji: "🧠", color: "bg-purple-50" },
+    { label: "Cardio", slug: "Cardio", emoji: "❤️", color: "bg-blue-50" },
+    { label: "Urologie", slug: "Urologie", emoji: "💧", color: "bg-sky-50" },
     { label: "Digestif", slug: "Digestif", emoji: "🍖", color: "bg-pink-50" },
+    { label: "Repro", slug: "Reproduction", emoji: "🍼", color: "bg-rose-50" },
 ];
 
 export const CategoryGrid = () => {
     return (
         <div className="grid grid-cols-3 gap-3 p-4">
-            {CATEGORIES.slice(0, 6).map((cat) => (
+            {CATEGORIES.slice(0, 9).map((cat) => (
                 <Link
                     key={cat.slug}
                     href={`/?category=${cat.slug}`} // Assuming homepage filtering or search page

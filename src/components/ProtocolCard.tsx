@@ -84,7 +84,7 @@ export default function ProtocolCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       data-testid={`protocol-card-${item.slug}`}
-      className={`group relative w-full overflow-hidden rounded-3xl border border-slate-200/60 bg-white/70 backdrop-blur-md px-5 py-4 text-left shadow-[0_20px_40px_rgba(15,23,42,0.12)] transition-all duration-500 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white/60`}
+      className={`group relative w-full overflow-hidden rounded-3xl border border-slate-200/60 bg-white/70 backdrop-blur-md px-5 py-4 text-left shadow-[0_20px_40px_rgba(15,23,42,0.12)] transition-all duration-500 hover:-translate-y-0.5 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white/60`}
       style={{
         background: `linear-gradient(135deg, ${withAlpha(
           item.accentColor,
@@ -146,6 +146,7 @@ export default function ProtocolCard({
 
       {/* Pastilles de pathologie (RESPIRATOIRE, REA, etc.) :
           ligne dédiée, alignée à gauche sous le bloc principal */}
+      {/* Pastilles de pathologie (Tags) */}
       {item.tags && item.tags.length > 0 && (
         <div
           className={`mt-3 flex flex-wrap gap-2 transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -164,6 +165,8 @@ export default function ProtocolCard({
           ))}
         </div>
       )}
+
+
     </button>
   );
 }

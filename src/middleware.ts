@@ -1,35 +1,71 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req, res });
+export async function middleware(request: NextRequest) {
+  // 1. Initial Response Setup
+  // We need to pass the request headers to maintain the chain
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
 
-  // Refresh session if expired - required for Server Components
+  // 2. Create Supabase Client (SSR)
+  // This handles the new "base64" chunked cookie format correctly
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          // Update request cookies for downstream
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value);
+          });
+
+          // Re-create response to include the updated cookies
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+
+          // Set cookies on response
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
+  // 3. Secure Auth Check
+  // supabase.auth.getUser() validates the token on the server side (secure)
+  // It also automatically refreshes the session if needed (via cookie setAll)
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const { pathname } = req.nextUrl;
+  const { pathname } = request.nextUrl;
 
-  // 1. Stripe Webhooks: Pass through immediately
+  // 4. Stripe Webhooks: Pass through immediately
   if (pathname.startsWith('/api/stripe')) {
-    return res;
+    return response;
   }
 
-  // 2. Coming Soon Gate (Cookie Check)
-  // Allow: /coming-soon, /api/stripe, static files
+  // 5. Coming Soon Gate (Cookie Check)
   const isComingSoonPage = pathname === '/coming-soon';
-  const previewCookie = req.cookies.get('vetogo_preview_auth');
+  const previewCookie = request.cookies.get('vetogo_preview_auth');
 
-  // If not on coming-soon page AND no valid cookie AND not in dev mode -> Redirect to /coming-soon
+  // If not on coming-soon page AND no valid cookie AND not in dev mode -> Redirect
   if (process.env.NODE_ENV !== 'development' && !isComingSoonPage && previewCookie?.value !== '1') {
-    const redirectUrl = req.nextUrl.clone();
+    const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/coming-soon';
 
-    // Preserve original destination to redirect back after login
-    // BUT avoid redirect loops if the user was already going to /coming-soon implies logic above handles it
     if (pathname !== '/') {
       redirectUrl.searchParams.set('from', pathname);
     }
@@ -37,26 +73,25 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // 3. Protected Routes (require login)
+  // 6. Protected Routes (require login)
   const protectedRoutes = ['/mon-compte', '/dashboard'];
   const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
 
-  if (isProtected && !session) {
-    const redirectUrl = req.nextUrl.clone();
+  if (isProtected && !user) {
+    const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/login';
     redirectUrl.searchParams.set('redirectedFrom', pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // 4. Auth Routes (redirect to account if already logged in)
-  // Optional: prevent logged-in users from seeing /login or /signup
-  if (session && (pathname === '/login' || pathname === '/signup')) {
-    const redirectUrl = req.nextUrl.clone();
+  // 7. Auth Routes (redirect if already logged in)
+  if (user && (pathname === '/login' || pathname === '/signup')) {
+    const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/'; // or /mon-compte
     return NextResponse.redirect(redirectUrl);
   }
 
-  return res;
+  return response;
 }
 
 export const config = {

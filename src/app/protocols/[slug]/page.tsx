@@ -143,18 +143,19 @@ export default async function Page({ params }: PageProps) {
 
   // 2. Auth Check
   const supabase = await createServerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { user } } = await supabase.auth.getUser();
 
   // 3. Premium Access Check
+  let isLocked = false;
   if (protocol?.accessLevel === "premium") {
     let canViewPremium = false;
 
-    if (session?.user) {
+    if (user) {
       const adminClient = getSupabaseAdminClient();
       const { data } = await adminClient
         .from("user_entitlements")
         .select("can_view_premium")
-        .eq("user_id", session.user.id)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       const entitlement = data as { can_view_premium: boolean | null } | null;
@@ -162,8 +163,7 @@ export default async function Page({ params }: PageProps) {
     }
 
     if (!canViewPremium) {
-      const target = protocol.title ?? slug;
-      redirect(`/subscribe?reason=premium&slug=${encodeURIComponent(target)}`);
+      isLocked = true;
     }
   }
 
@@ -175,6 +175,7 @@ export default async function Page({ params }: PageProps) {
         protocol={protocol}
         sections={sections}
         error={error?.message}
+        isLocked={isLocked}
       />
     </>
   );

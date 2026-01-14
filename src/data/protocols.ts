@@ -34,7 +34,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "anaphylaxie",
     title: "Anaphylaxie",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "allergie", "choc", "respiratoire"],
     icon: "⚡",
     accentColor: "#be185d", // Pink-700
@@ -49,11 +49,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "status-epilepticus",
     title: "Crise Convulsive / Status",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "neuro", "crise"],
     icon: "🧠",
     accentColor: "#7e22ce", // Purple-700
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Neurologie",
     sources: [
@@ -65,7 +65,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "hypoglycemie",
     title: "Hypoglycémie Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "metabolisme", "glucose"],
     icon: "🍬",
     accentColor: "#f59e0b", // Amber-500
@@ -81,7 +81,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "detresse-respiratoire",
     title: "Détresse Respiratoire",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "respiratoire", "oap"],
     icon: "💨",
     accentColor: "#0ea5e9", // Sky-500
@@ -95,11 +95,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "douleur-aigue",
     title: "Douleur Aiguë Sévère",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "analgesie", "douleur"],
     icon: "💊",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma", // ou Autre
     sources: [
@@ -109,11 +109,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "polytraumatisme",
     title: "Polytraumatisé",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "choc", "fast", "triage"],
     icon: "🚑",
     accentColor: "#b91c1c", // Red-700
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma",
     sources: [
@@ -123,7 +123,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "intoxication",
     title: "Intoxication Suspectée",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "toxique", "vomissement"],
     icon: "☠️",
     accentColor: "#4b5563", // Gray-600
@@ -137,11 +137,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "coup-de-chaleur",
     title: "Coup de Chaleur",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "thermique", "sirs"],
     icon: "☀️",
     accentColor: "#ea580c", // Orange-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Fièvre",
     sources: [
@@ -151,11 +151,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "insuffisance-cardiaque",
     title: "Insuffisance Cardiaque Congestive",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "cardio", "oap"],
     icon: "💔",
     accentColor: "#ec4899", // Pink-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Cardio",
     sources: [
@@ -165,7 +165,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "arret-cardio-respiratoire",
     title: "Arrêt Cardio-Respiratoire (RCP)",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "reanimation", "cpr", "recover"],
     icon: "💓",
     accentColor: "#000000", // Black/Slate-900 usually, but let's use a dark grey or red
@@ -179,11 +179,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "vomissements",
     title: "Vomissements Aigus Sévères",
-    version: "2024",
+    version: "V1.0",
     tags: ["digestif", "urgence", "pancreatite"],
     icon: "🤮",
     accentColor: "#84cc16", // Lime-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -193,11 +193,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "diarrhee",
     title: "Diarrhée Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["digestif", "ahds", "parvo"],
     icon: "💩",
     accentColor: "#854d0e", // Yellow-800 (Brownish)
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -207,11 +207,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "hemorragie-aigue",
     title: "Hémorragie Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "trauma", "choc", "transfusion"],
     icon: "🩸",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma",
     sources: [
@@ -221,11 +221,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "sepsis",
     title: "Sepsis Suspecté",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "infection", "choc", "antibiotiques"],
     icon: "🦠",
     accentColor: "#7c3aed", // Violet-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Fièvre",
     sources: [
@@ -235,11 +235,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "obstruction-urinaire",
     title: "Obstruction Urinaire (Globe)",
-    version: "2024",
+    version: "V1.0",
     tags: ["urologie", "chat-bouche", "hyperkaliemie", "urgence"],
     icon: "🐈",
     accentColor: "#ea580c", // Orange-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre",
     sources: [
@@ -249,11 +249,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "insuffisance-renale-aigue",
     title: "Insuffisance Rénale Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["nephrologie", "aki", "iris", "oligurie"],
     icon: "💧",
     accentColor: "#3b82f6", // Blue-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre",
     sources: [
@@ -263,11 +263,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "dilatation-torsion-estomac",
     title: "Dilatation-Torsion Estomac (GDV)",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "chirurgie", "choc", "digestif"],
     icon: "🥣",
     accentColor: "#be123c", // Rose-700
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chien",
     category: "Digestif",
     sources: [
@@ -277,11 +277,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "cesarienne-dystocie",
     title: "Césarienne / Dystocie",
-    version: "2024",
+    version: "V1.0",
     tags: ["reproduction", "neonatologie", "urgence", "chirurgie"],
     icon: "🍼",
     accentColor: "#ec4899", // Pink-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre",
     sources: [
@@ -291,11 +291,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "anemie-aigue",
     title: "Anémie Aiguë (IMHA)",
-    version: "2024",
+    version: "V1.0",
     tags: ["hematologie", "imha", "transfusion", "corticoïdes"],
     icon: "🛡️",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre",
     sources: [
@@ -305,11 +305,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "sedation-procedurale",
     title: "Sédation Procédurale",
-    version: "2024",
+    version: "V1.0",
     tags: ["anesthesie", "sedation", "urgence", "douleur"],
     icon: "💤",
     accentColor: "#6366f1", // Indigo-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre",
     sources: [
@@ -319,7 +319,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "fluidotherapie",
     title: "Fluidothérapie & Calculs",
-    version: "2024",
+    version: "V1.0",
     tags: ["perfusion", "maintenance", "deshydratation", "calcul"],
     icon: "💧",
     accentColor: "#3b82f6", // Blue-500
@@ -333,7 +333,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "euthanasie",
     title: "Euthanasie (Technique)",
-    version: "2024",
+    version: "V1.0",
     tags: ["fin-de-vie", "procedure", "sedation", "pentobarbital"],
     icon: "🕊️",
     accentColor: "#64748b", // Slate-500 (Respectful grey)
@@ -347,11 +347,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "gastro-enterite",
     title: "Gastro-Entérite Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["digestif", "vomissement", "diarrhee", "nutrition"],
     icon: "🤢",
     accentColor: "#84cc16", // Lime-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -361,11 +361,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "pancreatite-aigue",
     title: "Pancréatite Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["pancreas", "douleur", "vomissement", "nutrition"],
     icon: "🔥",
     accentColor: "#ea580c", // Orange-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -375,11 +375,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "corps-etranger-digestif",
     title: "Corps Étranger Digestif",
-    version: "2024",
+    version: "V1.0",
     tags: ["chirurgie", "obstruction", "digestif", "urgence"],
     icon: "🧦",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -389,11 +389,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "constipation-megacolon",
     title: "Constipation & Mégacôlon",
-    version: "2024",
+    version: "V1.0",
     tags: ["digestif", "chat", "lavement", "obstruction"],
     icon: "💩",
     accentColor: "#a16207", // Yellow-800 (Brownish)
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -403,11 +403,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "ileus-paralytique",
     title: "Iléus Paralytique",
-    version: "2024",
+    version: "V1.0",
     tags: ["chirurgie", "transit", "post-op", "cri"],
     icon: "🐌",
     accentColor: "#67e8f9", // Cyan-300
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -417,11 +417,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "hemorragie-digestive-haute",
     title: "Hémorragie Digestive Haute",
-    version: "2024",
+    version: "V1.0",
     tags: ["urgence", "sang", "ulcere", "anemie"],
     icon: "🩸",
     accentColor: "#991b1b", // Red-800
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -431,11 +431,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "ictere-aigu",
     title: "Ictère Aigu",
-    version: "2024",
+    version: "V1.0",
     tags: ["foie", "jaunisse", "lipidose", "urgence"],
     icon: "🍋",
     accentColor: "#facc15", // Yellow-400
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Digestif",
     sources: [
@@ -445,11 +445,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "insuffisance-renale-chronique",
     title: "IRC Décompensée",
-    version: "2024",
+    version: "V1.0",
     tags: ["rein", "uremie", "chat", "senior"],
     icon: "📉",
     accentColor: "#fb923c", // Orange-400
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Urologie",
     sources: [
@@ -459,11 +459,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "cystite-aigue",
     title: "Cystite Aiguë (UTI)",
-    version: "2019",
+    version: "V1.0",
     tags: ["urine", "infection", "amoxicilline", "vessie"],
     icon: "🦠",
     accentColor: "#ec4899", // Pink-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Urologie",
     sources: [
@@ -473,11 +473,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "pyelonephrite",
     title: "Pyélonéphrite",
-    version: "2019",
+    version: "V1.0",
     tags: ["rein", "infection", "fievre", "antibio"],
     icon: "🌡️",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Urologie",
     sources: [
@@ -487,11 +487,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "dysurie-aigue",
     title: "Dysurie Aiguë (Spasme)",
-    version: "2024",
+    version: "V1.0",
     tags: ["urine", "spasme", "prazosine", "retention"],
     icon: "⏸️",
     accentColor: "#a855f7", // Purple-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Urologie",
     sources: [
@@ -501,11 +501,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "urolithiase-gestion",
     title: "Urolithiases",
-    version: "2024",
+    version: "V1.0",
     tags: ["cristaux", "struvite", "oxalate", "calculs"],
     icon: "💎",
     accentColor: "#64748b", // Slate-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Urologie",
     sources: [
@@ -515,11 +515,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "hyperkaliemie",
     title: "Hyperkaliémie",
-    version: "2024",
+    version: "V1.0",
     tags: ["coeur", "urgence", "potassium", "bradycardie"],
     icon: "⚡",
     accentColor: "#ef4444", // Red-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Metabolique",
     sources: [
@@ -529,11 +529,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "acidocetose-diabetique",
     title: "Acidocétose (DKA)",
-    version: "2024",
+    version: "V1.0",
     tags: ["diabete", "insuline", "cetonurie", "urgence"],
     icon: "🧪",
     accentColor: "#f97316", // Orange-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Metabolique",
     sources: [
@@ -543,11 +543,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "hyperglycemie-hhs",
     title: "Hyperglycémie (HHS)",
-    version: "2024",
+    version: "V1.0",
     tags: ["diabete", "glucose", "coma", "urgence"],
     icon: "🧠",
     accentColor: "#8b5cf6", // Violet-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Metabolique",
     sources: [
@@ -557,11 +557,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "hypocalcemie-eclampsie",
     title: "Hypocalcémie (Eclampsie)",
-    version: "2024",
+    version: "V1.0",
     tags: ["calcium", "tetanie", "chiot", "lactation"],
     icon: "⚡",
     accentColor: "#f472b6", // Pink-400
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Metabolique",
     sources: [
@@ -571,11 +571,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "pyometre",
     title: "Pyomètre",
-    version: "2024",
+    version: "V1.0",
     tags: ["uterus", "infection", "chirurgie", "alizin"],
     icon: "✂️",
     accentColor: "#be123c", // Rose-700
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Reproduction",
     sources: [
@@ -585,11 +585,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "reanimation-neonatale",
     title: "Réanimation Néonatale",
-    version: "2024",
+    version: "V1.0",
     tags: ["chiot", "chaton", "cpr", "naissance"],
     icon: "👶",
     accentColor: "#38bdf8", // Sky-400
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Reproduction",
     sources: [
@@ -599,11 +599,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "mammite-mastite",
     title: "Mammite (Mastite)",
-    version: "2024",
+    version: "V1.0",
     tags: ["lait", "infection", "chiot", "antibio"],
     icon: "🌡️",
     accentColor: "#fb7185", // Rose-400
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Reproduction",
     sources: [
@@ -613,11 +613,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "paraphimosis",
     title: "Paraphimosis",
-    version: "2024",
+    version: "V1.0",
     tags: ["penis", "urgence", "sucre", "oedeme"],
     icon: "🍦",
     accentColor: "#3b82f6", // Blue-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chien",
     category: "Reproduction",
     sources: [
@@ -627,11 +627,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "prostatite",
     title: "Prostatite",
-    version: "2024",
+    version: "V1.0",
     tags: ["prostate", "infection", "enrofloxacine", "castration"],
     icon: "📉",
     accentColor: "#475569", // Slate-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chien",
     category: "Reproduction",
     sources: [
@@ -641,11 +641,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "asthme-felin",
     title: "Asthme Félin (Crise)",
-    version: "2024",
+    version: "V1.0",
     tags: ["chat", "respiratoire", "ventoline", "corticoide"],
     icon: "🌬️",
     accentColor: "#a855f7", // Purple-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chat",
     category: "Respiratoire",
     sources: [
@@ -655,11 +655,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "pneumonie",
     title: "Pneumonie",
-    version: "2024",
+    version: "V1.0",
     tags: ["poumon", "aspiration", "antibiotique", "toux"],
     icon: "🩺",
     accentColor: "#f87171", // Red-400
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Respiratoire",
     sources: [
@@ -669,11 +669,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "epanchement-pleural",
     title: "Épanchement Pleural",
-    version: "2024",
+    version: "V1.0",
     tags: ["thorax", "drainage", "liquide", "respiratoire"],
     icon: "💧",
     accentColor: "#0ea5e9", // Sky-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Respiratoire",
     sources: [
@@ -683,11 +683,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "oedeme-pulmonaire-nc",
     title: "Œdème Pulmonaire (NC)",
-    version: "2024",
+    version: "V1.0",
     tags: ["poumon", "electrocution", "noyade", "respiratoire"],
     icon: "⚡",
     accentColor: "#f59e0b", // Amber-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Respiratoire",
     sources: [
@@ -697,11 +697,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "toux-aigue",
     title: "Toux Aiguë (Antitussifs)",
-    version: "2024",
+    version: "V1.0",
     tags: ["toux", "sirop", "codeine", "tracheite"],
     icon: "🌬️",
     accentColor: "#64748b", // Slate-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Respiratoire",
     sources: [
@@ -711,11 +711,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "detresse-respi-chronique",
     title: "Détresse Respi Chronique (BPCO/Fibrose)",
-    version: "2024",
+    version: "V1.0",
     tags: ["fibrose", "westie", "sildenafil", "bpco"],
     icon: "🫁",
     accentColor: "#78716c", // Stone-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chien",
     category: "Respiratoire",
     sources: [
@@ -725,11 +725,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "boiterie-aigue",
     title: "Boiterie Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["os", "fracture", "panosteite", "douleur"],
     icon: "🦴",
     accentColor: "#f97316", // Orange-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma",
     sources: [
@@ -739,11 +739,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "fracture-fermee",
     title: "Fracture Fermée",
-    version: "2024",
+    version: "V1.0",
     tags: ["os", "immobilisation", "robert-jones", "trauma"],
     icon: "🦴",
     accentColor: "#3b82f6", // Blue-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma",
     sources: [
@@ -753,7 +753,7 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "plaie-morsure",
     title: "Plaie / Morsure",
-    version: "2024",
+    version: "V1.0",
     tags: ["peau", "infection", "drain", "lavage"],
     icon: "✂️",
     accentColor: "#ef4444", // Red-500
@@ -767,11 +767,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "brulure",
     title: "Brûlure",
-    version: "2024",
+    version: "V1.0",
     tags: ["peau", "feu", "chimique", "parkland"],
     icon: "🔥",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma",
     sources: [
@@ -781,11 +781,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "hernie-diaphragmatique",
     title: "Hernie Diaphragmatique",
-    version: "2024",
+    version: "V1.0",
     tags: ["respiratoire", "trauma", "chirurgie", "choc"],
     icon: "🫁",
     accentColor: "#7c3aed", // Violet-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma",
     sources: [
@@ -795,11 +795,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "abdomen-aigu-chirurgical",
     title: "Abdomen Aigu Chirurgical",
-    version: "2024",
+    version: "V1.0",
     tags: ["chirurgie", "peritonite", "sepsis", "uroabdomen"],
     icon: "🔪",
     accentColor: "#be123c", // Rose-700
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Trauma",
     sources: [
@@ -809,11 +809,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "syndrome-vestibulaire",
     title: "Syndrome Vestibulaire",
-    version: "2024",
+    version: "V1.0",
     tags: ["neurologie", "tete-penchee", "nystagmus", "cerenia"],
     icon: "🌀",
     accentColor: "#8b5cf6", // Violet-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Neurologie",
     sources: [
@@ -823,11 +823,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "paralysie-aigue",
     title: "Paralysie Aiguë (IVDD)",
-    version: "2024",
+    version: "V1.0",
     tags: ["hernie", "dos", "paralysie", "scanner"],
     icon: "♿",
     accentColor: "#a855f7", // Purple-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chien",
     category: "Neurologie",
     sources: [
@@ -837,11 +837,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "suspicion-compression-medullaire",
     title: "Compression Médullaire (Diag)",
-    version: "2024",
+    version: "V1.0",
     tags: ["neurologie", "localisation", "fce", "tumeur"],
     icon: "📍",
     accentColor: "#64748b", // Slate-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Neurologie",
     sources: [
@@ -851,11 +851,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "tremblements-myoclonies",
     title: "Tremblements / Intox",
-    version: "2024",
+    version: "V1.0",
     tags: ["permethrine", "metaldehyde", "tremblement", "lipides"],
     icon: "〰️",
     accentColor: "#16a34a", // Green-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Neurologie",
     sources: [
@@ -865,11 +865,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "intoxication-anticoagulants",
     title: "Anticoagulants (Rats)",
-    version: "2024",
+    version: "V1.0",
     tags: ["vitamine-k", "poison", "sang", "hemorragie"],
     icon: "🐀",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Toxico",
     sources: [
@@ -879,11 +879,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "intoxication-xylitol",
     title: "Intoxication Xylitol",
-    version: "2024",
+    version: "V1.0",
     tags: ["sucre", "hypoglycemie", "foie", "insuline"],
     icon: "🍬",
     accentColor: "#e11d48", // Rose-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chien",
     category: "Toxico",
     sources: [
@@ -893,11 +893,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "intoxication-ains",
     title: "Intoxication AINS (Ibuprofène)",
-    version: "2024",
+    version: "V1.0",
     tags: ["ibuprofene", "rein", "ulcere", "misoprostol"],
     icon: "💊",
     accentColor: "#f97316", // Orange-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Toxico",
     sources: [
@@ -907,11 +907,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "intoxication-paracetamol",
     title: "Paracétamol (Chat)",
-    version: "2024",
+    version: "V1.0",
     tags: ["chat", "anemie", "oedeme", "nac"],
     icon: "🐈",
     accentColor: "#000000", // Black/Dark
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "chat",
     category: "Toxico",
     sources: [
@@ -921,11 +921,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "desequilibres-electrolytiques",
     title: "Électrolytes (K+, Na+)",
-    version: "2024",
+    version: "V1.0",
     tags: ["potassium", "sodium", "perfusion", "calcul"],
     icon: "🧪",
     accentColor: "#eab308", // Yellow-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Perfusion",
     sources: [
@@ -935,11 +935,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "surveillance-perfusion",
     title: "Surveillance Perfusion",
-    version: "2024",
+    version: "V1.0",
     tags: ["nursing", "catheter", "surcharge", "pompe"],
     icon: "👁️",
     accentColor: "#3b82f6", // Blue-500
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Perfusion",
     sources: [
@@ -949,11 +949,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "metrite-post-partum",
     title: "Métrite Post-Partum",
-    version: "2024",
+    version: "V1.0",
     tags: ["reproduction", "sepsis", "chiot", "naissance"],
     icon: "🍼",
     accentColor: "#be185d", // Pink-700
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Reproduction",
     sources: [
@@ -963,11 +963,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "fievre-indeterminee",
     title: "Fièvre (FOI)",
-    version: "2024",
+    version: "V1.0",
     tags: ["hyperthermie", "infection", "diagnostic"],
     icon: "🌡️",
     accentColor: "#dc2626", // Red-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre", // ou Médecine Interne
     sources: [
@@ -977,11 +977,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "abces-cutane",
     title: "Abcès / Infection Peau",
-    version: "2024",
+    version: "V1.0",
     tags: ["plaie", "morsure", "chat", "pus"],
     icon: "🩹",
     accentColor: "#16a34a", // Green-600
-    accessLevel: "free",
+    accessLevel: "free", // Common enough to be free? Let's say free basically.
     species: "both",
     category: "Autre",
     sources: [
@@ -991,11 +991,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "insuffisance-hepatique-aigue",
     title: "Insuffisance Hépatique Aiguë",
-    version: "2024",
+    version: "V1.0",
     tags: ["foie", "ictere", "coagulation", "neuro"],
     icon: "☣️",
     accentColor: "#d97706", // Amber-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Metabolique", // ou Toxico
     sources: [
@@ -1005,11 +1005,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "douleur-chronique",
     title: "Douleur Chronique / Arthrose",
-    version: "2024",
+    version: "V1.0",
     tags: ["oa", "cancer", "palliative", "librela"],
     icon: "🦴",
     accentColor: "#4f46e5", // Indigo-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre",
     sources: [
@@ -1019,11 +1019,11 @@ export const PROTOCOLS: Protocol[] = [
   {
     slug: "soins-palliatifs",
     title: "Soins Palliatifs",
-    version: "2024",
+    version: "V1.0",
     tags: ["fin-vie", "euthanasie", "confort", "qol"],
     icon: "💜",
     accentColor: "#9333ea", // Purple-600
-    accessLevel: "free",
+    accessLevel: "premium",
     species: "both",
     category: "Autre",
     sources: [

@@ -153,16 +153,20 @@ const AVAILABLE_PROTOCOLS: Record<string, React.ComponentType> = {
     "soins-palliatifs": PalliativeCare,
 };
 
+import { ProtocolLockProvider } from "@/context/ProtocolLockContext";
+
 interface ProtocolClientPageProps {
     slug: string;
     protocol: Protocol | null;
     sections: ProtocolSection[];
     error?: string | null;
+    isLocked?: boolean;
 }
 
 export default function ProtocolClientPage({
     slug,
     protocol,
+    isLocked = false,
 }: ProtocolClientPageProps) {
     const router = useRouter();
     const ProtocolComponent = AVAILABLE_PROTOCOLS[slug];
@@ -186,6 +190,10 @@ export default function ProtocolClientPage({
         );
     }
 
-    // Render the specific component
-    return <ProtocolComponent />;
+    // Render the specific component wrapped in Lock Provider
+    return (
+        <ProtocolLockProvider isLocked={isLocked}>
+            <ProtocolComponent />
+        </ProtocolLockProvider>
+    );
 }

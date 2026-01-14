@@ -89,7 +89,7 @@ export default function TopMenu() {
   };
 
   return (
-    <div className="pointer-events-none fixed right-4 top-4 z-40 flex items-start gap-3 sm:right-6 sm:top-6">
+    <div className="pointer-events-none fixed right-4 top-4 z-50 flex items-start gap-3 sm:right-6 sm:top-6">
       <div ref={menuRef} className="pointer-events-auto">
         <button
           id={buttonId}

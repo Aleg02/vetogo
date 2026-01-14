@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { PROTOCOLS } from "@/data/protocols";
+import { useProtocolLock } from "@/context/ProtocolLockContext";
+import { ArrowLeft } from "lucide-react"; // Assuming Lucide is used, or replace with SVG
+import ContextEditorModal from "./ContextEditorModal"; // Assuming this exists or imports correct
 
 type Tab = "general" | "examens" | "traitements" | "liens";
 
@@ -14,6 +17,7 @@ interface ProtocolLayoutProps {
     title: string;
     children: (tab: Tab) => React.ReactNode;
     hasExamens?: boolean;
+    showDate?: boolean;
 }
 
 export const ProtocolLayout = ({ title, children, hasExamens = true }: ProtocolLayoutProps) => {
@@ -30,212 +34,164 @@ export const ProtocolLayout = ({ title, children, hasExamens = true }: ProtocolL
     // Tab state
     const [activeTab, setActiveTab] = useState<Tab>("traitements");
 
-    // Edit mode state for context
-    const [isEditing, setIsEditing] = useState(false);
-    const [localWeight, setLocalWeight] = useState(weightKg?.toString() || "");
+    // New state for header scroll
+    const [isScrolled, setIsScrolled] = useState(false);
 
-    const handleSaveContext = () => {
-        if (localWeight) setWeightKg(parseFloat(localWeight));
-        else setWeightKg(null);
-        setIsEditing(false);
-    };
+    // New state for context modal
+    const [isContextModalOpen, setIsContextModalOpen] = useState(false);
 
-    const allTabs: { id: Tab; label: string; icon: string; color: string }[] = [
-        { id: "general", label: "Général", icon: "📋", color: "text-blue-600" },
-        { id: "examens", label: "Examens", icon: "🩺", color: "text-purple-600" },
-        { id: "traitements", label: "Traitements", icon: "💉", color: "text-red-600" },
-        { id: "liens", label: "Liens", icon: "🔗", color: "text-slate-600" },
-    ];
+    // Soft Paywall Lock
+    const { isLocked } = useProtocolLock();
 
-    const tabs = allTabs.filter(t => t.id !== "examens" || hasExamens);
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col items-center font-sans text-slate-900">
-            <div className="w-full max-w-md bg-white min-h-screen shadow-2xl flex flex-col ring-1 ring-black/5">
+        <div className="min-h-screen bg-slate-50 pb-20 font-sans relative">
+            {/* Header Sticky */}
+            <header className={`sticky top-0 z-30 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-md shadow-sm pt-2 pb-2" : "bg-transparent pt-4 pb-0"}`}>
+                <div className="px-4 flex items-center gap-3">
+                    <Link href="/" className="p-2 -ml-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100/50">
+                        {/* Lucide ArrowLeft or SVG Fallback */}
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
+                    </Link>
+                    <h1 className={`font-bold text-slate-800 leading-tight transition-all ${isScrolled ? "text-lg" : "text-xl"}`}>
+                        {title}
+                    </h1>
+                </div>
 
-                {/* Sticky Glass Header */}
-                <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all duration-300">
-                    <div className="px-4 py-3 flex items-center justify-between">
-                        <button
-                            onClick={() => router.back()}
-                            className="p-2 -ml-2 text-slate-500 hover:text-slate-800 transition-colors rounded-full hover:bg-slate-100/50"
-                            aria-label="Retour"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
-                        </button>
-
-                        {/* LOGO ALWAYS VISIBLE */}
-                        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-                            <Link href="/">
-                                <Image
-                                    src="/vetogologo.png"
-                                    alt="VetoGo"
-                                    width={80}
-                                    height={24}
-                                    className="h-6 w-auto opacity-90 transition hover:opacity-100"
-                                />
-                            </Link>
-                        </div>
-
-                        <div className="w-8" /> {/* Spacer */}
-                    </div>
-
-                    {/* Protocol Title (Sub-header) */}
-                    <div className="px-5 pb-3">
-                        <h1 className="text-xl font-bold text-slate-800 leading-tight text-center">{title}</h1>
-                    </div>
-
-                    {/* Interactive Context Bar */}
-                    <div className="mx-4 mb-3">
-                        <AnimatePresence mode="wait">
-                            {!isEditing ? (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 10 }}
-                                    onClick={() => {
-                                        setLocalWeight(weightKg?.toString() || "");
-                                        setIsEditing(true);
-                                    }}
-                                    className="bg-slate-900 text-white rounded-2xl px-4 py-3 shadow-lg shadow-slate-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-between group"
-                                >
-                                    {/* Species Display */}
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-2xl pt-1">{species === "chat" ? "🐱" : "🐶"}</span>
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold group-hover:text-blue-300 transition-colors">Patient</span>
-                                            <span className="font-bold text-base capitalize">{species || "Sélectionner"}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Weight Display */}
-                                    <div className="flex items-center gap-3 text-right border-l border-white/10 pl-3">
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold group-hover:text-blue-300 transition-colors">Poids</span>
-                                            <span className="font-bold text-lg text-[#009EF0]">{weightKg ? `${weightKg} kg` : "--"}</span>
-                                        </div>
-                                        <span className="text-slate-500 text-xs">✏️</span>
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    className="bg-white border-2 border-[#009EF0] rounded-2xl p-4 shadow-xl"
-                                >
-                                    <div className="flex justify-between items-center mb-4">
-                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Modifier le contexte</span>
-                                        <button onClick={() => setIsEditing(false)} className="text-slate-400 hover:text-red-500 text-sm">Annuler</button>
-                                    </div>
-
-                                    <div className="flex gap-4 mb-4">
-                                        <button
-                                            onClick={() => setSpecies("chien")}
-                                            className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all ${species === 'chien' ? 'border-[#009EF0] bg-blue-50 text-blue-700' : 'border-slate-100 text-slate-400 hover:bg-slate-50'}`}
-                                        >
-                                            <span className="text-2xl mb-1">🐶</span>
-                                            <span className="text-xs font-bold">Chien</span>
-                                        </button>
-                                        <button
-                                            onClick={() => setSpecies("chat")}
-                                            className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all ${species === 'chat' ? 'border-[#009EF0] bg-blue-50 text-blue-700' : 'border-slate-100 text-slate-400 hover:bg-slate-50'}`}
-                                        >
-                                            <span className="text-2xl mb-1">🐱</span>
-                                            <span className="text-xs font-bold">Chat</span>
-                                        </button>
-                                    </div>
-
-                                    <div className="flex gap-2">
-                                        <div className="relative flex-1">
-                                            <input
-                                                type="number"
-                                                value={localWeight}
-                                                onChange={(e) => setLocalWeight(e.target.value)}
-                                                placeholder="Poids..."
-                                                className="w-full text-lg font-bold p-3 rounded-xl border border-slate-200 focus:border-[#009EF0] focus:ring-2 focus:ring-blue-100 outline-none text-center"
-                                                autoFocus
-                                            />
-                                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">kg</span>
-                                        </div>
-                                        <button
-                                            onClick={handleSaveContext}
-                                            className="bg-[#009EF0] text-white px-5 rounded-xl font-bold shadow-lg shadow-blue-200 hover:shadow-xl active:scale-95 transition-all"
-                                        >
-                                            OK
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Navigation Tabs */}
-                    <nav className="flex px-2 space-x-1 overflow-x-auto no-scrollbar scroll-smooth">
-                        {tabs.map((tab) => {
-                            const isActive = activeTab === tab.id;
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-300 relative ${isActive ? 'bg-white shadow-sm' : 'hover:bg-slate-100/50'}`}
-                                >
-                                    <span className={`text-xl mb-1 transition-transform duration-300 ${isActive ? 'scale-110' : 'grayscale opacity-60'}`}>{tab.icon}</span>
-                                    <span className={`text-[10px] font-bold uppercase tracking-wide ${isActive ? tab.color : 'text-slate-400'}`}>{tab.label}</span>
-                                    {isActive && (
-                                        <motion.div
-                                            layoutId="activeTabIndicator"
-                                            className={`absolute bottom-0 w-8 h-1 rounded-t-full ${tab.id === 'traitements' ? 'bg-red-500' : tab.id === 'general' ? 'bg-blue-500' : tab.id === 'examens' ? 'bg-purple-500' : 'bg-slate-500'}`}
-                                        />
+                {/* Patient Context Bar (Sticky under header) */}
+                <div className="px-4 mt-2">
+                    <div
+                        onClick={() => setIsContextModalOpen(true)}
+                        className="bg-white rounded-lg border border-slate-200 shadow-sm p-3 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all hover:border-blue-200 group"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl transition-colors ${species ? 'bg-[#e0f2fe] text-[#0284c7]' : 'bg-slate-100 text-slate-400'}`}>
+                                {species === "chien" && "🐶"}
+                                {species === "chat" && "🐱"}
+                                {!species && "?"}
+                            </div>
+                            <div>
+                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Patient</div>
+                                <div className="font-bold text-slate-700 leading-none">
+                                    {(species || weightKg) ? (
+                                        <span>
+                                            {species === "chien" ? "Chien" : species === "chat" ? "Chat" : "Espèce ?"}
+                                            <span className="mx-1.5 text-slate-300">|</span>
+                                            {weightKg ? `${weightKg} kg` : "Poids ?"}
+                                        </span>
+                                    ) : (
+                                        <span className="text-slate-400 italic font-medium">Toucher pour définir...</span>
                                     )}
-                                </button>
-                            );
-                        })}
-                    </nav>
-                </header>
-
-                {/* Scrollable Content */}
-                <main className="flex-1 overflow-y-auto bg-slate-50/50">
-                    <div className="p-4 safe-area-bottom pb-24">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeTab}
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -5 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                {children(activeTab)}
-
-                                {/* Automated "Voir aussi" / Related Protocols Section in Liens tab */}
-                                {activeTab === "liens" && relatedProtocols && relatedProtocols.length > 0 && (
-                                    <section className="mt-8 pt-8 border-t border-slate-200">
-                                        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                            🔍 Voir aussi
-                                        </h3>
-                                        <div className="grid gap-3">
-                                            {relatedProtocols.map((p) => p && (
-                                                <button
-                                                    key={p.slug}
-                                                    onClick={() => router.push(`/ protocols / ${p.slug} `)}
-                                                    className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all text-left group"
-                                                >
-                                                    <span className="text-2xl p-2 bg-slate-50 rounded-xl">{p.icon}</span>
-                                                    <div className="flex-1">
-                                                        <div className="font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{p.title}</div>
-                                                        <div className="text-xs text-slate-500 uppercase font-semibold">{p.category}</div>
-                                                    </div>
-                                                    <span className="text-slate-300 group-hover:text-blue-400">→</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </section>
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="text-blue-500 bg-blue-50 px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide group-hover:bg-blue-100 transition-colors">
+                            Modifier
+                        </div>
                     </div>
-                </main>
-            </div>
+                </div>
+
+                {/* Tabs (Sticky under context) */}
+                <div className="mt-4 border-b border-slate-200 px-4 flex gap-6 overflow-x-auto hide-scrollbar">
+                    {[
+                        { id: "general", label: "Général" },
+                        { id: "examens", label: "Examens" },
+                        { id: "traitements", label: "Traitements" },
+                        { id: "liens", label: "Liens" }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as Tab)}
+                            className={`pb-3 text-sm font-bold uppercase tracking-wide whitespace-nowrap transition-all border-b-2 ${activeTab === tab.id
+                                    ? "text-[#2CA9BC] border-[#2CA9BC]"
+                                    : "text-slate-400 border-transparent hover:text-slate-600"
+                                }`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+            </header>
+
+            {/* Context Editor Modal */}
+            <AnimatePresence>
+                {isContextModalOpen && (
+                    <ContextEditorModal
+                        isOpen={isContextModalOpen}
+                        onClose={() => setIsContextModalOpen(false)}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Content Area */}
+            <main className="px-4 pt-4 relative">
+                {/* Soft Paywall Overlay */}
+                {isLocked && (
+                    <div className="absolute inset-x-0 top-0 bottom-0 z-20 flex flex-col items-center pt-20 px-6 overflow-hidden">
+                        {/* Blur Gradient */}
+                        <div className="absolute inset-0 bg-white/60 backdrop-blur-[6px] transition-all duration-700" />
+
+                        {/* Lock Content */}
+                        <div className="relative z-30 w-full max-w-sm bg-white rounded-3xl shadow-2xl shadow-blue-900/10 p-8 border border-slate-100 text-center animate-fade-in-up">
+                            <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 shadow-sm transform -rotate-6">
+                                🔒
+                            </div>
+                            <h3 className="text-xl font-black text-slate-800 mb-2">
+                                Protocole Premium
+                            </h3>
+                            <p className="text-slate-500 mb-8 leading-relaxed">
+                                Accédez à ce protocole clinique complet et à plus de 70 fiches d'urgence avec VetoGo+.
+                            </p>
+
+                            <Link href="/subscribe" className="block w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg shadow-slate-900/20 transform transition active:scale-[0.98]">
+                                Débloquer VetoGo+
+                            </Link>
+
+                            <div className="mt-4 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                <span>Sans engagement</span>
+                                <span>•</span>
+                                <span>Annulable à tout moment</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Actual Content (Blurred if locked) */}
+                <div className={`transition-all duration-500 ${isLocked ? "filter blur-sm opacity-50 pointer-events-none select-none h-[80vh] overflow-hidden" : ""}`}>
+                    {children(activeTab)}
+
+                    {/* Related Protocols in Liens tab */}
+                    {activeTab === "liens" && relatedProtocols && relatedProtocols.length > 0 && (
+                        <section className="mt-8 pt-8 border-t border-slate-200">
+                            <h3 className="text-lg font-bold text-ink mb-4 flex items-center gap-2">
+                                🔍 Voir aussi
+                            </h3>
+                            <div className="grid gap-3">
+                                {relatedProtocols.map((p) => p && (
+                                    <button
+                                        key={p.slug}
+                                        onClick={() => router.push(`/protocols/${p.slug}`)}
+                                        className="flex items-center gap-3 p-4 rounded-lg bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-primary-light transition-all text-left group"
+                                    >
+                                        <div className="flex-1">
+                                            <div className="font-bold text-ink group-hover:text-primary transition-colors">{p.title}</div>
+                                            <div className="text-xs text-mute uppercase font-semibold">{p.category}</div>
+                                        </div>
+                                        <span className="text-slate-300 group-hover:text-primary">→</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </div>
+            </main>
         </div>
     );
 };

@@ -30,20 +30,7 @@ export const AcuteHemorrhage = () => {
     const isCat = species === "chat";
     const isSpeciesSelected = isDog || isCat;
 
-    // --- CALCULS ---
-
-    // 1. TRANEXAMIC ACID (Exacyl)
-    // 10-15 mg/kg IV lent (sur 15 min)
-    const txaDose = w > 0 ? (w * 10).toFixed(0) : "--"; // mg
-    const txaVol = w > 0 ? (w * 10 / 100).toFixed(2) : "--"; // ml (100 mg/ml)
-
-    // 2. BOLUS HYPOTENSEUR (Permissive Hypotension)
-    // Chien: 10 ml/kg - Chat: 5 ml/kg
-    const bolusFluid = w > 0 ? (w * (isDog ? 10 : 5)).toFixed(0) : "--";
-
-    // 3. TRANSFUSION SANG ROYAL (Sang Total)
-    // Formule rapide estimation : 10-20 ml/kg
-    const bloodTransfusion = w > 0 ? (w * 15).toFixed(0) : "--";
+    // --- CALCULS (Supprimés, gérés par DosageCard) ---
 
     return (
         <ProtocolLayout title="Hémorragie Aiguë (Choc Hémorragique)">
@@ -125,21 +112,23 @@ export const AcuteHemorrhage = () => {
                                 <div className="space-y-6">
                                     {/* TRANEXAMIC ACID */}
                                     <div>
-                                        <h4 className="font-bold text-purple-600 mb-2 flex items-center gap-2">
+                                        <h4 className="font-bold text-slate-700 mb-2 flex items-center gap-2">
                                             <Syringe size={20} /> Acide Tranexamique (Exacyl)
                                         </h4>
                                         <DosageCard
                                             title="TXA IV Lent"
-                                            value={txaDose}
-                                            unit="mg"
+                                            value="10-15"
+                                            unit="mg/kg"
+                                            dosageRange={[10, 15]}
+                                            concentration={100}
+                                            route="IV"
                                             subtitle={
                                                 <span>
-                                                    Vol (100mg/ml) : <strong>{txaVol} ml</strong>.
-                                                    <br />
-                                                    Sur 15 min. Efficace si donné dans les 3h post-trauma.
+                                                    Sur 15 min. Efficace si donné dans les 3h post-trauma (CRASH-2 Study).
                                                 </span>
                                             }
                                             color="purple"
+                                            intentionLabel="Hémostatique"
                                         />
                                     </div>
 
@@ -150,10 +139,13 @@ export const AcuteHemorrhage = () => {
                                         </h4>
                                         <DosageCard
                                             title="Bolus Cristalloïdes"
-                                            value={bolusFluid}
-                                            unit="ml"
+                                            value={isDog ? "10" : "5"}
+                                            unit="ml/kg"
+                                            dosage={isDog ? 10 : 5}
+                                            route="IV"
                                             subtitle="Objectif PAS 80-90 mmHg. Ne pas viser une normotension totale avant chirurgie."
                                             color="blue"
+                                            intentionLabel="1ère Intention"
                                         />
                                     </div>
                                 </div>
@@ -171,9 +163,11 @@ export const AcuteHemorrhage = () => {
                                     <h4 className="font-bold text-red-600 mb-2">Sang Total / Culot (Estimation)</h4>
                                     <DosageCard
                                         title="Volume à Transfuser"
-                                        value={bloodTransfusion}
-                                        unit="ml"
-                                        subtitle="10-20 ml/kg. Débit lent (0.5 ml/kg) les 15 premières min (Réaction ?)."
+                                        value="10-20"
+                                        unit="ml/kg"
+                                        dosageRange={[10, 20]}
+                                        route="IV"
+                                        subtitle="Débit lent (0.5 ml/kg) les 15 premières min (Réaction ?)."
                                         color="red"
                                     />
                                 </div>

@@ -19,10 +19,14 @@ export const metadata: Metadata = {
 // Remplace createServerComponentClient(...)
 async function getInitialSession(): Promise<Session | null> {
   const supabase = await createServerSupabaseClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  return session;
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    return session;
+  } catch (error) {
+    return null;
+  }
 }
 
 export default async function RootLayout({
