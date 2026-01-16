@@ -18,7 +18,7 @@ const CATEGORIES = [
 export const CategoryGrid = () => {
     return (
         <div className="grid grid-cols-3 gap-3 p-4">
-            {CATEGORIES.slice(0, 9).map((cat) => (
+            {CATEGORIES.slice(0, 6).map((cat) => (
                 <Link
                     key={cat.slug}
                     href={`/?category=${cat.slug}`} // Assuming homepage filtering or search page

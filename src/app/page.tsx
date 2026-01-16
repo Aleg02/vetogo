@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "@supabase/auth-helpers-react";
@@ -12,6 +13,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { fetchCardsList } from "@/lib/cardsClient";
 import { useUserEntitlements } from "@/hooks/useUserEntitlements";
 
+import { Search, Calculator } from "lucide-react";
 import SearchBar from "@/components/SearchBar";
 import ProtocolCard from "@/components/ProtocolCard";
 import Disclaimer from "@/components/Disclaimer";
@@ -270,6 +272,25 @@ export default function HomePage() {
               {!searchMode && (
                 <div className="mt-2">
                   <CategoryGrid />
+
+                  {/* Dose Calculator Entry */}
+                  <div className="p-4 pt-0">
+                    <Link
+                      href="/dose-calculator"
+                      className="flex items-center gap-4 rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-md transition-all hover:bg-slate-50 hover:border-blue-300 hover:shadow-lg active:scale-95 group"
+                    >
+                      <div className="relative h-16 w-16 flex-none rounded-xl overflow-hidden shadow-inner border border-slate-100 group-hover:scale-105 transition-transform bg-blue-50 flex items-center justify-center">
+                        <Calculator className="h-12 w-12 text-[#009EF0]" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg text-slate-900 leading-tight">Calculateur de dose</h3>
+                        <p className="text-sm font-medium text-slate-500 mt-0.5">Calcul automatique des posologies</p>
+                      </div>
+                      <div className="ml-auto text-blue-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
