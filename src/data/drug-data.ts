@@ -475,6 +475,30 @@ export const DRUG_DATA: DrugData = {
                     }
                 },
                 {
+                    "id": "buprenorphine",
+                    "name": "Buprénorphine",
+                    "concentration_label": "0,3 mg/mL (ou 0,6 mg/mL)",
+                    "concentration_mg_ml": 0.3,
+                    "is_high_alert": true,
+                    "routes": ["IV (Lent)", "IM", "SC", "Buccale (chat)"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.02,
+                            "range_mg_kg": [0.01, 0.02],
+                            "frequency": "q4-8h"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.02,
+                            "range_mg_kg": [0.01, 0.02],
+                            "frequency": "q4-8h",
+                            "note": "Voie buccale possible chez le chat. Adapter le volume si concentration à 0,6 mg/mL."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Effet plafond : l’analgésie n’augmente pas au-delà d’un certain seuil. Peut antagoniser les opioïdes purs."
+                    }
+                },
+                {
                     "id": "morphine",
                     "name": "Morphine",
                     "concentration_label": "10 mg/mL",
