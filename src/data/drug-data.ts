@@ -475,6 +475,28 @@ export const DRUG_DATA: DrugData = {
                     }
                 },
                 {
+                    "id": "butorphanol",
+                    "name": "Butorphanol (Torbugesic)",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": false,
+                    "routes": ["IV", "IM", "SC"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.2,
+                            "range_mg_kg": [0.2, 0.4],
+                            "frequency": "q2-4h",
+                            "note": "Analgésie/sédation légère"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.2,
+                            "range_mg_kg": [0.2, 0.4],
+                            "frequency": "q2-4h",
+                            "note": "Analgésie/sédation légère"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Durée d'action courte. Excitation/dysphorie possible chez le chat."
                     "id": "buprenorphine",
                     "name": "Buprénorphine",
                     "concentration_label": "0,3 mg/mL (ou 0,6 mg/mL)",
