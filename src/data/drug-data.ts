@@ -58,6 +58,8 @@ export interface DrugItem {
     is_high_alert: boolean;
     routes: string[];
     dosage: DrugDosage;
+    recommendation_type?: string;
+    source_level?: string;
     safety_guardrails?: SafetyGuardrails;
 }
 
@@ -1178,6 +1180,165 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "IV risque anaphylaxie sévère -> utiliser SC."
+                    }
+                }
+            ]
+        },
+        {
+            "category_name": "NOUVEAUX MÉDICAMENTS",
+            "items": [
+                {
+                    "id": "amiodarone",
+                    "name": "Amiodarone",
+                    "concentration_label": "50 mg/mL",
+                    "concentration_mg_ml": 50,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 5.0,
+                            "frequency": "Bolus IV lent"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "warning_msg": "Surveillance ECG requise (hypotension/arythmies possibles)."
+                    }
+                },
+                {
+                    "id": "esmolol",
+                    "name": "Esmolol",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent", "IV CRI"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 0.5,
+                            "frequency": "Bolus 1 min puis CRI 0,1–0,3 mg/kg/min"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "warning_msg": "Contre-indiqué si insuffisance cardiaque congestive ou bloc AV."
+                    }
+                },
+                {
+                    "id": "alfaxalone",
+                    "name": "Alfaxalone",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV", "IM"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "Induction IV titrée"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 3.0,
+                            "range_mg_kg": [2.0, 5.0],
+                            "frequency": "Induction IV titrée"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "VASG – Alfaxalone",
+                    "safety_guardrails": {
+                        "note": "Sédation IM (chat) 5–10 mg/kg avec association opioïde/benzodiazépine."
+                    }
+                },
+                {
+                    "id": "etomidate",
+                    "name": "Etomidate",
+                    "concentration_label": "2 mg/mL",
+                    "concentration_mg_ml": 2,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "Bolus IV lent"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "AAHA – Protocoles d’induction IV",
+                    "safety_guardrails": {
+                        "warning_msg": "Suppression surrénalienne transitoire : éviter en sepsis sévère."
+                    }
+                },
+                {
+                    "id": "buprenorphine",
+                    "name": "Buprénorphine",
+                    "concentration_label": "0,3 mg/mL (0,6 mg/mL possible)",
+                    "concentration_mg_ml": 0.3,
+                    "is_high_alert": false,
+                    "routes": ["IV", "IM", "SC", "Sublinguale"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.01,
+                            "range_mg_kg": [0.005, 0.02]
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.01,
+                            "range_mg_kg": [0.005, 0.01],
+                            "note": "Buccal : 0,02 mg/kg q4–8h"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "note": "Effet plafond respiratoire, efficacité prolongée chez le chat."
+                    }
+                },
+                {
+                    "id": "butorphanol",
+                    "name": "Butorphanol",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": false,
+                    "routes": ["IV", "IM", "SC"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.2,
+                            "range_mg_kg": [0.2, 0.5]
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.1,
+                            "range_mg_kg": [0.1, 0.4]
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "note": "Analgésie courte, sédation légère."
+                    }
+                },
+                {
+                    "id": "pimobendan",
+                    "name": "Pimobendan",
+                    "concentration_label": "Comprimés 1,25 / 2,5 / 5 mg",
+                    "concentration_mg_ml": 1,
+                    "is_high_alert": false,
+                    "routes": ["PO"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.25,
+                            "range_mg_kg": [0.25, 0.3],
+                            "frequency": "q12h"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.25,
+                            "frequency": "q12h (hors AMM)"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "note": "Calculer la dose totale en mg et ajuster au comprimé (volume non applicable)."
                     }
                 }
             ]
