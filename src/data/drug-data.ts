@@ -302,6 +302,7 @@ export const DRUG_DATA: DrugData = {
                         }
                     }
                 },
+
                 {
                     "id": "sodium_bicarb",
                     "name": "Bicarbonate de Sodium 8.4%",
@@ -339,7 +340,7 @@ export const DRUG_DATA: DrugData = {
                         }
                     },
                     "safety_guardrails": {
-                        "warning_msg": "⛔️ NÉCROSE SÉVÈRE si périvasculaire. CVC recommandé.",
+                        "warning_msg": "⛔️ RISQUE EXTRAVASATION: NÉCROSE SÉVÈRE si périvasculaire. CVC recommandé.",
                         "dilution_hint": "Ne pas mélanger avec Bicarb."
                     }
                 }
@@ -424,6 +425,30 @@ export const DRUG_DATA: DrugData = {
                     "safety_guardrails": {
                         "warning_msg": "⛔️ TOXICITÉ RÉNALE CHAT si répété. Bien hydrater.",
                         "contraindications": ["Insuff rénale/hépatique", "Corticoïdes", "Choc"]
+                    }
+                },
+                {
+                    "id": "robenacoxib",
+                    "name": "Robénacoxib (Onsior)",
+                    "concentration_label": "Comprimés (6/10/20/40mg)",
+                    "concentration_mg_ml": 1,
+                    "is_high_alert": false,
+                    "routes": ["PO"],
+                    "dosage": {
+                        "feline": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 2.4],
+                            "frequency": "q24h",
+                            "note": "Comprimés non sécables. Arrondir au comprimé entier."
+                        },
+                        "canine": {
+                            "dose_mg_kg": 2.0,
+                            "frequency": "q24h",
+                            "note": "Anti-inflammatoire COX-2 sélectif."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "note": "Le volume affiché correspond aux mg (Conc=1). À convertir en comprimés."
                     }
                 }
             ]
@@ -519,6 +544,25 @@ export const DRUG_DATA: DrugData = {
                     "safety_guardrails": {
                         "note": "Effet plafond. Moins efficace pour douleur très sévère (fémur, thorax)."
                     }
+                },
+                {
+                    "id": "butorphanol",
+                    "name": "Butorphanol",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV", "IM", "SC"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 0.3,
+                            "range_mg_kg": [0.2, 0.4],
+                            "frequency": "q2-4h",
+                            "note": "Agoniste-antagoniste. Sédation douce / Antitussif."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Durée d'action courte. Moins efficace pour douleur viscèrale sévère."
+                    }
                 }
             ]
         },
@@ -608,6 +652,26 @@ export const DRUG_DATA: DrugData = {
                     "safety_guardrails": {
                         "warning_msg": "Apnée fréquente si injection rapide.",
                         "contraindications": ["Pas de conservateur: jeter après 6-24h"]
+                    }
+                },
+                {
+                    "id": "alfaxalone",
+                    "name": "Alfaxalone (Alfaxan)",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV STRICT"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [2.0, 3.0],
+                            "frequency": "Induction (Titrer)",
+                            "note": "Injection lente sur 60 secondes."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Apnée sévère si injection rapide.",
+                        "note": "Jeter 28j après ouverture."
                     }
                 },
                 {
@@ -837,6 +901,7 @@ export const DRUG_DATA: DrugData = {
                         }
                     },
                     "safety_guardrails": {
+                        "warning_msg": "⛔️ RISQUE EXTRAVASATION (NÉCROSE) si non dilué.",
                         "dilution_hint": "TOUJOURS DILUER 1:1 (min) pour faire du 25% ou 1:4 pour du 10%. Nécrotique pur.",
                         "min_volume_ml": null
                     }
@@ -1043,7 +1108,7 @@ export const DRUG_DATA: DrugData = {
                         }
                     },
                     "safety_guardrails": {
-                        "warning_msg": "Extravasation = Nécrose. Cathéter central recommandé.",
+                        "warning_msg": "⛔️ RISQUE EXTRAVASATION (NÉCROSE). Voie centrale recommandée.",
                         "dilution_hint": "Calculer débit pour seringue 50ml."
                     }
                 },
@@ -1214,6 +1279,42 @@ export const DRUG_DATA: DrugData = {
                     }
                 },
                 {
+                    "id": "amoxicillin_po",
+                    "name": "Amoxicilline (PO)",
+                    "concentration_label": "Suspension / Comprimés",
+                    "concentration_mg_ml": 50,
+                    "is_high_alert": false,
+                    "routes": ["PO"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 12.5,
+                            "range_mg_kg": [10.0, 20.0],
+                            "frequency": "q12h (BID)"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Bien vérifier la concentration de la suspension (ex: 50mg/mL vs 100mg/mL)."
+                    }
+                },
+                {
+                    "id": "amox_clav_po",
+                    "name": "Amox-Clav (PO)",
+                    "concentration_label": "Suspension / Comprimés",
+                    "concentration_mg_ml": 50,
+                    "is_high_alert": false,
+                    "routes": ["PO"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 12.5,
+                            "range_mg_kg": [12.5, 20.0],
+                            "frequency": "q12h (BID)"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Allergie Pénicilline. Vérifier concentration suspension."
+                    }
+                },
+                {
                     "id": "cefazolin",
                     "name": "Céfazoline",
                     "concentration_label": "Reconstitué",
@@ -1245,6 +1346,25 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "dilution_hint": "IV: Diluer au 1/3 minimum et injecter sur 30 min (risque convulsif si rapide)"
+                    }
+                },
+                {
+                    "id": "marbofloxacin",
+                    "name": "Marbofloxacine (Marbocyl)",
+                    "concentration_label": "Variable (Tabs)",
+                    "concentration_mg_ml": 1,
+                    "is_high_alert": false,
+                    "routes": ["PO"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [2.0, 4.0],
+                            "frequency": "q24h"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "note": "Concentration fixée à 1 pour obtenir la dose en mg. Adapter selon comprimés.",
+                        "contraindications": ["Jeunes animaux (cartilage)"]
                     }
                 },
                 {

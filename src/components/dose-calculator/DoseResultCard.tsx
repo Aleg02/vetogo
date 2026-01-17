@@ -11,6 +11,8 @@ interface DoseResultCardProps {
     onRemove: () => void;
 }
 
+const highRiskUnits = ["UI", "mEq", "mmol"];
+
 export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCardProps) {
     const [isExpanded, setIsExpanded] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
@@ -167,7 +169,7 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                         </button>
 
                         {/* Alerts */}
-                        {(showMinVolWarning || showMaxDoseWarning || drug.safety_guardrails?.warning_msg) && (
+                        {(showMinVolWarning || showMaxDoseWarning || drug.safety_guardrails?.warning_msg || highRiskUnits.includes(drug.unit_type || "") || drug.concentration_label?.toLowerCase().includes("variable")) && (
                             <div className="flex flex-col gap-2 animate-in slide-in-from-top-1">
                                 {showMaxDoseWarning && (
                                     <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
@@ -181,9 +183,31 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                                         <span>⚠️ Volume très faible ({formattedVolume.replace('.', ',')} mL). Risque d'erreur. Dilution recommandée. {drug.safety_guardrails?.dilution_hint}</span>
                                     </div>
                                 )}
+                                {drug.concentration_label?.toLowerCase().includes("variable") && (
+                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200">
+                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100 text-amber-700" />
+                                        <span>⚠️ Concentration variable. Vérifiez votre flacon ({drug.concentration_label}).</span>
+                                    </div>
+                                )}
+                                {highRiskUnits.includes(drug.unit_type || "") && (
+                                    <div className="flex items-start gap-2 text-xs font-bold text-red-600 bg-red-50 p-2 rounded-lg border border-red-100">
+                                        <AlertTriangle className="h-4 w-4 flex-none fill-red-100 text-red-600" />
+                                        <span>⚠️ Attention : Unité en {drug.unit_type}. Ne pas confondre avec mL !</span>
+                                    </div>
+                                )}
                                 {drug.safety_guardrails?.warning_msg && (
-                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
-                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
+                                    <div className={`flex items-start gap-2 text-xs font-bold ${(drug.safety_guardrails.warning_msg.toUpperCase().includes("EXTRAVASATION") ||
+                                        drug.safety_guardrails.warning_msg.toUpperCase().includes("NÉCROSE") ||
+                                        drug.safety_guardrails.warning_msg.toUpperCase().includes("MORTEL"))
+                                        ? "text-red-600 bg-red-50 p-2 rounded-lg border border-red-100"
+                                        : "text-amber-600"
+                                        }`}>
+                                        <AlertTriangle className={`h-4 w-4 flex-none ${(drug.safety_guardrails.warning_msg.toUpperCase().includes("EXTRAVASATION") ||
+                                            drug.safety_guardrails.warning_msg.toUpperCase().includes("NÉCROSE") ||
+                                            drug.safety_guardrails.warning_msg.toUpperCase().includes("MORTEL"))
+                                            ? "fill-red-100 text-red-600"
+                                            : "fill-amber-100"
+                                            }`} />
                                         <span>{drug.safety_guardrails.warning_msg}</span>
                                     </div>
                                 )}
