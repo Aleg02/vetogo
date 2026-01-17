@@ -528,6 +528,25 @@ export const DRUG_DATA: DrugData = {
                     }
                 },
                 {
+                    "id": "etomidate",
+                    "name": "Etomidate",
+                    "concentration_label": "2 mg/mL",
+                    "concentration_mg_ml": 2,
+                    "is_high_alert": true,
+                    "routes": ["IV (Lent)"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "IV lente",
+                            "note": "Induction/sédation brève."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Suppression surrénalienne; éviter sepsis."
+                    }
+                },
+                {
                     "id": "ketamine",
                     "name": "Kétamine",
                     "concentration_label": "100 mg/mL",
