@@ -121,6 +121,20 @@ with upsert as (
       ),
       jsonb_build_object('summary', 'Correction par paliers avec surveillance rapprochée.'),
       true
+    ),
+    (
+      'etomidate',
+      'etomidate',
+      'Etomidate',
+      'V1.0',
+      array['pratique-clinique-courante','guideline'],
+      '💉',
+      '#14b8a6',
+      jsonb_build_array(
+        jsonb_build_object('label', 'Guideline – Induction/sédation pédiatrique')
+      ),
+      jsonb_build_object('summary', 'Induction rapide : 1–3 mg/kg IV lente (2 mg/mL).', 'cta', 'Surveiller respiration et TA'),
+      false
     )
   on conflict (slug) do update set
     protocol = excluded.protocol,
@@ -210,6 +224,25 @@ from (
     ('Évaluation initiale', jsonb_build_object('bullets', jsonb_build_array('Glycémie capillaire immédiate', 'Recherche signe neuro', 'Accès veineux ou IO')), 0),
     ('Bolus rapide', jsonb_build_object('bullets', jsonb_build_array('Glucose 10% : 2 ml/kg IV lent', 'Contrôle glycémie 5 min', 'Préparer perfusion continue')), 1),
     ('Stabilisation', jsonb_build_object('bullets', jsonb_build_array('Perf 10% à 5-8 mg/kg/min', 'Apport per os dès que possible', 'Investiguer cause métabolique')), 2)
+  ) as rows(title, content, position)
+) as data;
+
+-- Etomidate sections
+with card_ref as (
+  select id from public.cards where slug = 'etomidate'
+)
+delete from public.card_sections where card_id = (select id from card_ref);
+
+insert into public.card_sections (card_id, title, content, position)
+select card_id, title, content, position
+from (
+  select
+    (select id from public.cards where slug = 'etomidate') as card_id,
+    *
+  from (values
+    ('Posologie', jsonb_build_object('bullets', jsonb_build_array('1–3 mg/kg IV lente', 'Concentration : 2 mg/mL')), 0),
+    ('Préparation & administration', jsonb_build_object('bullets', jsonb_build_array('Injection IV lente et titrée à l’effet', 'Surveiller FR, SpO₂, TA')), 1),
+    ('Alerte', jsonb_build_object('bullets', jsonb_build_array('Suppression surrénalienne', 'Éviter en cas de sepsis')), 2)
   ) as rows(title, content, position)
 ) as data;
 
