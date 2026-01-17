@@ -521,6 +521,30 @@ export const DRUG_DATA: DrugData = {
                     }
                 },
                 {
+                    "id": "alfaxalone",
+                    "name": "Alfaxalone",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV", "IM (Chat)"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 2.5,
+                            "range_mg_kg": [1.5, 3.0],
+                            "frequency": "Titrer à effet"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "Titrer à effet",
+                            "note": "Voie IM possible chez le chat (dose IM souvent 3-5 mg/kg)."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Risque d'hypoventilation/apnée : monitorer FR/SpO₂ et ventiler si besoin."
+                    }
+                },
+                {
                     "id": "midazolam",
                     "name": "Midazolam",
                     "concentration_label": "5 mg/mL",
