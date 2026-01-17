@@ -47,6 +47,13 @@ export interface SafetyGuardrails {
     note?: string;
     contraindications?: string[];
     min_volume_ml?: number | null;
+    blocking_alerts?: string[];
+}
+
+export interface UnitMetadata {
+    unit_nature: string;
+    compatible_concentration_units: string[];
+    note?: string;
 }
 
 export interface DrugItem {
@@ -58,6 +65,7 @@ export interface DrugItem {
     concentration_warning?: string;
     requires_concentration_confirmation?: boolean;
     unit_type?: string;
+    unit_metadata?: UnitMetadata;
     is_high_alert: boolean;
     routes: string[];
     dosage: DrugDosage;
@@ -294,6 +302,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "20 UI/mL",
                     "concentration_mg_ml": 20,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV", "IO"],
                     "dosage": {
@@ -310,6 +322,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "1 mEq/mL (8.4%)",
                     "concentration_mg_ml": 84,
                     "unit_type": "mEq",
+                    "unit_metadata": {
+                        "unit_nature": "Équivalent ionique",
+                        "compatible_concentration_units": ["mEq"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV LENT"],
                     "dosage": {
@@ -341,12 +357,14 @@ export const DRUG_DATA: DrugData = {
                         "canine": {
                             "dose_mg_kg": 4.0,
                             "range_mg_kg": [1.0, 6.0],
-                            "note": "Dose TOTALE max par session"
+                            "note": "Dose TOTALE max par session",
+                            "max_dose_mg_kg": 4.0
                         },
                         "feline": {
                             "dose_mg_kg": 2.0,
                             "range_mg_kg": [1.0, 3.0],
-                            "note": "Dose TOTALE max par session (Toxique!)"
+                            "note": "Dose TOTALE max par session (Toxique!)",
+                            "max_dose_mg_kg": 2.0
                         }
                     },
                     "safety_guardrails": {
@@ -365,17 +383,20 @@ export const DRUG_DATA: DrugData = {
                         "canine": {
                             "dose_mg_kg": 1.5,
                             "range_mg_kg": [1.0, 2.0],
-                            "note": "Dose Max Absolue"
+                            "note": "Dose Max Absolue",
+                            "max_dose_mg_kg": 1.5
                         },
                         "feline": {
                             "dose_mg_kg": 1.0,
                             "range_mg_kg": [0.5, 1.0],
-                            "note": "Dose Max Absolue (Cardiotoxique)"
+                            "note": "Dose Max Absolue (Cardiotoxique)",
+                            "max_dose_mg_kg": 1.0
                         }
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ MORTEL EN IV (Arrêt cardiaque réfractaire). Toujours aspirer avant d'injecter.",
-                        "contraindications": ["Injection IV"]
+                        "contraindications": ["Injection IV"],
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : injection IV de bupivacaïne."]
                     }
                 }
             ]
@@ -719,6 +740,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "3 mmol/mL (Phos)",
                     "concentration_mg_ml": 425,
                     "unit_type": "mmol",
+                    "unit_metadata": {
+                        "unit_nature": "Quantité de matière",
+                        "compatible_concentration_units": ["mmol"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV CRI SEULEMENT"],
                     "dosage": {
@@ -731,7 +756,8 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ JAMAIS EN BOLUS. Risque d'hypocalcémie sévère et hypotension.",
-                        "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!"
+                        "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!",
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : bolus IV de phosphate de potassium."]
                     }
                 },
                 {
@@ -760,6 +786,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "100 UI/mL",
                     "concentration_mg_ml": 100,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV", "IM"],
                     "dosage": {
@@ -781,6 +811,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "2 mEq/mL (15%)",
                     "concentration_mg_ml": 150,
                     "unit_type": "mEq",
+                    "unit_metadata": {
+                        "unit_nature": "Équivalent ionique",
+                        "compatible_concentration_units": ["mEq"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV DILUÉ"],
                     "dosage": {
@@ -792,7 +826,8 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ JAMAIS EN BOLUS. MORTEL.",
-                        "dilution_hint": "Doit être mélangé dans poche de fluide."
+                        "dilution_hint": "Doit être mélangé dans poche de fluide.",
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : bolus IV de KCl."]
                     }
                 }
             ]
@@ -806,6 +841,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "10 UI/mL",
                     "concentration_mg_ml": 10,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IM", "SC", "IV (Micro-doses)"],
                     "dosage": {
