@@ -1,7 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { DrugItem, Species, DosageDetail } from "@/data/drug-data"; // Fixed Import
+import { DrugItem } from "@/data/drug-data"; // Fixed Import
+import {
+    formatPerKgUnit,
+    normalizeUnitLabel,
+    validateUnitCompatibility,
+} from "@/lib/units";
 import { ChevronDown, ChevronUp, AlertTriangle, Info, Syringe, Trash2 } from "lucide-react";
 
 interface DoseResultCardProps {
@@ -56,8 +61,19 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
             // Let's rely on logic: volume = totalAmount / concentration
             // The data file maps unit-based drugs concentration_mg_ml to their unit value (e.g. 100 UI/ml -> 100)
             vol = totalAmount / drug.concentration_mg_ml;
-            formula = `Vol = (${weight} kg × ${doseVal} ${dosageRule.unit || 'U'}/kg) / ${drug.concentration_mg_ml} ${drug.unit_type || 'mg'}/mL`;
-            unit = dosageRule.unit || "U";
+            const doseUnit = normalizeUnitLabel(dosageRule.unit || drug.unit_type || "U");
+            const concentrationUnit = normalizeUnitLabel(drug.unit_type || "mg");
+            const unitValidationError = validateUnitCompatibility(
+                doseUnit,
+                concentrationUnit
+            );
+            if (unitValidationError) {
+                return {
+                    error: unitValidationError,
+                };
+            }
+            formula = `Vol = (${weight} kg × ${doseVal} ${formatPerKgUnit(doseUnit)}) / ${drug.concentration_mg_ml} ${concentrationUnit}/mL`;
+            unit = doseUnit;
         }
         // CASE C: Dose defined in ml/kg directly (e.g. blood products)
         else if (dosageRule.dose_ml_kg) {
@@ -72,15 +88,19 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
             totalDose: doseVal * weight,
             volume: vol,
             unit: unit,
-            formula
+            formula,
         };
 
     }, [dosageRule, weight, drug]);
 
-    if (!calculation || !dosageRule) {
+    if (!calculation || !dosageRule || "error" in calculation) {
+        const errorMessage =
+            calculation && "error" in calculation
+                ? calculation.error
+                : "Erreur de données pour ce médicament.";
         return (
             <div className="rounded-2xl border border-red-200 bg-red-50 p-4 mb-4 mx-auto max-w-lg">
-                <p className="text-red-600 font-bold">Erreur de données pour ce médicament.</p>
+                <p className="text-red-600 font-bold">{errorMessage}</p>
             </div>
         );
     }
@@ -101,7 +121,8 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
             : calculation.totalDose.toFixed(2);
 
 
-    const doseUnitDisplay = calculation.unit === "ml" ? "mL" : calculation.unit;
+    const doseUnitDisplay = calculation.unit === "ml" ? "mL" : normalizeUnitLabel(calculation.unit);
+    const dosePerKgUnit = formatPerKgUnit(doseUnitDisplay);
 
 
     return (
@@ -136,7 +157,7 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                         <div className="space-y-3 mb-5">
                             <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
                                 <span className="text-slate-500 font-medium">Dose</span>
-                                <span className="font-bold text-slate-900">{calculation.dosePerKg.toString().replace('.', ',')} {doseUnitDisplay}/{calculation.unit === "ml" ? "kg" : "kg"}</span>
+                                <span className="font-bold text-slate-900">{calculation.dosePerKg.toString().replace('.', ',')} {dosePerKgUnit}</span>
                             </div>
                             <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
                                 <span className="text-slate-500 font-medium">Dose calculée</span>

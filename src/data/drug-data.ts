@@ -49,12 +49,19 @@ export interface SafetyGuardrails {
     min_volume_ml?: number | null;
 }
 
+export interface UnitMetadata {
+    unit_nature: string;
+    compatible_concentration_units: string[];
+    note?: string;
+}
+
 export interface DrugItem {
     id: string;
     name: string;
     concentration_label: string;
     concentration_mg_ml: number;
     unit_type?: string;
+    unit_metadata?: UnitMetadata;
     is_high_alert: boolean;
     routes: string[];
     dosage: DrugDosage;
@@ -291,6 +298,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "20 UI/mL",
                     "concentration_mg_ml": 20,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV", "IO"],
                     "dosage": {
@@ -307,6 +318,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "1 mEq/mL (8.4%)",
                     "concentration_mg_ml": 84,
                     "unit_type": "mEq",
+                    "unit_metadata": {
+                        "unit_nature": "Équivalent ionique",
+                        "compatible_concentration_units": ["mEq"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV LENT"],
                     "dosage": {
@@ -716,6 +731,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "3 mmol/mL (Phos)",
                     "concentration_mg_ml": 425,
                     "unit_type": "mmol",
+                    "unit_metadata": {
+                        "unit_nature": "Quantité de matière",
+                        "compatible_concentration_units": ["mmol"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV CRI SEULEMENT"],
                     "dosage": {
@@ -757,6 +776,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "100 UI/mL",
                     "concentration_mg_ml": 100,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV", "IM"],
                     "dosage": {
@@ -778,6 +801,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "2 mEq/mL (15%)",
                     "concentration_mg_ml": 150,
                     "unit_type": "mEq",
+                    "unit_metadata": {
+                        "unit_nature": "Équivalent ionique",
+                        "compatible_concentration_units": ["mEq"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV DILUÉ"],
                     "dosage": {
@@ -803,6 +830,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "10 UI/mL",
                     "concentration_mg_ml": 10,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IM", "SC", "IV (Micro-doses)"],
                     "dosage": {
