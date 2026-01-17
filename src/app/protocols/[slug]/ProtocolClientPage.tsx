@@ -13,6 +13,7 @@ import { Polytrauma } from "@/components/protocols/Polytrauma";
 import { Intoxication } from "@/components/protocols/Intoxication";
 import { HeatStroke } from "@/components/protocols/HeatStroke";
 import { CongestiveHeartFailure } from "@/components/protocols/CongestiveHeartFailure";
+import { Esmolol } from "@/components/protocols/Esmolol";
 import { CPR } from "@/components/protocols/CPR";
 import { Vomiting } from "@/components/protocols/Vomiting";
 import { Diarrhea } from "@/components/protocols/Diarrhea";
@@ -88,6 +89,7 @@ const AVAILABLE_PROTOCOLS: Record<string, React.ComponentType> = {
     "intoxication": Intoxication,
     "coup-de-chaleur": HeatStroke,
     "insuffisance-cardiaque": CongestiveHeartFailure,
+    "esmolol": Esmolol,
     "arret-cardio-respiratoire": CPR,
     "vomissements": Vomiting,
     "diarrhee": Diarrhea,

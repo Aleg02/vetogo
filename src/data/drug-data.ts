@@ -47,6 +47,13 @@ export interface SafetyGuardrails {
     note?: string;
     contraindications?: string[];
     min_volume_ml?: number | null;
+    blocking_alerts?: string[];
+}
+
+export interface UnitMetadata {
+    unit_nature: string;
+    compatible_concentration_units: string[];
+    note?: string;
 }
 
 export interface DrugItem {
@@ -54,11 +61,19 @@ export interface DrugItem {
     name: string;
     concentration_label: string;
     concentration_mg_ml: number;
+    usual_concentrations?: string[];
+    concentration_warning?: string;
+    requires_concentration_confirmation?: boolean;
     unit_type?: string;
+    unit_metadata?: UnitMetadata;
     is_high_alert: boolean;
     routes: string[];
     dosage: DrugDosage;
+    recommendation_type?: string;
+    source_level?: string;
     safety_guardrails?: SafetyGuardrails;
+    source_tag?: string;
+    recommendation_tag?: string;
 }
 
 export interface DrugCategory {
@@ -286,11 +301,36 @@ export const DRUG_DATA: DrugData = {
                     }
                 },
                 {
+                    "id": "amiodarone",
+                    "name": "Amiodarone",
+                    "concentration_label": "50 mg/mL (dilution requise)",
+                    "concentration_mg_ml": 50,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 5.0,
+                            "frequency": "Dose unique / répétition selon ECG",
+                            "instruction": "IV lente"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Surveillance ECG continue recommandée pendant l'administration.",
+                        "dilution_hint": "Dilution requise avant injection IV lente."
+                    },
+                    "source_tag": "guideline",
+                    "recommendation_tag": "pratique clinique courante"
+                },
+                {
                     "id": "vasopressin",
                     "name": "Vasopressine",
                     "concentration_label": "20 UI/mL",
                     "concentration_mg_ml": 20,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV", "IO"],
                     "dosage": {
@@ -307,6 +347,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "1 mEq/mL (8.4%)",
                     "concentration_mg_ml": 84,
                     "unit_type": "mEq",
+                    "unit_metadata": {
+                        "unit_nature": "Équivalent ionique",
+                        "compatible_concentration_units": ["mEq"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV LENT"],
                     "dosage": {
@@ -338,12 +382,14 @@ export const DRUG_DATA: DrugData = {
                         "canine": {
                             "dose_mg_kg": 4.0,
                             "range_mg_kg": [1.0, 6.0],
-                            "note": "Dose TOTALE max par session"
+                            "note": "Dose TOTALE max par session",
+                            "max_dose_mg_kg": 4.0
                         },
                         "feline": {
                             "dose_mg_kg": 2.0,
                             "range_mg_kg": [1.0, 3.0],
-                            "note": "Dose TOTALE max par session (Toxique!)"
+                            "note": "Dose TOTALE max par session (Toxique!)",
+                            "max_dose_mg_kg": 2.0
                         }
                     },
                     "safety_guardrails": {
@@ -362,17 +408,20 @@ export const DRUG_DATA: DrugData = {
                         "canine": {
                             "dose_mg_kg": 1.5,
                             "range_mg_kg": [1.0, 2.0],
-                            "note": "Dose Max Absolue"
+                            "note": "Dose Max Absolue",
+                            "max_dose_mg_kg": 1.5
                         },
                         "feline": {
                             "dose_mg_kg": 1.0,
                             "range_mg_kg": [0.5, 1.0],
-                            "note": "Dose Max Absolue (Cardiotoxique)"
+                            "note": "Dose Max Absolue (Cardiotoxique)",
+                            "max_dose_mg_kg": 1.0
                         }
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ MORTEL EN IV (Arrêt cardiaque réfractaire). Toujours aspirer avant d'injecter.",
-                        "contraindications": ["Injection IV"]
+                        "contraindications": ["Injection IV"],
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : injection IV de bupivacaïne."]
                     }
                 }
             ]
@@ -448,6 +497,27 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "Durée d'action courte. Excitation/dysphorie possible chez le chat."
+                    "id": "buprenorphine",
+                    "name": "Buprénorphine",
+                    "concentration_label": "0,3 mg/mL (ou 0,6 mg/mL)",
+                    "concentration_mg_ml": 0.3,
+                    "is_high_alert": true,
+                    "routes": ["IV (Lent)", "IM", "SC", "Buccale (chat)"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.02,
+                            "range_mg_kg": [0.01, 0.02],
+                            "frequency": "q4-8h"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.02,
+                            "range_mg_kg": [0.01, 0.02],
+                            "frequency": "q4-8h",
+                            "note": "Voie buccale possible chez le chat. Adapter le volume si concentration à 0,6 mg/mL."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Effet plafond : l’analgésie n’augmente pas au-delà d’un certain seuil. Peut antagoniser les opioïdes purs."
                     }
                 },
                 {
@@ -504,6 +574,25 @@ export const DRUG_DATA: DrugData = {
                     }
                 },
                 {
+                    "id": "etomidate",
+                    "name": "Etomidate",
+                    "concentration_label": "2 mg/mL",
+                    "concentration_mg_ml": 2,
+                    "is_high_alert": true,
+                    "routes": ["IV (Lent)"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "IV lente",
+                            "note": "Induction/sédation brève."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Suppression surrénalienne; éviter sepsis."
+                    }
+                },
+                {
                     "id": "ketamine",
                     "name": "Kétamine",
                     "concentration_label": "100 mg/mL",
@@ -543,6 +632,30 @@ export const DRUG_DATA: DrugData = {
                     "safety_guardrails": {
                         "warning_msg": "Apnée fréquente si injection rapide.",
                         "contraindications": ["Pas de conservateur: jeter après 6-24h"]
+                    }
+                },
+                {
+                    "id": "alfaxalone",
+                    "name": "Alfaxalone",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV", "IM (Chat)"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 2.5,
+                            "range_mg_kg": [1.5, 3.0],
+                            "frequency": "Titrer à effet"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "Titrer à effet",
+                            "note": "Voie IM possible chez le chat (dose IM souvent 3-5 mg/kg)."
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Risque d'hypoventilation/apnée : monitorer FR/SpO₂ et ventiler si besoin."
                     }
                 },
                 {
@@ -741,6 +854,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "3 mmol/mL (Phos)",
                     "concentration_mg_ml": 425,
                     "unit_type": "mmol",
+                    "unit_metadata": {
+                        "unit_nature": "Quantité de matière",
+                        "compatible_concentration_units": ["mmol"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV CRI SEULEMENT"],
                     "dosage": {
@@ -753,7 +870,8 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ JAMAIS EN BOLUS. Risque d'hypocalcémie sévère et hypotension.",
-                        "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!"
+                        "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!",
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : bolus IV de phosphate de potassium."]
                     }
                 },
                 {
@@ -782,6 +900,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "100 UI/mL",
                     "concentration_mg_ml": 100,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV", "IM"],
                     "dosage": {
@@ -803,6 +925,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "2 mEq/mL (15%)",
                     "concentration_mg_ml": 150,
                     "unit_type": "mEq",
+                    "unit_metadata": {
+                        "unit_nature": "Équivalent ionique",
+                        "compatible_concentration_units": ["mEq"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IV DILUÉ"],
                     "dosage": {
@@ -814,7 +940,8 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ JAMAIS EN BOLUS. MORTEL.",
-                        "dilution_hint": "Doit être mélangé dans poche de fluide."
+                        "dilution_hint": "Doit être mélangé dans poche de fluide.",
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : bolus IV de KCl."]
                     }
                 }
             ]
@@ -828,6 +955,10 @@ export const DRUG_DATA: DrugData = {
                     "concentration_label": "10 UI/mL",
                     "concentration_mg_ml": 10,
                     "unit_type": "UI",
+                    "unit_metadata": {
+                        "unit_nature": "Unité internationale",
+                        "compatible_concentration_units": ["UI"]
+                    },
                     "is_high_alert": true,
                     "routes": ["IM", "SC", "IV (Micro-doses)"],
                     "dosage": {
@@ -899,7 +1030,7 @@ export const DRUG_DATA: DrugData = {
                         }
                     },
                     "safety_guardrails": {
-                        "dilution_hint": "Diluer 1:9 (10mg/ml) pour injection IV (irritant)"
+                        "dilution_hint": "Diluer 1:9 (10 mg/mL) pour injection IV (irritant)"
                     }
                 },
                 {
@@ -1102,8 +1233,10 @@ export const DRUG_DATA: DrugData = {
                 {
                     "id": "ampicillin",
                     "name": "Ampicilline",
-                    "concentration_label": "Reconstitué (ex: 100mg/ml)",
+                    "concentration_label": "Reconstitué (ex: 100 mg/mL)",
                     "concentration_mg_ml": 100,
+                    "usual_concentrations": ["100 mg/mL", "62,5 mg/mL"],
+                    "concentration_warning": "Vérifier notice produit.",
                     "is_high_alert": false,
                     "routes": ["IV", "IM"],
                     "dosage": {
@@ -1115,8 +1248,10 @@ export const DRUG_DATA: DrugData = {
                 {
                     "id": "amoxicillin_clav",
                     "name": "Amox-Clav (Augmentin)",
-                    "concentration_label": "Reconstitué (ex: 100mg/ml)",
+                    "concentration_label": "Reconstitué (ex: 100 mg/mL)",
                     "concentration_mg_ml": 100,
+                    "usual_concentrations": ["100 mg/mL", "62,5 mg/mL"],
+                    "concentration_warning": "Vérifier notice produit.",
                     "is_high_alert": false,
                     "routes": ["IV"],
                     "dosage": {
@@ -1128,8 +1263,10 @@ export const DRUG_DATA: DrugData = {
                 {
                     "id": "cefazolin",
                     "name": "Céfazoline",
-                    "concentration_label": "Reconstitué",
+                    "concentration_label": "Reconstitué (ex: 100 mg/mL)",
                     "concentration_mg_ml": 100,
+                    "usual_concentrations": ["100 mg/mL", "62,5 mg/mL"],
+                    "concentration_warning": "Vérifier notice produit.",
                     "is_high_alert": false,
                     "routes": ["IV", "IM"],
                     "dosage": {
@@ -1203,6 +1340,165 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "IV risque anaphylaxie sévère -> utiliser SC."
+                    }
+                }
+            ]
+        },
+        {
+            "category_name": "NOUVEAUX MÉDICAMENTS",
+            "items": [
+                {
+                    "id": "amiodarone",
+                    "name": "Amiodarone",
+                    "concentration_label": "50 mg/mL",
+                    "concentration_mg_ml": 50,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 5.0,
+                            "frequency": "Bolus IV lent"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "warning_msg": "Surveillance ECG requise (hypotension/arythmies possibles)."
+                    }
+                },
+                {
+                    "id": "esmolol",
+                    "name": "Esmolol",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent", "IV CRI"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 0.5,
+                            "frequency": "Bolus 1 min puis CRI 0,1–0,3 mg/kg/min"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "warning_msg": "Contre-indiqué si insuffisance cardiaque congestive ou bloc AV."
+                    }
+                },
+                {
+                    "id": "alfaxalone",
+                    "name": "Alfaxalone",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": true,
+                    "routes": ["IV", "IM"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "Induction IV titrée"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 3.0,
+                            "range_mg_kg": [2.0, 5.0],
+                            "frequency": "Induction IV titrée"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "VASG – Alfaxalone",
+                    "safety_guardrails": {
+                        "note": "Sédation IM (chat) 5–10 mg/kg avec association opioïde/benzodiazépine."
+                    }
+                },
+                {
+                    "id": "etomidate",
+                    "name": "Etomidate",
+                    "concentration_label": "2 mg/mL",
+                    "concentration_mg_ml": 2,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 2.0,
+                            "range_mg_kg": [1.0, 3.0],
+                            "frequency": "Bolus IV lent"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "AAHA – Protocoles d’induction IV",
+                    "safety_guardrails": {
+                        "warning_msg": "Suppression surrénalienne transitoire : éviter en sepsis sévère."
+                    }
+                },
+                {
+                    "id": "buprenorphine",
+                    "name": "Buprénorphine",
+                    "concentration_label": "0,3 mg/mL (0,6 mg/mL possible)",
+                    "concentration_mg_ml": 0.3,
+                    "is_high_alert": false,
+                    "routes": ["IV", "IM", "SC", "Sublinguale"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.01,
+                            "range_mg_kg": [0.005, 0.02]
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.01,
+                            "range_mg_kg": [0.005, 0.01],
+                            "note": "Buccal : 0,02 mg/kg q4–8h"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "note": "Effet plafond respiratoire, efficacité prolongée chez le chat."
+                    }
+                },
+                {
+                    "id": "butorphanol",
+                    "name": "Butorphanol",
+                    "concentration_label": "10 mg/mL",
+                    "concentration_mg_ml": 10,
+                    "is_high_alert": false,
+                    "routes": ["IV", "IM", "SC"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.2,
+                            "range_mg_kg": [0.2, 0.5]
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.1,
+                            "range_mg_kg": [0.1, 0.4]
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "note": "Analgésie courte, sédation légère."
+                    }
+                },
+                {
+                    "id": "pimobendan",
+                    "name": "Pimobendan",
+                    "concentration_label": "Comprimés 1,25 / 2,5 / 5 mg",
+                    "concentration_mg_ml": 1,
+                    "is_high_alert": false,
+                    "routes": ["PO"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.25,
+                            "range_mg_kg": [0.25, 0.3],
+                            "frequency": "q12h"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.25,
+                            "frequency": "q12h (hors AMM)"
+                        }
+                    },
+                    "recommendation_type": "Recommandation clinique",
+                    "source_level": "Merck Veterinary Manual",
+                    "safety_guardrails": {
+                        "note": "Calculer la dose totale en mg et ajuster au comprimé (volume non applicable)."
                     }
                 }
             ]
