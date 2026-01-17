@@ -59,6 +59,8 @@ export interface DrugItem {
     routes: string[];
     dosage: DrugDosage;
     safety_guardrails?: SafetyGuardrails;
+    source_tag?: string;
+    recommendation_tag?: string;
 }
 
 export interface DrugCategory {
@@ -284,6 +286,27 @@ export const DRUG_DATA: DrugData = {
                     "safety_guardrails": {
                         "contraindications": ["Glaucome", "Tachycardie", "Iléus"]
                     }
+                },
+                {
+                    "id": "amiodarone",
+                    "name": "Amiodarone",
+                    "concentration_label": "50 mg/mL (dilution requise)",
+                    "concentration_mg_ml": 50,
+                    "is_high_alert": true,
+                    "routes": ["IV Lent"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 5.0,
+                            "frequency": "Dose unique / répétition selon ECG",
+                            "instruction": "IV lente"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Surveillance ECG continue recommandée pendant l'administration.",
+                        "dilution_hint": "Dilution requise avant injection IV lente."
+                    },
+                    "source_tag": "guideline",
+                    "recommendation_tag": "pratique clinique courante"
                 },
                 {
                     "id": "vasopressin",
