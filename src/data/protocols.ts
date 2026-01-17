@@ -163,6 +163,22 @@ export const PROTOCOLS: Protocol[] = [
     ],
   },
   {
+    slug: "esmolol",
+    title: "Esmolol",
+    version: "V1.0",
+    tags: ["cardio", "arythmie", "tsv"],
+    icon: "💓",
+    accentColor: "#2563eb", // Blue-600
+    accessLevel: "free",
+    species: "both",
+    category: "Cardio",
+    sources: [
+      { label: "Références locales", type: "protocol" },
+    ],
+    keywords: ["tachycardie", "supraventriculaire", "beta-bloquant"],
+    relatedProtocols: ["insuffisance-cardiaque"],
+  },
+  {
     slug: "arret-cardio-respiratoire",
     title: "Arrêt Cardio-Respiratoire (RCP)",
     version: "V1.0",
