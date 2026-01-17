@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DrugItem, Species, DosageDetail } from "@/data/drug-data"; // Fixed Import
 import { ChevronDown, ChevronUp, AlertTriangle, Info, Syringe, Trash2 } from "lucide-react";
 
@@ -14,6 +14,7 @@ interface DoseResultCardProps {
 export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCardProps) {
     const [isExpanded, setIsExpanded] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
+    const [isConfirmed, setIsConfirmed] = useState(false);
 
     // Logic to determine the correct dosage rule
     const dosageRule = useMemo(() => {
@@ -87,7 +88,17 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
 
     // Warnings
     const showMinVolWarning = calculation.volume < 0.1;
-    const showMaxDoseWarning = dosageRule.max_dose_mg_kg && (calculation.dosePerKg > dosageRule.max_dose_mg_kg);
+    const showMaxDoseWarning = dosageRule.max_dose_mg_kg !== undefined && dosageRule.max_dose_mg_kg !== null
+        ? calculation.dosePerKg >= dosageRule.max_dose_mg_kg
+        : false;
+    const blockingAlerts = drug.safety_guardrails?.blocking_alerts ?? [];
+    const requiresConfirmation = showMinVolWarning || showMaxDoseWarning;
+
+    useEffect(() => {
+        if (requiresConfirmation) {
+            setIsConfirmed(false);
+        }
+    }, [requiresConfirmation, calculation.volume, calculation.dosePerKg]);
 
     // Formatting
     const formattedVolume = calculation.volume < 1
@@ -167,24 +178,51 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                         </button>
 
                         {/* Alerts */}
-                        {(showMinVolWarning || showMaxDoseWarning || drug.safety_guardrails?.warning_msg) && (
-                            <div className="flex flex-col gap-2 animate-in slide-in-from-top-1">
+                        {(showMinVolWarning || showMaxDoseWarning || drug.safety_guardrails?.warning_msg || blockingAlerts.length > 0 || requiresConfirmation) && (
+                            <div className="flex flex-col gap-3 animate-in slide-in-from-top-1">
+                                <div className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                                    Alertes cliniques critiques
+                                </div>
+                                {blockingAlerts.map((alert) => (
+                                    <div key={alert} className="flex items-start gap-2 text-xs font-bold text-red-600">
+                                        <AlertTriangle className="h-4 w-4 flex-none fill-red-100" />
+                                        <span>{alert}</span>
+                                    </div>
+                                ))}
                                 {showMaxDoseWarning && (
                                     <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
                                         <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
-                                        <span>Dose max : {dosageRule.max_dose_mg_kg} mg</span>
+                                        <span>Dose max absolue atteinte ({dosageRule.max_dose_mg_kg} mg/kg).</span>
                                     </div>
                                 )}
                                 {showMinVolWarning && (
                                     <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
                                         <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
-                                        <span> Volume très faible ({formattedVolume.replace('.', ',')} mL). Pensez à diluer. {drug.safety_guardrails?.dilution_hint}</span>
+                                        <span>Volume très faible ({formattedVolume.replace('.', ',')} mL). Pensez à diluer. {drug.safety_guardrails?.dilution_hint}</span>
                                     </div>
                                 )}
                                 {drug.safety_guardrails?.warning_msg && (
                                     <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
                                         <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
                                         <span>{drug.safety_guardrails.warning_msg}</span>
+                                    </div>
+                                )}
+                                {requiresConfirmation && (
+                                    <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                                        <p className="font-bold">Confirmation utilisateur requise</p>
+                                        <p className="mt-1">
+                                            Valider explicitement avant administration (volume &lt; 0,1 mL ou dose max absolue atteinte).
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsConfirmed(true)}
+                                            disabled={isConfirmed}
+                                            className={`mt-2 inline-flex items-center rounded-md px-3 py-1 text-xs font-bold text-white transition-colors ${
+                                                isConfirmed ? "bg-emerald-600" : "bg-amber-600 hover:bg-amber-700"
+                                            }`}
+                                        >
+                                            {isConfirmed ? "Confirmation enregistrée" : "Je confirme"}
+                                        </button>
                                     </div>
                                 )}
                             </div>
