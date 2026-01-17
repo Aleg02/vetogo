@@ -497,6 +497,9 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "Durée d'action courte. Excitation/dysphorie possible chez le chat."
+                    }
+                },
+                {
                     "id": "buprenorphine",
                     "name": "Buprénorphine",
                     "concentration_label": "0,3 mg/mL (ou 0,6 mg/mL)",

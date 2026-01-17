@@ -1,15 +1,13 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
-import { DrugItem, Species, DosageDetail } from "@/data/drug-data"; // Fixed Import
-import { useMemo, useState } from "react";
-import { DrugItem } from "@/data/drug-data"; // Fixed Import
+import { useEffect, useMemo, useState } from "react";
+import { DrugItem } from "@/data/drug-data";
 import {
     formatPerKgUnit,
     normalizeUnitLabel,
     validateUnitCompatibility,
 } from "@/lib/units";
-import { ChevronDown, ChevronUp, AlertTriangle, Info, Syringe, Trash2 } from "lucide-react";
+import { AlertTriangle, ChevronDown, Info, Syringe, Trash2 } from "lucide-react";
 
 interface DoseResultCardProps {
     drug: DrugItem;
@@ -18,26 +16,22 @@ interface DoseResultCardProps {
     onRemove: () => void;
 }
 
-type VariantSpecies = "canine" | "feline" | "both";
+type Calculation = {
+    dosePerKg: number;
+    totalDose: number;
+    volume: number | null;
+    unit: string;
+    formula: string;
+};
 
-interface DosageVariant {
-    key: string;
-    detail: DosageDetail;
-    species: VariantSpecies;
-    label: string;
-}
-
-const formatNumber = (value: number, decimals = 2) => {
-    if (Number.isInteger(value)) {
-        return value.toString();
-    }
-
-    return value.toFixed(decimals).replace(".", ",");
+type CalculationError = {
+    error: string;
 };
 
 export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCardProps) {
     const [isExpanded, setIsExpanded] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
+    const [isConfirmed, setIsConfirmed] = useState(false);
     const requiresConcentrationConfirmation = useMemo(() => {
         if (drug.requires_concentration_confirmation !== undefined) {
             return drug.requires_concentration_confirmation;
@@ -49,66 +43,31 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
     useEffect(() => {
         setHasConfirmedConcentration(!requiresConcentrationConfirmation);
     }, [requiresConcentrationConfirmation, drug.id]);
-    const [openDetails, setOpenDetails] = useState<Record<string, boolean>>({});
 
-    const activeSpeciesKey = species === "chat" ? "feline" : "canine";
     const activeSpeciesLabel = species === "chat" ? "Chat" : "Chien";
 
-    const dosageVariants = useMemo(() => {
-        const variants = Object.entries(drug.dosage)
-            .map(([key, detail]) => {
-                if (!detail) return null;
+    const dosageRule = useMemo(() => {
+        const speciesKey = species === "chat" ? "feline" : "canine";
 
-                let variantSpecies: VariantSpecies = "both";
+        const speciesRule = drug.dosage[speciesKey];
+        if (speciesRule) return speciesRule;
 
-                if (key === "canine") variantSpecies = "canine";
-                if (key === "feline") variantSpecies = "feline";
+        if (drug.dosage.common) return drug.dosage.common;
 
-                const labelParts = [] as string[];
+        return null;
+    }, [drug, species]);
 
-                if (detail.condition) {
-                    labelParts.push(`Indication: ${detail.condition}`);
-                }
+    const calculation = useMemo<Calculation | CalculationError | null>(() => {
+        if (!dosageRule) return null;
 
-                if (detail.route) {
-                    labelParts.push(`Route: ${detail.route}`);
-                }
-
-                const label = labelParts.length > 0
-                    ? labelParts.join(" • ")
-                    : key === "common"
-                        ? "Posologie standard"
-                        : key.replace(/_/g, " ");
-
-                return {
-                    key,
-                    detail,
-                    species: variantSpecies,
-                    label,
-                } satisfies DosageVariant;
-            })
-            .filter(Boolean) as DosageVariant[];
-
-        return variants.sort((a, b) => {
-            const score = (variant: DosageVariant) => {
-                if (variant.species === activeSpeciesKey) return 0;
-                if (variant.species === "both") return 1;
-                return 2;
-            };
-
-            return score(a) - score(b);
-        });
-    }, [drug.dosage, activeSpeciesKey]);
-
-    const buildCalculation = (detail: DosageDetail) => {
         let doseVal = 0;
         let unit = "mg";
         let vol: number | null = 0;
         let formula = "";
         const canComputeVolume = !requiresConcentrationConfirmation || hasConfirmedConcentration;
 
-        if (detail.dose_mg_kg) {
-            doseVal = detail.dose_mg_kg;
+        if (dosageRule.dose_mg_kg) {
+            doseVal = dosageRule.dose_mg_kg;
             const totalDose = doseVal * weight;
             if (canComputeVolume) {
                 vol = totalDose / drug.concentration_mg_ml;
@@ -117,34 +76,27 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                 vol = null;
             }
             unit = "mg";
-        } else if (detail.dose_amount_kg) {
-            doseVal = detail.dose_amount_kg;
+        } else if (dosageRule.dose_amount_kg) {
+            doseVal = dosageRule.dose_amount_kg;
             const totalAmount = doseVal * weight;
-            // We assume concentration_mg_ml holds the unit concentration if unit_type is set
-            // But looking at data, concentration_mg_ml might be in other units.
-            // Let's rely on logic: volume = totalAmount / concentration
-            // The data file maps unit-based drugs concentration_mg_ml to their unit value (e.g. 100 UI/ml -> 100)
+            const doseUnit = normalizeUnitLabel(dosageRule.unit || drug.unit_type || "U");
+            const concentrationUnit = normalizeUnitLabel(drug.unit_type || "mg");
+            const unitValidationError = validateUnitCompatibility(doseUnit, concentrationUnit);
+            if (unitValidationError) {
+                return { error: unitValidationError };
+            }
             if (canComputeVolume) {
                 vol = totalAmount / drug.concentration_mg_ml;
-                formula = `Vol = (${weight} kg × ${doseVal} ${dosageRule.unit || 'U'}/kg) / ${drug.concentration_mg_ml} ${drug.unit_type || 'mg'}/mL`;
+                formula = `Vol = (${weight} kg × ${doseVal} ${formatPerKgUnit(doseUnit)}) / ${drug.concentration_mg_ml} ${concentrationUnit}/mL`;
             } else {
                 vol = null;
             }
-            unit = dosageRule.unit || "U";
-            vol = totalAmount / drug.concentration_mg_ml;
-            const doseUnit = normalizeUnitLabel(dosageRule.unit || drug.unit_type || "U");
-            const concentrationUnit = normalizeUnitLabel(drug.unit_type || "mg");
-            const unitValidationError = validateUnitCompatibility(
-                doseUnit,
-                concentrationUnit
-            );
-            if (unitValidationError) {
-                return {
-                    error: unitValidationError,
-                };
-            }
-            formula = `Vol = (${weight} kg × ${doseVal} ${formatPerKgUnit(doseUnit)}) / ${drug.concentration_mg_ml} ${concentrationUnit}/mL`;
             unit = doseUnit;
+        } else if (dosageRule.dose_ml_kg) {
+            vol = dosageRule.dose_ml_kg * weight;
+            formula = `Vol = ${weight} kg × ${dosageRule.dose_ml_kg} mL/kg`;
+            unit = "ml";
+            doseVal = dosageRule.dose_ml_kg;
         }
 
         if (!doseVal) {
@@ -155,43 +107,10 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
             dosePerKg: doseVal,
             totalDose: doseVal * weight,
             volume: vol,
-            unit: unit,
+            unit,
             formula,
         };
-    };
-
-    const renderRange = (detail: DosageDetail, variantSpecies: VariantSpecies) => {
-        if (!detail.range_mg_kg && !detail.range_ml_kg && !detail.range) {
-            return null;
-        }
-
-        const prefix = variantSpecies === "canine"
-            ? "Chien: "
-            : variantSpecies === "feline"
-                ? "Chat: "
-                : "";
-
-        if (detail.range_mg_kg) {
-            return {
-                min: `${prefix}${formatNumber(detail.range_mg_kg[0])} mg/kg`,
-                max: `${prefix}${formatNumber(detail.range_mg_kg[1])} mg/kg`,
-            };
-        }
-
-        if (detail.range_ml_kg) {
-            return {
-                min: `${prefix}${formatNumber(detail.range_ml_kg[0])} mL/kg`,
-                max: `${prefix}${formatNumber(detail.range_ml_kg[1])} mL/kg`,
-            };
-        }
-
-        if (detail.range) {
-            const unitLabel = detail.unit || "";
-            return {
-                min: `${prefix}${formatNumber(detail.range[0])} ${unitLabel}`.trim(),
-                max: `${prefix}${formatNumber(detail.range[1])} ${unitLabel}`.trim(),
-            };
-        }
+    }, [dosageRule, weight, drug, requiresConcentrationConfirmation, hasConfirmedConcentration]);
 
     if (!calculation || !dosageRule || "error" in calculation) {
         const errorMessage =
@@ -205,10 +124,8 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
         );
     }
 
-    // Warnings
-    const showMinVolWarning = calculation.volume !== null && calculation.volume < 0.1;
-    const showMaxDoseWarning = dosageRule.max_dose_mg_kg && (calculation.dosePerKg > dosageRule.max_dose_mg_kg);
-    const showMinVolWarning = calculation.volume < 0.1;
+    const minVolumeThreshold = drug.safety_guardrails?.min_volume_ml ?? 0.1;
+    const showMinVolWarning = calculation.volume !== null && calculation.volume < minVolumeThreshold;
     const showMaxDoseWarning = dosageRule.max_dose_mg_kg !== undefined && dosageRule.max_dose_mg_kg !== null
         ? calculation.dosePerKg >= dosageRule.max_dose_mg_kg
         : false;
@@ -221,7 +138,6 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
         }
     }, [requiresConfirmation, calculation.volume, calculation.dosePerKg]);
 
-    // Formatting
     const formattedVolume = calculation.volume !== null
         ? calculation.volume < 1
             ? calculation.volume.toFixed(2)
@@ -229,15 +145,15 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
         : "--";
 
     const formattedTotalDose = calculation.unit === "ml"
-        ? calculation.volume.toFixed(1) // for ml/kg drugs, total dose is volume
+        ? calculation.volume !== null
+            ? calculation.volume.toFixed(1)
+            : "--"
         : calculation.totalDose < 0.01
             ? calculation.totalDose.toFixed(4)
             : calculation.totalDose.toFixed(2);
 
-
     const doseUnitDisplay = calculation.unit === "ml" ? "mL" : normalizeUnitLabel(calculation.unit);
     const dosePerKgUnit = formatPerKgUnit(doseUnitDisplay);
-
 
     return (
         <div className="overflow-hidden rounded-2xl border border-slate-200 border-l-4 border-l-[#009EF0] bg-white shadow-sm mb-4 mx-auto max-w-lg transition-all animate-in fade-in zoom-in-95 group">
@@ -271,15 +187,14 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
             {isExpanded && (
                 <div className="animate-in slide-in-from-top-2 duration-200">
                     <div className="p-5 pt-4">
-
                         <div className="space-y-3 mb-5">
                             <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
                                 <span className="text-slate-500 font-medium">Dose</span>
-                                <span className="font-bold text-slate-900">{calculation.dosePerKg.toString().replace('.', ',')} {dosePerKgUnit}</span>
+                                <span className="font-bold text-slate-900">{calculation.dosePerKg.toString().replace(".", ",")} {dosePerKgUnit}</span>
                             </div>
                             <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
                                 <span className="text-slate-500 font-medium">Dose calculée</span>
-                                <span className="font-bold text-slate-900">{formattedTotalDose.replace('.', ',')} {doseUnitDisplay}</span>
+                                <span className="font-bold text-slate-900">{formattedTotalDose.replace(".", ",")} {doseUnitDisplay}</span>
                             </div>
                             <div className="flex justify-between items-center text-sm pb-1">
                                 <span className="text-slate-500 font-medium">Concentration</span>
@@ -327,7 +242,7 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                                 </p>
                             ) : (
                                 <p className="text-4xl font-extrabold text-[#003B5C] tracking-tight">
-                                    {formattedVolume.replace('.', ',')} <span className="text-xl font-bold text-[#006090]/70 ml-0.5">ml</span>
+                                    {formattedVolume.replace(".", ",")} <span className="text-xl font-bold text-[#006090]/70 ml-0.5">ml</span>
                                 </p>
                             )}
                         </div>
@@ -340,7 +255,6 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                             Voir le détail du calcul
                         </button>
 
-                        {/* Alerts */}
                         {(showMinVolWarning || showMaxDoseWarning || drug.safety_guardrails?.warning_msg || blockingAlerts.length > 0 || requiresConfirmation) && (
                             <div className="flex flex-col gap-3 animate-in slide-in-from-top-1">
                                 <div className="text-xs font-bold uppercase tracking-wide text-slate-400">
@@ -352,56 +266,29 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                                         <span>{alert}</span>
                                     </div>
                                 ))}
-                                {showMaxDoseWarning && (
+                                {showMaxDoseWarning && dosageRule.max_dose_mg_kg !== null && dosageRule.max_dose_mg_kg !== undefined && (
                                     <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
                                         <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
                                         <span>Dose max absolue atteinte ({dosageRule.max_dose_mg_kg} mg/kg).</span>
                                     </div>
-                                );
-                            }
-
-                            if (!calculation) {
-                                return (
-                                    <div key={variant.key} className="rounded-xl border border-red-200 bg-red-50 p-4">
-                                        <p className="text-red-600 font-bold">Erreur de données pour cette posologie.</p>
+                                )}
+                                {showMinVolWarning && (
+                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
+                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
+                                        <span>Volume très faible ({formattedVolume.replace(".", ",")} mL). Pensez à diluer. {drug.safety_guardrails?.dilution_hint}</span>
                                     </div>
-                                );
-                            }
-
-                            const showMinVolWarning = calculation.volume < (drug.safety_guardrails?.min_volume_ml ?? 0.1);
-                            const showMaxDoseWarning = variant.detail.max_dose_mg_kg && (calculation.dosePerKg > variant.detail.max_dose_mg_kg);
-
-                            const formattedVolume = calculation.volume < 1
-                                ? calculation.volume.toFixed(2)
-                                : calculation.volume.toFixed(1);
-
-                            const formattedTotalDose = calculation.unit === "ml"
-                                ? calculation.volume.toFixed(1)
-                                : calculation.totalDose < 0.01
-                                    ? calculation.totalDose.toFixed(4)
-                                    : calculation.totalDose.toFixed(2);
-
-                            const doseUnitDisplay = calculation.unit === "ml" ? "mL" : calculation.unit;
-
-                            return (
-                                <div key={variant.key} className="rounded-xl border border-slate-200 bg-white shadow-sm">
-                                    <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-                                        <div>
-                                            <p className="text-sm font-bold text-slate-900">{variant.label}</p>
-                                            {variant.detail.instruction && (
-                                                <p className="text-xs text-slate-500">Instruction : {variant.detail.instruction}</p>
-                                            )}
-                                        </div>
-                                        <span className="text-xs font-bold uppercase tracking-wide text-[#009EF0] border border-blue-100 rounded-full px-2 py-1 bg-blue-50">
-                                            {speciesBadgeLabel}
-                                        </span>
+                                )}
+                                {drug.safety_guardrails?.warning_msg && (
+                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
+                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
+                                        <span>{drug.safety_guardrails.warning_msg}</span>
                                     </div>
                                 )}
                                 {requiresConfirmation && (
                                     <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
                                         <p className="font-bold">Confirmation utilisateur requise</p>
                                         <p className="mt-1">
-                                            Valider explicitement avant administration (volume &lt; 0,1 mL ou dose max absolue atteinte).
+                                            Valider explicitement avant administration (volume &lt; {minVolumeThreshold.toString().replace(".", ",")} mL ou dose max absolue atteinte).
                                         </p>
                                         <button
                                             type="button"
@@ -417,24 +304,8 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                                 )}
                             </div>
                         )}
+                    </div>
 
-                                    <div className="p-4">
-                                        <div className="space-y-3 mb-5">
-                                            <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
-                                                <span className="text-slate-500 font-medium">Dose</span>
-                                                <span className="font-bold text-slate-900">{calculation.dosePerKg.toString().replace(".", ",")} {doseUnitDisplay}/kg</span>
-                                            </div>
-                                            <div className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
-                                                <span className="text-slate-500 font-medium">Dose calculée</span>
-                                                <span className="font-bold text-slate-900">{formattedTotalDose.replace(".", ",")} {doseUnitDisplay}</span>
-                                            </div>
-                                            <div className="flex justify-between items-center text-sm pb-1">
-                                                <span className="text-slate-500 font-medium">Concentration</span>
-                                                <span className="font-bold text-slate-900">{drug.concentration_label}</span>
-                                            </div>
-                                        </div>
-
-                    {/* Details Panel */}
                     {showDetails && (
                         <div className="bg-slate-50 px-5 pb-5 pt-2 text-sm text-slate-600 border-t border-slate-100">
                             {calculation.formula && (
@@ -450,77 +321,6 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                             )}
                         </div>
                     )}
-                                        <div className="rounded-xl bg-[#F0F6FA] p-4 text-center border border-[#E1EEF6] shadow-inner mb-4">
-                                            <div className="flex items-center justify-center gap-2 mb-1 text-[#006090]">
-                                                <Syringe className="h-4 w-4" />
-                                                <p className="text-sm font-bold">Volume à injecter</p>
-                                            </div>
-                                            <p className="text-4xl font-extrabold text-[#003B5C] tracking-tight">
-                                                {formattedVolume.replace(".", ",")} <span className="text-xl font-bold text-[#006090]/70 ml-0.5">ml</span>
-                                            </p>
-                                        </div>
-
-                                        <button
-                                            onClick={() => setOpenDetails((prev) => ({ ...prev, [variant.key]: !prev[variant.key] }))}
-                                            className="flex items-center gap-1.5 text-xs font-bold text-[#009EF0] underline underline-offset-2 hover:text-blue-700 transition-colors mb-3"
-                                        >
-                                            <Info className="h-3.5 w-3.5" />
-                                            Voir le détail du calcul
-                                        </button>
-
-                                        {(showMinVolWarning || showMaxDoseWarning || drug.safety_guardrails?.warning_msg || variant.detail.warning_msg) && (
-                                            <div className="flex flex-col gap-2 animate-in slide-in-from-top-1">
-                                                {showMaxDoseWarning && (
-                                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
-                                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
-                                                        <span>Dose max : {variant.detail.max_dose_mg_kg} mg/kg</span>
-                                                    </div>
-                                                )}
-                                                {showMinVolWarning && (
-                                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
-                                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
-                                                        <span> Volume très faible ({formattedVolume.replace(".", ",")} mL). Pensez à diluer. {drug.safety_guardrails?.dilution_hint}</span>
-                                                    </div>
-                                                )}
-                                                {variant.detail.warning_msg && (
-                                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
-                                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
-                                                        <span>{variant.detail.warning_msg}</span>
-                                                    </div>
-                                                )}
-                                                {drug.safety_guardrails?.warning_msg && (
-                                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
-                                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
-                                                        <span>{drug.safety_guardrails.warning_msg}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {openDetails[variant.key] && (
-                                            <div className="bg-slate-50 px-4 pb-4 pt-2 text-sm text-slate-600 border-t border-slate-100 rounded-lg">
-                                                <div className="rounded-lg bg-white p-3 border border-slate-200 font-mono text-xs mb-3">
-                                                    {calculation.formula}
-                                                </div>
-                                                {rangeDisplay && (
-                                                    <div className="grid gap-1 mb-3">
-                                                        <p><span className="font-bold">Dose minimale :</span> {rangeDisplay.min}</p>
-                                                        <p><span className="font-bold">Dose maximale :</span> {rangeDisplay.max}</p>
-                                                    </div>
-                                                )}
-                                                {variant.detail.note && (
-                                                    <p className="mb-2"><span className="font-bold">Note:</span> {variant.detail.note}</p>
-                                                )}
-                                                {variant.detail.frequency && (
-                                                    <p><span className="font-bold">Fréquence:</span> {variant.detail.frequency}</p>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
                 </div>
             )}
         </div>

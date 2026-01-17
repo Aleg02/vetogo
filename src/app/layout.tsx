@@ -18,6 +18,13 @@ export const metadata: Metadata = {
 
 // Remplace createServerComponentClient(...)
 async function getInitialSession(): Promise<Session | null> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return null;
+  }
+
   const supabase = await createServerSupabaseClient();
   try {
     const {

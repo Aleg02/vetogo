@@ -17,10 +17,12 @@ export default function SupabaseProvider({
   initialSession,
 }: SupabaseProviderProps) {
   // Utilise createBrowserClient pour le client Supabase côté navigateur
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const [supabaseClient] = useState(() =>
     createBrowserClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      supabaseUrl || "http://localhost",
+      supabaseAnonKey || "public-anon-key"
     )
   );
 
