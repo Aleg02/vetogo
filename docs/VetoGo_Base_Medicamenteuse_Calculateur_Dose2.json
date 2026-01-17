@@ -2,7 +2,7 @@
   "meta": {
     "version": "6.0.0",
     "last_updated": "2024-05-24",
-    "source": "Plumb's / ACVECC / RECOVER 2024 / KSVECC Transfusion Guidelines",
+    "source": "ANMV/EMA (RCP/AMM) / WSAVA & BSAVA / Consensus d'experts",
     "scope": "Platinum Emergency, Critical Care, Transfusion & Nutrition"
   },
   "species_config": {
@@ -13,8 +13,14 @@
         "shock_fluid_rate_ml_kg": 90,
         "maintenance_formula": "132 * (weight ^ 0.75)",
         "rer_formula": "70 * (weight ^ 0.75)",
-        "respiratory_rate_range": [10, 30],
-        "heart_rate_range": [60, 140],
+        "respiratory_rate_range": [
+          10,
+          30
+        ],
+        "heart_rate_range": [
+          60,
+          140
+        ],
         "blood_volume_ml_kg": 90
       },
       "forbidden_drugs": []
@@ -26,11 +32,25 @@
         "shock_fluid_rate_ml_kg": 55,
         "maintenance_formula": "80 * (weight ^ 0.75)",
         "rer_formula": "70 * (weight ^ 0.75)",
-        "respiratory_rate_range": [20, 40],
-        "heart_rate_range": [140, 220],
+        "respiratory_rate_range": [
+          20,
+          40
+        ],
+        "heart_rate_range": [
+          140,
+          220
+        ],
         "blood_volume_ml_kg": 60
       },
-      "forbidden_drugs": ["acetaminophen", "paracetamol", "permethrin", "ibuprofen", "azathioprine", "cisplatin", "phosphate_enema"]
+      "forbidden_drugs": [
+        "acetaminophen",
+        "paracetamol",
+        "permethrin",
+        "ibuprofen",
+        "azathioprine",
+        "cisplatin",
+        "phosphate_enema"
+      ]
     }
   },
   "drugs": [
@@ -43,11 +63,16 @@
           "concentration_label": "N/A",
           "concentration_mg_ml": 1,
           "is_high_alert": true,
-          "routes": ["IV (Avec Filtre)"],
+          "routes": [
+            "IV (Avec Filtre)"
+          ],
           "dosage": {
             "common": {
               "dose_ml_kg": 20.0,
-              "range_ml_kg": [10.0, 22.0],
+              "range_ml_kg": [
+                10.0,
+                22.0
+              ],
               "frequency": "Sur 4 heures",
               "note": "Règle du pouce: 2 ml/kg augmentent PCV de 1%."
             }
@@ -63,17 +88,22 @@
           "concentration_label": "N/A",
           "concentration_mg_ml": 1,
           "is_high_alert": true,
-          "routes": ["IV (Avec Filtre)"],
+          "routes": [
+            "IV (Avec Filtre)"
+          ],
           "dosage": {
             "common": {
               "dose_ml_kg": 10.0,
-              "range_ml_kg": [6.0, 15.0],
+              "range_ml_kg": [
+                6.0,
+                15.0
+              ],
               "frequency": "Sur 4 heures",
               "note": "Règle du pouce: 1 ml/kg augmente PCV de 1%."
             }
           },
           "safety_guardrails": {
-             "dilution_hint": "Diluer avec NaCl 0.9% pour réduire la viscosité si nécessaire."
+            "dilution_hint": "Diluer avec NaCl 0.9% pour réduire la viscosité si nécessaire."
           }
         },
         {
@@ -82,11 +112,16 @@
           "concentration_label": "N/A",
           "concentration_mg_ml": 1,
           "is_high_alert": true,
-          "routes": ["IV (Avec Filtre)"],
+          "routes": [
+            "IV (Avec Filtre)"
+          ],
           "dosage": {
             "common": {
               "dose_ml_kg": 15.0,
-              "range_ml_kg": [10.0, 20.0],
+              "range_ml_kg": [
+                10.0,
+                20.0
+              ],
               "frequency": "Sur 4 heures (plus vite si coagulopathie active)"
             }
           },
@@ -105,11 +140,17 @@
           "concentration_label": "2 mg/mL",
           "concentration_mg_ml": 2,
           "is_high_alert": false,
-          "routes": ["IV Lent", "PO"],
+          "routes": [
+            "IV Lent",
+            "PO"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.5,
-              "range_mg_kg": [0.1, 1.0],
+              "range_mg_kg": [
+                0.1,
+                1.0
+              ],
               "frequency": "q8-12h"
             }
           },
@@ -123,16 +164,23 @@
           "concentration_label": "50 mg/mL",
           "concentration_mg_ml": 50,
           "is_high_alert": false,
-          "routes": ["IM", "IV (Lent)", "SC"],
+          "routes": [
+            "IM",
+            "IV (Lent)",
+            "SC"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 2.0,
-              "range_mg_kg": [1.0, 4.0],
+              "range_mg_kg": [
+                1.0,
+                4.0
+              ],
               "frequency": "q8h / Réaction allergique"
             }
           },
           "safety_guardrails": {
-             "warning_msg": "Sédation possible. IV : diluer et injecter lentement."
+            "warning_msg": "Sédation possible. IV : diluer et injecter lentement."
           }
         },
         {
@@ -141,11 +189,16 @@
           "concentration_label": "10 mg/mL",
           "concentration_mg_ml": 10,
           "is_high_alert": false,
-          "routes": ["IV Lent"],
+          "routes": [
+            "IV Lent"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.5,
-              "range_mg_kg": [0.5, 1.0],
+              "range_mg_kg": [
+                0.5,
+                1.0
+              ],
               "frequency": "q12h"
             }
           },
@@ -164,7 +217,11 @@
           "concentration_label": "1:10 000 (0,1 mg/mL)",
           "concentration_mg_ml": 0.1,
           "is_high_alert": true,
-          "routes": ["IV", "IO", "IT"],
+          "routes": [
+            "IV",
+            "IO",
+            "IT"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.01,
@@ -188,7 +245,12 @@
           "concentration_label": "0,54 mg/mL",
           "concentration_mg_ml": 0.54,
           "is_high_alert": false,
-          "routes": ["IV", "IO", "IT", "IM"],
+          "routes": [
+            "IV",
+            "IO",
+            "IT",
+            "IM"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.04,
@@ -200,7 +262,11 @@
             }
           },
           "safety_guardrails": {
-             "contraindications": ["Glaucome", "Tachycardie", "Iléus"]
+            "contraindications": [
+              "Glaucome",
+              "Tachycardie",
+              "Iléus"
+            ]
           }
         },
         {
@@ -209,8 +275,15 @@
           "concentration_label": "20 UI/mL",
           "concentration_mg_ml": 20,
           "unit_type": "UI",
+          "unit_metadata": {
+            "unit_nature": "Unité internationale",
+            "compatible_concentration_units": ["UI"]
+          },
           "is_high_alert": true,
-          "routes": ["IV", "IO"],
+          "routes": [
+            "IV",
+            "IO"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 0.8,
@@ -225,19 +298,28 @@
           "concentration_label": "1 mEq/mL (8.4%)",
           "concentration_mg_ml": 84,
           "unit_type": "mEq",
+          "unit_metadata": {
+            "unit_nature": "Équivalent ionique",
+            "compatible_concentration_units": ["mEq"]
+          },
           "is_high_alert": true,
-          "routes": ["IV LENT"],
+          "routes": [
+            "IV LENT"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 1.0,
               "unit": "mEq/kg",
-              "range": [0.5, 2.0],
+              "range": [
+                0.5,
+                2.0
+              ],
               "frequency": "Si acidose métabolique sévère / CPR > 10min"
             }
           },
           "safety_guardrails": {
-             "note": "Ne pas mélanger avec Calcium (précipite).",
-             "warning_msg": "Risque hypernatrémie et acidose paradoxale IC."
+            "note": "Ne pas mélanger avec Calcium (précipite).",
+            "warning_msg": "Risque hypernatrémie et acidose paradoxale IC."
           }
         }
       ]
@@ -251,16 +333,26 @@
           "concentration_label": "20 mg/mL (2%)",
           "concentration_mg_ml": 20,
           "is_high_alert": true,
-          "routes": ["SC", "Infiltration", "Perineural"],
+          "routes": [
+            "SC",
+            "Infiltration",
+            "Perineural"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 4.0,
-              "range_mg_kg": [1.0, 6.0],
+              "range_mg_kg": [
+                1.0,
+                6.0
+              ],
               "note": "Dose TOTALE max par session"
             },
             "feline": {
               "dose_mg_kg": 2.0,
-              "range_mg_kg": [1.0, 3.0],
+              "range_mg_kg": [
+                1.0,
+                3.0
+              ],
               "note": "Dose TOTALE max par session (Toxique!)"
             }
           },
@@ -275,22 +367,34 @@
           "concentration_label": "5 mg/mL (0.5%)",
           "concentration_mg_ml": 5,
           "is_high_alert": true,
-          "routes": ["Infiltration", "Epidurale", "JAMAIS IV"],
+          "routes": [
+            "Infiltration",
+            "Epidurale",
+            "JAMAIS IV"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 1.5,
-              "range_mg_kg": [1.0, 2.0],
+              "range_mg_kg": [
+                1.0,
+                2.0
+              ],
               "note": "Dose Max Absolue"
             },
             "feline": {
               "dose_mg_kg": 1.0,
-              "range_mg_kg": [0.5, 1.0],
+              "range_mg_kg": [
+                0.5,
+                1.0
+              ],
               "note": "Dose Max Absolue (Cardiotoxique)"
             }
           },
           "safety_guardrails": {
             "warning_msg": "⛔️ MORTEL EN IV (Arrêt cardiaque réfractaire). Toujours aspirer avant d'injecter.",
-            "contraindications": ["Injection IV"]
+            "contraindications": [
+              "Injection IV"
+            ]
           }
         }
       ]
@@ -304,18 +408,23 @@
           "concentration_label": "0.05 mg/mL (50 µg/mL)",
           "concentration_mg_ml": 0.05,
           "is_high_alert": true,
-          "routes": ["IV"],
+          "routes": [
+            "IV"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.005,
-              "range_mg_kg": [0.002, 0.01],
+              "range_mg_kg": [
+                0.002,
+                0.01
+              ],
               "note": "2-10 µg/kg",
               "frequency": "Bolus analgésie courte durée"
             },
             "induction_override": {
-               "dose_mg_kg": 0.01,
-               "note": "Co-induction: 5-10 µg/kg",
-               "frequency": "Induction"
+              "dose_mg_kg": 0.01,
+              "note": "Co-induction: 5-10 µg/kg",
+              "frequency": "Induction"
             }
           },
           "safety_guardrails": {
@@ -329,16 +438,26 @@
           "concentration_label": "10 mg/mL",
           "concentration_mg_ml": 10,
           "is_high_alert": true,
-          "routes": ["IV", "IM", "SC"],
+          "routes": [
+            "IV",
+            "IM",
+            "SC"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 0.2,
-              "range_mg_kg": [0.1, 0.4],
+              "range_mg_kg": [
+                0.1,
+                0.4
+              ],
               "frequency": "q4-6h"
             },
             "feline": {
               "dose_mg_kg": 0.2,
-              "range_mg_kg": [0.1, 0.3],
+              "range_mg_kg": [
+                0.1,
+                0.3
+              ],
               "frequency": "q4-6h"
             }
           }
@@ -349,23 +468,36 @@
           "concentration_label": "10 mg/mL",
           "concentration_mg_ml": 10,
           "is_high_alert": true,
-          "routes": ["IM", "SC", "IV (Lent!)"],
+          "routes": [
+            "IM",
+            "SC",
+            "IV (Lent!)"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 0.5,
-              "range_mg_kg": [0.2, 1.0],
+              "range_mg_kg": [
+                0.2,
+                1.0
+              ],
               "frequency": "q4h"
             },
             "feline": {
               "dose_mg_kg": 0.2,
-              "range_mg_kg": [0.1, 0.3],
+              "range_mg_kg": [
+                0.1,
+                0.3
+              ],
               "frequency": "q4-6h",
               "warning_msg": "Attention à la dysphonie/excitation chez le chat"
             }
           },
           "safety_guardrails": {
             "dilution_hint": "IV: Diluer et donner LENTEMENT (risque libération histamine)",
-            "contraindications": ["Trauma crânien (débat)", "Mastocytome"]
+            "contraindications": [
+              "Trauma crânien (débat)",
+              "Mastocytome"
+            ]
           }
         }
       ]
@@ -379,16 +511,25 @@
           "concentration_label": "0,5 mg/mL",
           "concentration_mg_ml": 0.5,
           "is_high_alert": true,
-          "routes": ["IV", "IM"],
+          "routes": [
+            "IV",
+            "IM"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 0.005,
-              "range_mg_kg": [0.001, 0.01],
+              "range_mg_kg": [
+                0.001,
+                0.01
+              ],
               "frequency": "Titrer à effet"
             },
             "feline": {
               "dose_mg_kg": 0.007,
-              "range_mg_kg": [0.005, 0.04],
+              "range_mg_kg": [
+                0.005,
+                0.04
+              ],
               "frequency": "Souvent combiné (Kitty Magic)"
             }
           },
@@ -402,11 +543,17 @@
           "concentration_label": "100 mg/mL",
           "concentration_mg_ml": 100,
           "is_high_alert": true,
-          "routes": ["IV", "IM"],
+          "routes": [
+            "IV",
+            "IM"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 5.0,
-              "range_mg_kg": [2.0, 10.0],
+              "range_mg_kg": [
+                2.0,
+                10.0
+              ],
               "note": "Dose induction ou contention chimique"
             },
             "analgesia_cri_loading": {
@@ -415,7 +562,10 @@
             }
           },
           "safety_guardrails": {
-            "contraindications": ["Glaucome", "HCM sévère (chat)"]
+            "contraindications": [
+              "Glaucome",
+              "HCM sévère (chat)"
+            ]
           }
         },
         {
@@ -424,18 +574,25 @@
           "concentration_label": "10 mg/mL (1%)",
           "concentration_mg_ml": 10,
           "is_high_alert": true,
-          "routes": ["IV STRICT"],
+          "routes": [
+            "IV STRICT"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 4.0,
-              "range_mg_kg": [2.0, 6.0],
+              "range_mg_kg": [
+                2.0,
+                6.0
+              ],
               "frequency": "TITRER À EFFET (lentement)",
               "note": "Dose plus faible si prémédiqué (ex: 2mg/kg)"
             }
           },
           "safety_guardrails": {
             "warning_msg": "Apnée fréquente si injection rapide.",
-            "contraindications": ["Pas de conservateur: jeter après 6-24h"]
+            "contraindications": [
+              "Pas de conservateur: jeter après 6-24h"
+            ]
           }
         },
         {
@@ -444,11 +601,18 @@
           "concentration_label": "5 mg/mL",
           "concentration_mg_ml": 5,
           "is_high_alert": false,
-          "routes": ["IV", "IM", "IN (Intra-nasal)"],
+          "routes": [
+            "IV",
+            "IM",
+            "IN (Intra-nasal)"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.2,
-              "range_mg_kg": [0.1, 0.5],
+              "range_mg_kg": [
+                0.1,
+                0.5
+              ],
               "frequency": "Sédation ou Anti-convulsivant"
             }
           }
@@ -464,18 +628,23 @@
           "concentration_label": "200 mg/mL (20%)",
           "concentration_mg_ml": 200,
           "is_high_alert": true,
-          "routes": ["IV"],
+          "routes": [
+            "IV"
+          ],
           "dosage": {
             "common": {
               "dose_ml_kg": 1.5,
-              "range_ml_kg": [1.5, 4.0],
+              "range_ml_kg": [
+                1.5,
+                4.0
+              ],
               "frequency": "Bolus sur 1 min",
               "note": "Suivi d'une CRI 0.25 ml/kg/min"
             }
           },
           "safety_guardrails": {
-             "note": "Antidote vital pour : Anesthésiques locaux (Lidocaïne), Ivermectine, Perméthrine (chat).",
-             "warning_msg": "Aspect laiteux normal. Ne pas mélanger."
+            "note": "Antidote vital pour : Anesthésiques locaux (Lidocaïne), Ivermectine, Perméthrine (chat).",
+            "warning_msg": "Aspect laiteux normal. Ne pas mélanger."
           }
         },
         {
@@ -484,20 +653,22 @@
           "concentration_label": "50 mg/mL (Reconstitué)",
           "concentration_mg_ml": 50,
           "is_high_alert": true,
-          "routes": ["IV LENT"],
+          "routes": [
+            "IV LENT"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 20.0,
               "frequency": "Dose de charge (Intox Éthylène Glycol)"
             },
             "feline": {
-               "dose_mg_kg": 125.0,
-               "note": "Dose BEAUCOUP plus élevée chez le chat",
-               "frequency": "Dose de charge"
+              "dose_mg_kg": 125.0,
+              "note": "Dose BEAUCOUP plus élevée chez le chat",
+              "frequency": "Dose de charge"
             }
           },
           "safety_guardrails": {
-             "note": "Antidote spécifique Éthylène Glycol (Antigel)."
+            "note": "Antidote spécifique Éthylène Glycol (Antigel)."
           }
         },
         {
@@ -506,7 +677,9 @@
           "concentration_label": "1 mg/vial (Reconstitué)",
           "concentration_mg_ml": 1,
           "is_high_alert": true,
-          "routes": ["IV"],
+          "routes": [
+            "IV"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.05,
@@ -515,7 +688,7 @@
             }
           },
           "safety_guardrails": {
-             "note": "Antidote pour surdosage Beta-bloquants / Calcium-bloquants / Insuline."
+            "note": "Antidote pour surdosage Beta-bloquants / Calcium-bloquants / Insuline."
           }
         },
         {
@@ -524,11 +697,18 @@
           "concentration_label": "0,4 mg/mL",
           "concentration_mg_ml": 0.4,
           "is_high_alert": false,
-          "routes": ["IV", "IM", "IT"],
+          "routes": [
+            "IV",
+            "IM",
+            "IT"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.04,
-              "range_mg_kg": [0.01, 0.04],
+              "range_mg_kg": [
+                0.01,
+                0.04
+              ],
               "frequency": "Titrer à effet"
             }
           }
@@ -539,7 +719,9 @@
           "concentration_label": "0,1 mg/mL",
           "concentration_mg_ml": 0.1,
           "is_high_alert": false,
-          "routes": ["IV"],
+          "routes": [
+            "IV"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.01,
@@ -553,7 +735,9 @@
           "concentration_label": "5 mg/mL",
           "concentration_mg_ml": 5,
           "is_high_alert": false,
-          "routes": ["IM"],
+          "routes": [
+            "IM"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.1,
@@ -561,7 +745,9 @@
             }
           },
           "safety_guardrails": {
-            "contraindications": ["IV (hypotension brutale)"]
+            "contraindications": [
+              "IV (hypotension brutale)"
+            ]
           }
         },
         {
@@ -570,7 +756,10 @@
           "concentration_label": "200 mg/mL (20%)",
           "concentration_mg_ml": 200,
           "is_high_alert": false,
-          "routes": ["IV (Dilué)", "PO"],
+          "routes": [
+            "IV (Dilué)",
+            "PO"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 140.0,
@@ -592,11 +781,16 @@
           "concentration_label": "100 mg/mL (10%)",
           "concentration_mg_ml": 100,
           "is_high_alert": true,
-          "routes": ["IV (Lent)"],
+          "routes": [
+            "IV (Lent)"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 100,
-              "range_mg_kg": [50, 150],
+              "range_mg_kg": [
+                50,
+                150
+              ],
               "frequency": "Sur 10-20 min"
             }
           },
@@ -610,22 +804,27 @@
           "concentration_label": "500 mg/mL (50%)",
           "concentration_mg_ml": 500,
           "is_high_alert": true,
-          "routes": ["IV LENT"],
+          "routes": [
+            "IV LENT"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 30.0,
-              "range_mg_kg": [30.0, 50.0],
+              "range_mg_kg": [
+                30.0,
+                50.0
+              ],
               "frequency": "Sur 15-30 min"
             },
             "vtach_override": {
-               "dose_mg_kg": 30.0,
-               "condition": "Torsades de Pointes",
-               "instruction": "Bolus lent sous monitoring ECG"
+              "dose_mg_kg": 30.0,
+              "condition": "Torsades de Pointes",
+              "instruction": "Bolus lent sous monitoring ECG"
             }
           },
           "safety_guardrails": {
-             "warning_msg": "Hypotension sévère si injection rapide.",
-             "dilution_hint": "Diluer à 20% ou moins avant injection."
+            "warning_msg": "Hypotension sévère si injection rapide.",
+            "dilution_hint": "Diluer à 20% ou moins avant injection."
           }
         },
         {
@@ -634,19 +833,28 @@
           "concentration_label": "3 mmol/mL (Phos)",
           "concentration_mg_ml": 425,
           "unit_type": "mmol",
+          "unit_metadata": {
+            "unit_nature": "Quantité de matière",
+            "compatible_concentration_units": ["mmol"]
+          },
           "is_high_alert": true,
-          "routes": ["IV CRI SEULEMENT"],
+          "routes": [
+            "IV CRI SEULEMENT"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 0.03,
               "unit": "mmol/kg/h",
-              "range": [0.01, 0.06],
+              "range": [
+                0.01,
+                0.06
+              ],
               "frequency": "CRI (6-12h)"
             }
           },
           "safety_guardrails": {
-             "warning_msg": "⛔️ JAMAIS EN BOLUS. Risque d'hypocalcémie sévère et hypotension.",
-             "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!"
+            "warning_msg": "⛔️ JAMAIS EN BOLUS. Risque d'hypocalcémie sévère et hypotension.",
+            "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!"
           }
         },
         {
@@ -655,11 +863,16 @@
           "concentration_label": "500 mg/mL (50%)",
           "concentration_mg_ml": 500,
           "is_high_alert": true,
-          "routes": ["IV STRICT (Dilué)"],
+          "routes": [
+            "IV STRICT (Dilué)"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 500,
-              "range_mg_kg": [250, 1000],
+              "range_mg_kg": [
+                250,
+                1000
+              ],
               "note": "0.5 à 1 ml/kg de D50% dilué",
               "frequency": "Bolus hypoglycémie"
             }
@@ -675,19 +888,29 @@
           "concentration_label": "100 UI/mL",
           "concentration_mg_ml": 100,
           "unit_type": "UI",
+          "unit_metadata": {
+            "unit_nature": "Unité internationale",
+            "compatible_concentration_units": ["UI"]
+          },
           "is_high_alert": true,
-          "routes": ["IV", "IM"],
+          "routes": [
+            "IV",
+            "IM"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 0.1,
               "unit": "UI/kg",
-              "range": [0.05, 0.2],
+              "range": [
+                0.05,
+                0.2
+              ],
               "frequency": "Protocole Hyperkaliémie / DKA"
             }
           },
           "safety_guardrails": {
-             "warning_msg": "RISQUE HYPOGLYCÉMIE FATALE. Toujours associer Dextrose si utilisé pour Hyperkaliémie.",
-             "dilution_hint": "Utiliser seringue insuline U-100."
+            "warning_msg": "RISQUE HYPOGLYCÉMIE FATALE. Toujours associer Dextrose si utilisé pour Hyperkaliémie.",
+            "dilution_hint": "Utiliser seringue insuline U-100."
           }
         },
         {
@@ -696,8 +919,14 @@
           "concentration_label": "2 mEq/mL (15%)",
           "concentration_mg_ml": 150,
           "unit_type": "mEq",
+          "unit_metadata": {
+            "unit_nature": "Équivalent ionique",
+            "compatible_concentration_units": ["mEq"]
+          },
           "is_high_alert": true,
-          "routes": ["IV DILUÉ"],
+          "routes": [
+            "IV DILUÉ"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 0.5,
@@ -721,26 +950,37 @@
           "concentration_label": "10 UI/mL",
           "concentration_mg_ml": 10,
           "unit_type": "UI",
+          "unit_metadata": {
+            "unit_nature": "Unité internationale",
+            "compatible_concentration_units": ["UI"]
+          },
           "is_high_alert": true,
-          "routes": ["IM", "SC", "IV (Micro-doses)"],
+          "routes": [
+            "IM",
+            "SC",
+            "IV (Micro-doses)"
+          ],
           "dosage": {
             "canine": {
               "dose_amount_kg": 0.05,
               "unit": "UI/kg",
-              "range": [0.5, 2.0],
+              "range": [
+                0.5,
+                2.0
+              ],
               "note": "MAX 2 UI TOTAL / Chien (pas par kg souvent)",
               "frequency": "Dystocie (si pas d'obstruction)"
             },
             "feline": {
-               "dose_amount_kg": 0.05,
-               "unit": "UI/kg",
-               "note": "MAX 0.5 - 1 UI TOTAL / Chat",
-               "frequency": "Dystocie"
+              "dose_amount_kg": 0.05,
+              "unit": "UI/kg",
+              "note": "MAX 0.5 - 1 UI TOTAL / Chat",
+              "frequency": "Dystocie"
             }
           },
           "safety_guardrails": {
-             "warning_msg": "CONTRE-INDIQUÉ si obstruction fœtale (risque rupture utérine). Vérifier calcémie avant.",
-             "note": "Doses souvent empiriques fixes (0.5 à 2 UI par animal)."
+            "warning_msg": "CONTRE-INDIQUÉ si obstruction fœtale (risque rupture utérine). Vérifier calcémie avant.",
+            "note": "Doses souvent empiriques fixes (0.5 à 2 UI par animal)."
           }
         }
       ]
@@ -754,11 +994,17 @@
           "concentration_label": "5 mg/mL",
           "concentration_mg_ml": 5,
           "is_high_alert": false,
-          "routes": ["IV", "Intra-rectal"],
+          "routes": [
+            "IV",
+            "Intra-rectal"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.5,
-              "range_mg_kg": [0.5, 1.0],
+              "range_mg_kg": [
+                0.5,
+                1.0
+              ],
               "frequency": "Bolus crise"
             }
           }
@@ -769,11 +1015,17 @@
           "concentration_label": "Variable (ex: 200 mg/mL)",
           "concentration_mg_ml": 200,
           "is_high_alert": true,
-          "routes": ["IV", "IM"],
+          "routes": [
+            "IV",
+            "IM"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 16.0,
-              "range_mg_kg": [10.0, 20.0],
+              "range_mg_kg": [
+                10.0,
+                20.0
+              ],
               "frequency": "Dose de charge"
             }
           }
@@ -784,14 +1036,20 @@
           "concentration_label": "100 mg/mL",
           "concentration_mg_ml": 100,
           "is_high_alert": false,
-          "routes": ["IV", "PO"],
+          "routes": [
+            "IV",
+            "PO"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 30.0,
-              "range_mg_kg": [20.0, 60.0]
+              "range_mg_kg": [
+                20.0,
+                60.0
+              ]
             }
           },
-           "safety_guardrails": {
+          "safety_guardrails": {
             "dilution_hint": "Diluer 1:9 (10mg/ml) pour injection IV (irritant)"
           }
         },
@@ -801,16 +1059,21 @@
           "concentration_label": "200 mg/mL (20%)",
           "concentration_mg_ml": 200,
           "is_high_alert": true,
-          "routes": ["IV STRICT"],
+          "routes": [
+            "IV STRICT"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 1000,
-              "range_mg_kg": [500, 2000],
+              "range_mg_kg": [
+                500,
+                2000
+              ],
               "note": "0.5 à 2 g/kg"
             }
           },
           "safety_guardrails": {
-             "warning_msg": "Utiliser un filtre (cristaux). Vérifier hydratation avant."
+            "warning_msg": "Utiliser un filtre (cristaux). Vérifier hydratation avant."
           }
         },
         {
@@ -819,15 +1082,25 @@
           "concentration_label": "4 mg/mL",
           "concentration_mg_ml": 4,
           "is_high_alert": false,
-          "routes": ["IV", "IM", "SC"],
+          "routes": [
+            "IV",
+            "IM",
+            "SC"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.1,
-              "range_mg_kg": [0.05, 0.2]
+              "range_mg_kg": [
+                0.05,
+                0.2
+              ]
             },
             "shock_override": {
               "dose_mg_kg": 0.5,
-              "range_mg_kg": [0.5, 2.0],
+              "range_mg_kg": [
+                0.5,
+                2.0
+              ],
               "condition": "Anaphylaxie sévère"
             }
           }
@@ -838,15 +1111,20 @@
           "concentration_label": "Reconstitué (ex: 62.5 mg/mL)",
           "concentration_mg_ml": 62.5,
           "is_high_alert": false,
-          "routes": ["IV"],
+          "routes": [
+            "IV"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 1.0,
-              "range_mg_kg": [1.0, 2.0]
+              "range_mg_kg": [
+                1.0,
+                2.0
+              ]
             },
             "spinal_override": {
-               "dose_mg_kg": 30.0,
-               "condition": "Protocole Spinal"
+              "dose_mg_kg": 30.0,
+              "condition": "Protocole Spinal"
             }
           }
         }
@@ -861,12 +1139,17 @@
           "concentration_label": "1 mg/mL",
           "concentration_mg_ml": 1,
           "is_high_alert": true,
-          "routes": ["IV CRI STRICT"],
+          "routes": [
+            "IV CRI STRICT"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 0.1,
               "unit": "µg/kg/min",
-              "range": [0.05, 2.0],
+              "range": [
+                0.05,
+                2.0
+              ],
               "frequency": "Perfusion Continue (CRI)"
             }
           },
@@ -881,12 +1164,17 @@
           "concentration_label": "40 mg/mL",
           "concentration_mg_ml": 40,
           "is_high_alert": true,
-          "routes": ["IV CRI STRICT"],
+          "routes": [
+            "IV CRI STRICT"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 5.0,
               "unit": "µg/kg/min",
-              "range": [2.0, 15.0]
+              "range": [
+                2.0,
+                15.0
+              ]
             }
           }
         },
@@ -896,12 +1184,17 @@
           "concentration_label": "12.5 mg/mL",
           "concentration_mg_ml": 12.5,
           "is_high_alert": true,
-          "routes": ["IV CRI"],
+          "routes": [
+            "IV CRI"
+          ],
           "dosage": {
             "common": {
               "dose_amount_kg": 5,
               "unit": "µg/kg/min",
-              "range": [2, 20]
+              "range": [
+                2,
+                20
+              ]
             }
           }
         },
@@ -911,15 +1204,24 @@
           "concentration_label": "20 mg/mL (2%)",
           "concentration_mg_ml": 20,
           "is_high_alert": true,
-          "routes": ["IV", "IO"],
+          "routes": [
+            "IV",
+            "IO"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 2.0,
-              "range_mg_kg": [2.0, 8.0]
+              "range_mg_kg": [
+                2.0,
+                8.0
+              ]
             },
             "feline": {
               "dose_mg_kg": 0.25,
-              "range_mg_kg": [0.25, 1.0],
+              "range_mg_kg": [
+                0.25,
+                1.0
+              ],
               "warning_msg": "Toxicité féline élevée."
             }
           }
@@ -930,11 +1232,18 @@
           "concentration_label": "50 mg/mL",
           "concentration_mg_ml": 50,
           "is_high_alert": false,
-          "routes": ["IV", "IM", "SC"],
+          "routes": [
+            "IV",
+            "IM",
+            "SC"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 2.0,
-              "range_mg_kg": [1.0, 4.0]
+              "range_mg_kg": [
+                1.0,
+                4.0
+              ]
             }
           }
         }
@@ -949,7 +1258,10 @@
           "concentration_label": "10 mg/mL",
           "concentration_mg_ml": 10,
           "is_high_alert": false,
-          "routes": ["IV (Lent)", "SC"],
+          "routes": [
+            "IV (Lent)",
+            "SC"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 1.0,
@@ -963,15 +1275,24 @@
           "concentration_label": "5 mg/mL",
           "concentration_mg_ml": 5,
           "is_high_alert": false,
-          "routes": ["IV", "IM", "SC"],
+          "routes": [
+            "IV",
+            "IM",
+            "SC"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 0.5,
-              "range_mg_kg": [0.2, 0.5]
+              "range_mg_kg": [
+                0.2,
+                0.5
+              ]
             }
           },
           "safety_guardrails": {
-            "contraindications": ["Obstruction GI"]
+            "contraindications": [
+              "Obstruction GI"
+            ]
           }
         },
         {
@@ -980,15 +1301,22 @@
           "concentration_label": "Variable (ex: 5-10 mg/mL)",
           "concentration_mg_ml": 10,
           "is_high_alert": false,
-          "routes": ["IV", "SC", "Conjonctival"],
+          "routes": [
+            "IV",
+            "SC",
+            "Conjonctival"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 0.03,
-              "range_mg_kg": [0.02, 0.04]
+              "range_mg_kg": [
+                0.02,
+                0.04
+              ]
             },
             "feline": {
-               "warning_msg": "INEFFICACE CHEZ LE CHAT. Utiliser Xylazine/Dexmed.",
-               "dose_mg_kg": 0
+              "warning_msg": "INEFFICACE CHEZ LE CHAT. Utiliser Xylazine/Dexmed.",
+              "dose_mg_kg": 0
             }
           }
         },
@@ -998,7 +1326,10 @@
           "concentration_label": "Reconstitué (ex: 100mg/ml)",
           "concentration_mg_ml": 100,
           "is_high_alert": false,
-          "routes": ["IV", "IM"],
+          "routes": [
+            "IV",
+            "IM"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 22.0
@@ -1011,7 +1342,9 @@
           "concentration_label": "Reconstitué (ex: 100mg/ml)",
           "concentration_mg_ml": 100,
           "is_high_alert": false,
-          "routes": ["IV"],
+          "routes": [
+            "IV"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 20.0
@@ -1024,7 +1357,10 @@
           "concentration_label": "Reconstitué",
           "concentration_mg_ml": 100,
           "is_high_alert": false,
-          "routes": ["IV", "IM"],
+          "routes": [
+            "IV",
+            "IM"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 22.0
@@ -1037,11 +1373,18 @@
           "concentration_label": "50 mg/mL",
           "concentration_mg_ml": 50,
           "is_high_alert": true,
-          "routes": ["IV (Dilué)", "IM", "SC"],
+          "routes": [
+            "IV (Dilué)",
+            "IM",
+            "SC"
+          ],
           "dosage": {
             "canine": {
               "dose_mg_kg": 5.0,
-              "range_mg_kg": [5.0, 20.0]
+              "range_mg_kg": [
+                5.0,
+                20.0
+              ]
             },
             "feline": {
               "dose_mg_kg": 5.0,
@@ -1049,7 +1392,7 @@
             }
           },
           "safety_guardrails": {
-             "dilution_hint": "IV: Diluer au 1/3 minimum et injecter sur 30 min (risque convulsif si rapide)"
+            "dilution_hint": "IV: Diluer au 1/3 minimum et injecter sur 30 min (risque convulsif si rapide)"
           }
         },
         {
@@ -1058,11 +1401,16 @@
           "concentration_label": "5 mg/mL (0.5%)",
           "concentration_mg_ml": 5,
           "is_high_alert": false,
-          "routes": ["IV Lent"],
+          "routes": [
+            "IV Lent"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 10.0,
-              "range_mg_kg": [10.0, 15.0]
+              "range_mg_kg": [
+                10.0,
+                15.0
+              ]
             }
           }
         },
@@ -1072,11 +1420,16 @@
           "concentration_label": "100 mg/mL",
           "concentration_mg_ml": 100,
           "is_high_alert": false,
-          "routes": ["IV"],
+          "routes": [
+            "IV"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 10.0,
-              "range_mg_kg": [10.0, 20.0]
+              "range_mg_kg": [
+                10.0,
+                20.0
+              ]
             }
           }
         },
@@ -1086,16 +1439,23 @@
           "concentration_label": "10 mg/mL",
           "concentration_mg_ml": 10,
           "is_high_alert": false,
-          "routes": ["SC (Préféré)", "IM (Hématome!)", "PO"],
+          "routes": [
+            "SC (Préféré)",
+            "IM (Hématome!)",
+            "PO"
+          ],
           "dosage": {
             "common": {
               "dose_mg_kg": 2.5,
-              "range_mg_kg": [2.5, 5.0],
+              "range_mg_kg": [
+                2.5,
+                5.0
+              ],
               "frequency": "Dose de charge intoxication raticide"
             }
           },
           "safety_guardrails": {
-             "warning_msg": "IV risque anaphylaxie sévère -> utiliser SC."
+            "warning_msg": "IV risque anaphylaxie sévère -> utiliser SC."
           }
         }
       ]
@@ -1151,4 +1511,673 @@
       "reservoir_bag_l": "3.0 - 5.0"
     }
   ]
+}
+  ],
+  "documentation_mapping": {
+    "recommendation_type_definitions": {
+      "AMM": "Indication couverte par une autorisation de mise sur le marché vétérinaire (ANMV/EMA) pour l'espèce considérée.",
+      "pratique_clinique_courante": "Usage hors AMM, mais courant en pratique clinique vétérinaire selon guidelines ou consensus."
+    },
+    "source_level_definitions": {
+      "reglementaire": "Données issues des RCP/AMM vétérinaires (ANMV/EMA).",
+      "guideline": "Guidelines professionnelles (WSAVA/BSAVA) ou protocoles standardisés.",
+      "consensus": "Consensus d'experts/retours de pratique lorsqu'aucun cadre réglementaire n'existe."
+    },
+    "amm_status_notes": "Statuts AMM/hors AMM fournis à titre documentaire pour chien/chat et indication majeure; vérifier les RCP locaux avant usage.",
+    "drug_mapping": [
+      {
+        "id": "whole_blood",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Transfusion hémorragie/anémie aiguë",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "packed_rbc",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Transfusion anémie aiguë (culot globulaire)",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "fresh_frozen_plasma",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Coagulopathies/hémorragies (plasma)",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "ondansetron",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Antiémétique (vomissements/nausées)",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "diphenhydramine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Réaction allergique/urticaire",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "famotidine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Protection gastrique/ulcères",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "epinephrine_low_conc",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Arrêt cardio-respiratoire (RCP)",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          },
+          {
+            "label": "Anaphylaxie",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "atropine_sulfate",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Bradycardie vagale/bloc AV",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "vasopressin",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Vasopresseur en RCP réfractaire",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "sodium_bicarb",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Acidose métabolique sévère",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "lidocaine_local",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Anesthésie locale/locorégionale",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "bupivacaine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Anesthésie locale/locorégionale longue durée",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "fentanyl_inj",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Analgésie opioïde aiguë",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "methadone",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Analgésie opioïde",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "morphine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Analgésie opioïde",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "dexmedetomidine",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Sédation/prémédication",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "ketamine",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Induction anesthésique/dissociation",
+            "canine_status": "hors_AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "propofol",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Induction/maintenance anesthésie",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "midazolam",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Sédation/anticonvulsivant d'appoint",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "intralipid",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Antidote toxicité lipophile",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "fomepizole",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Antidote éthylène glycol",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "glucagon",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Hypoglycémie réfractaire/insulinome",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "naloxone",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Antagoniste opioïde",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "flumazenil",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Antagoniste benzodiazépines",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "atipamezole",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Réversion des alpha-2",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "acetylcysteine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Antidote paracétamol",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "calcium_gluconate",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Hypocalcémie/hyperkaliémie",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "magnesium_sulfate",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Hypomagnésémie/arythmie torsades",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "potassium_phosphate",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Hypophosphatémie sévère",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "dextrose_50",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Hypoglycémie aiguë",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "insulin_regular",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Acidocétose diabétique",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "kcl",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Supplémentation hypokaliémie",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "oxytocin",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Inertie utérine/dystocie",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "diazepam",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Crise convulsive",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "phenobarbital",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Épilepsie/convulsions",
+            "canine_status": "AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "levetiracetam",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Crise convulsive réfractaire",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "mannitol",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Hypertension intracrânienne/œdème cérébral",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "dexamethasone_phosphate",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Anti-inflammatoire systémique",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "methylprednisolone_succinate",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Traumatisme médullaire/choc",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "norepinephrine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Choc vasoplégique",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "dopamine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Soutien hémodynamique/inotrope",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "dobutamine",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Insuffisance cardiaque aiguë/inotrope",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "lidocaine_2",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Arythmie ventriculaire",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "furosemide",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Diurétique (œdème pulmonaire/IC)",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "maropitant",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Antiémétique",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "metoclopramide",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Procinétique/antiémétique",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "apomorphine",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Émétique d'urgence",
+            "canine_status": "AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "ampicillin",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Antibiotique large spectre",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "amoxicillin_clav",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Antibiotique large spectre",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "cefazolin",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Antibioprophylaxie péri-opératoire",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "enrofloxacin",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Antibiotique fluoroquinolone",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      },
+      {
+        "id": "metronidazole",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "guideline",
+        "indications": [
+          {
+            "label": "Antibiotique anaérobie/antiprotozoaire",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "tranexamic_acid",
+        "recommendation_type": "pratique_clinique_courante",
+        "source_level": "consensus",
+        "indications": [
+          {
+            "label": "Hémorragie/chirurgie",
+            "canine_status": "hors_AMM",
+            "feline_status": "hors_AMM"
+          }
+        ]
+      },
+      {
+        "id": "vitamin_k1",
+        "recommendation_type": "AMM",
+        "source_level": "reglementaire",
+        "indications": [
+          {
+            "label": "Intoxication aux anticoagulants (rodenticides)",
+            "canine_status": "AMM",
+            "feline_status": "AMM"
+          }
+        ]
+      }
+    ]
+  }
 }
