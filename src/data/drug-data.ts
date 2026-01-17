@@ -47,6 +47,7 @@ export interface SafetyGuardrails {
     note?: string;
     contraindications?: string[];
     min_volume_ml?: number | null;
+    blocking_alerts?: string[];
 }
 
 export interface UnitMetadata {
@@ -353,12 +354,14 @@ export const DRUG_DATA: DrugData = {
                         "canine": {
                             "dose_mg_kg": 4.0,
                             "range_mg_kg": [1.0, 6.0],
-                            "note": "Dose TOTALE max par session"
+                            "note": "Dose TOTALE max par session",
+                            "max_dose_mg_kg": 4.0
                         },
                         "feline": {
                             "dose_mg_kg": 2.0,
                             "range_mg_kg": [1.0, 3.0],
-                            "note": "Dose TOTALE max par session (Toxique!)"
+                            "note": "Dose TOTALE max par session (Toxique!)",
+                            "max_dose_mg_kg": 2.0
                         }
                     },
                     "safety_guardrails": {
@@ -377,17 +380,20 @@ export const DRUG_DATA: DrugData = {
                         "canine": {
                             "dose_mg_kg": 1.5,
                             "range_mg_kg": [1.0, 2.0],
-                            "note": "Dose Max Absolue"
+                            "note": "Dose Max Absolue",
+                            "max_dose_mg_kg": 1.5
                         },
                         "feline": {
                             "dose_mg_kg": 1.0,
                             "range_mg_kg": [0.5, 1.0],
-                            "note": "Dose Max Absolue (Cardiotoxique)"
+                            "note": "Dose Max Absolue (Cardiotoxique)",
+                            "max_dose_mg_kg": 1.0
                         }
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ MORTEL EN IV (Arrêt cardiaque réfractaire). Toujours aspirer avant d'injecter.",
-                        "contraindications": ["Injection IV"]
+                        "contraindications": ["Injection IV"],
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : injection IV de bupivacaïne."]
                     }
                 }
             ]
@@ -747,7 +753,8 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ JAMAIS EN BOLUS. Risque d'hypocalcémie sévère et hypotension.",
-                        "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!"
+                        "dilution_hint": "A calculer en Millimoles (mmol) et non en mg!",
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : bolus IV de phosphate de potassium."]
                     }
                 },
                 {
@@ -816,7 +823,8 @@ export const DRUG_DATA: DrugData = {
                     },
                     "safety_guardrails": {
                         "warning_msg": "⛔️ JAMAIS EN BOLUS. MORTEL.",
-                        "dilution_hint": "Doit être mélangé dans poche de fluide."
+                        "dilution_hint": "Doit être mélangé dans poche de fluide.",
+                        "blocking_alerts": ["⛔️ Contre-indication absolue : bolus IV de KCl."]
                     }
                 }
             ]
