@@ -176,9 +176,9 @@ export function DoseResultCard({ drug, species, weight, onRemove }: DoseResultCa
                                     </div>
                                 )}
                                 {showMinVolWarning && (
-                                    <div className="flex items-start gap-2 text-xs font-bold text-amber-600">
-                                        <AlertTriangle className="h-4 w-4 flex-none fill-amber-100" />
-                                        <span> Volume très faible ({formattedVolume.replace('.', ',')} mL). Pensez à diluer. {drug.safety_guardrails?.dilution_hint}</span>
+                                    <div className="flex items-start gap-2 text-xs font-bold text-red-600 bg-red-50 p-2 rounded-lg border border-red-100">
+                                        <AlertTriangle className="h-4 w-4 flex-none fill-red-100 text-red-600" />
+                                        <span>⚠️ Volume très faible ({formattedVolume.replace('.', ',')} mL). Risque d'erreur. Dilution recommandée. {drug.safety_guardrails?.dilution_hint}</span>
                                     </div>
                                 )}
                                 {drug.safety_guardrails?.warning_msg && (

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useAppStore } from "@/store/useAppStore";
+import { AlertTriangle } from "lucide-react";
 
 export default function WeightInput() {
     const { weightKg, setWeightKg } = useAppStore();
@@ -35,6 +36,13 @@ export default function WeightInput() {
         setDraft(null);
     };
 
+    const warning = useMemo(() => {
+        if (!weightKg) return null;
+        if (weightKg < 0.5) return "Poids très faible (< 0.5kg). Exotique/Pédiatrie ?";
+        if (weightKg > 80) return "Poids très élevé (> 80kg). Erreur de saisie ?";
+        return null;
+    }, [weightKg]);
+
     return (
         <div className="w-full">
             <div className="relative">
@@ -50,6 +58,12 @@ export default function WeightInput() {
                     kg
                 </span>
             </div>
+            {warning && (
+                <div className="mt-2 flex items-center gap-2 text-xs font-bold text-amber-600 bg-amber-50 p-2 rounded-lg border border-amber-100 animate-in fade-in slide-in-from-top-1">
+                    <AlertTriangle className="h-3.5 w-3.5 flex-none" />
+                    <span>{warning}</span>
+                </div>
+            )}
         </div>
     );
 }

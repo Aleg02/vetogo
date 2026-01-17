@@ -131,7 +131,7 @@ export const DRUG_DATA: DrugData = {
                             "dose_ml_kg": 20.0,
                             "range_ml_kg": [10.0, 22.0],
                             "frequency": "Sur 4 heures",
-                            "note": "Règle du pouce: 2 ml/kg augmentent PCV de 1%."
+                            "note": "Règle du pouce: 2 ml/kg augmentent PCV de 1%. [Source: KSVECC]"
                         }
                     },
                     "safety_guardrails": {
@@ -151,7 +151,7 @@ export const DRUG_DATA: DrugData = {
                             "dose_ml_kg": 10.0,
                             "range_ml_kg": [6.0, 15.0],
                             "frequency": "Sur 4 heures",
-                            "note": "Règle du pouce: 1 ml/kg augmente PCV de 1%."
+                            "note": "Règle du pouce: 1 ml/kg augmente PCV de 1%. [Source: KSVECC]"
                         }
                     },
                     "safety_guardrails": {
@@ -251,6 +251,7 @@ export const DRUG_DATA: DrugData = {
                         "common": {
                             "dose_mg_kg": 0.01,
                             "frequency": "Toutes les 3-5 min (1 cycle sur 2)",
+                            "note": "Dose Low. [Source: RECOVER 2024]",
                             "max_dose_mg_kg": null
                         },
                         "it_override": {
@@ -297,7 +298,7 @@ export const DRUG_DATA: DrugData = {
                         "common": {
                             "dose_amount_kg": 0.8,
                             "unit": "UI/kg",
-                            "frequency": "Dose UNIQUE (remplace l'adrénaline)"
+                            "frequency": "Dose UNIQUE (remplace l'adrénaline). [Source: RECOVER 2024]"
                         }
                     }
                 },
@@ -314,12 +315,32 @@ export const DRUG_DATA: DrugData = {
                             "dose_amount_kg": 1.0,
                             "unit": "mEq/kg",
                             "range": [0.5, 2.0],
-                            "frequency": "Si acidose métabolique sévère / CPR > 10min"
+                            "frequency": "Si acidose métabolique sévère / CPR > 10min. [Source: RECOVER]"
                         }
                     },
                     "safety_guardrails": {
                         "note": "Ne pas mélanger avec Calcium (précipite).",
                         "warning_msg": "Risque hypernatrémie et acidose paradoxale IC."
+                    }
+                },
+                {
+                    "id": "calcium_chloride",
+                    "name": "Chlorure de Calcium 10%",
+                    "concentration_label": "100 mg/mL",
+                    "concentration_mg_ml": 100,
+                    "is_high_alert": true,
+                    "routes": ["IV STRICT", "IO"],
+                    "dosage": {
+                        "common": {
+                            "dose_ml_kg": 0.05,
+                            "range_ml_kg": [0.05, 0.1],
+                            "frequency": "Bolus CPR",
+                            "note": "3x plus de Ca++ que Gluconate. [Source: RECOVER]"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "⛔️ NÉCROSE SÉVÈRE si périvasculaire. CVC recommandé.",
+                        "dilution_hint": "Ne pas mélanger avec Bicarb."
                     }
                 }
             ]
@@ -373,6 +394,36 @@ export const DRUG_DATA: DrugData = {
                     "safety_guardrails": {
                         "warning_msg": "⛔️ MORTEL EN IV (Arrêt cardiaque réfractaire). Toujours aspirer avant d'injecter.",
                         "contraindications": ["Injection IV"]
+                    }
+                }
+            ]
+        },
+        {
+            "category_name": "ANTI-INFLAMMATOIRES (AINS)",
+            "items": [
+                {
+                    "id": "meloxicam",
+                    "name": "Méloxicam (Metacam)",
+                    "concentration_label": "5 mg/mL",
+                    "concentration_mg_ml": 5,
+                    "is_high_alert": true,
+                    "routes": ["SC", "IV"],
+                    "dosage": {
+                        "canine": {
+                            "dose_mg_kg": 0.2,
+                            "frequency": "q24h (Charge)",
+                            "note": "Suivi par PO. [Source: AMM]"
+                        },
+                        "feline": {
+                            "dose_mg_kg": 0.2,
+                            "range_mg_kg": [0.1, 0.3],
+                            "frequency": "DOSE UNIQUE",
+                            "note": "POUR CHIRURGIE SEULEMENT. 0.3 autorisé AMM. [Source: AMM]"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "⛔️ TOXICITÉ RÉNALE CHAT si répété. Bien hydrater.",
+                        "contraindications": ["Insuff rénale/hépatique", "Corticoïdes", "Choc"]
                     }
                 }
             ]
@@ -449,12 +500,51 @@ export const DRUG_DATA: DrugData = {
                         "dilution_hint": "IV: Diluer et donner LENTEMENT (risque libération histamine)",
                         "contraindications": ["Trauma crânien (débat)", "Mastocytome"]
                     }
+                },
+                {
+                    "id": "buprenorphine",
+                    "name": "Buprénorphine",
+                    "concentration_label": "0.3 mg/mL",
+                    "concentration_mg_ml": 0.3,
+                    "is_high_alert": true,
+                    "routes": ["IV", "IM", "SC"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 0.02,
+                            "range_mg_kg": [0.01, 0.03],
+                            "frequency": "q6-8h",
+                            "note": "Agoniste partiel. [Source: AMM/Consensus]"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "note": "Effet plafond. Moins efficace pour douleur très sévère (fémur, thorax)."
+                    }
                 }
             ]
         },
         {
             "category_name": "SÉDATION & ANESTHÉSIE",
             "items": [
+                {
+                    "id": "acepromazine",
+                    "name": "Acépromazine (Calmivet)",
+                    "concentration_label": "5 mg/mL",
+                    "concentration_mg_ml": 5,
+                    "is_high_alert": false,
+                    "routes": ["IV (Lent)", "IM"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 0.03,
+                            "range_mg_kg": [0.01, 0.05],
+                            "frequency": "Pré-médication",
+                            "note": "Doses réduites (0.01) si IV ou géants. [Source: Pratique]"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "contraindications": ["Choc", "Hypotension", "Déshydratation", "Boxer"],
+                        "warning_msg": "Vasodilatation (Hypotension). Pas en urgence choc."
+                    }
+                },
                 {
                     "id": "dexmedetomidine",
                     "name": "Dexmédétomidine (Dexdomitor)",
@@ -742,7 +832,7 @@ export const DRUG_DATA: DrugData = {
                         "common": {
                             "dose_mg_kg": 500,
                             "range_mg_kg": [250, 1000],
-                            "note": "0.5 à 1 ml/kg de D50% dilué",
+                            "note": "0.5 à 1 ml/kg de D50% dilué. [Source: Plumb's]",
                             "frequency": "Bolus hypoglycémie"
                         }
                     },
@@ -949,7 +1039,7 @@ export const DRUG_DATA: DrugData = {
                             "dose_amount_kg": 0.1,
                             "unit": "µg/kg/min",
                             "range": [0.05, 2.0],
-                            "frequency": "Perfusion Continue (CRI)"
+                            "frequency": "Perfusion Continue (CRI). [Source: RECOVER/ACVECC]"
                         }
                     },
                     "safety_guardrails": {
@@ -1018,6 +1108,29 @@ export const DRUG_DATA: DrugData = {
                             "dose_mg_kg": 2.0,
                             "range_mg_kg": [1.0, 4.0]
                         }
+                    }
+                }
+            ]
+        },
+        {
+            "category_name": "RESPIRATOIRE",
+            "items": [
+                {
+                    "id": "terbutaline",
+                    "name": "Terbutaline (Bricanyl)",
+                    "concentration_label": "0.5 mg/mL",
+                    "concentration_mg_ml": 0.5,
+                    "is_high_alert": false,
+                    "routes": ["SC", "IM", "IV (Lent)"],
+                    "dosage": {
+                        "common": {
+                            "dose_mg_kg": 0.01,
+                            "frequency": "q4-6h",
+                            "note": "Bronchodilatateur. [Source: Pratique]"
+                        }
+                    },
+                    "safety_guardrails": {
+                        "warning_msg": "Peut causer tachycardie et tremblements."
                     }
                 }
             ]
