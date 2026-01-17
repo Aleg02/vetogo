@@ -54,6 +54,9 @@ export interface DrugItem {
     name: string;
     concentration_label: string;
     concentration_mg_ml: number;
+    usual_concentrations?: string[];
+    concentration_warning?: string;
+    requires_concentration_confirmation?: boolean;
     unit_type?: string;
     is_high_alert: boolean;
     routes: string[];
@@ -874,7 +877,7 @@ export const DRUG_DATA: DrugData = {
                         }
                     },
                     "safety_guardrails": {
-                        "dilution_hint": "Diluer 1:9 (10mg/ml) pour injection IV (irritant)"
+                        "dilution_hint": "Diluer 1:9 (10 mg/mL) pour injection IV (irritant)"
                     }
                 },
                 {
@@ -1077,8 +1080,10 @@ export const DRUG_DATA: DrugData = {
                 {
                     "id": "ampicillin",
                     "name": "Ampicilline",
-                    "concentration_label": "Reconstitué (ex: 100mg/ml)",
+                    "concentration_label": "Reconstitué (ex: 100 mg/mL)",
                     "concentration_mg_ml": 100,
+                    "usual_concentrations": ["100 mg/mL", "62,5 mg/mL"],
+                    "concentration_warning": "Vérifier notice produit.",
                     "is_high_alert": false,
                     "routes": ["IV", "IM"],
                     "dosage": {
@@ -1090,8 +1095,10 @@ export const DRUG_DATA: DrugData = {
                 {
                     "id": "amoxicillin_clav",
                     "name": "Amox-Clav (Augmentin)",
-                    "concentration_label": "Reconstitué (ex: 100mg/ml)",
+                    "concentration_label": "Reconstitué (ex: 100 mg/mL)",
                     "concentration_mg_ml": 100,
+                    "usual_concentrations": ["100 mg/mL", "62,5 mg/mL"],
+                    "concentration_warning": "Vérifier notice produit.",
                     "is_high_alert": false,
                     "routes": ["IV"],
                     "dosage": {
@@ -1103,8 +1110,10 @@ export const DRUG_DATA: DrugData = {
                 {
                     "id": "cefazolin",
                     "name": "Céfazoline",
-                    "concentration_label": "Reconstitué",
+                    "concentration_label": "Reconstitué (ex: 100 mg/mL)",
                     "concentration_mg_ml": 100,
+                    "usual_concentrations": ["100 mg/mL", "62,5 mg/mL"],
+                    "concentration_warning": "Vérifier notice produit.",
                     "is_high_alert": false,
                     "routes": ["IV", "IM"],
                     "dosage": {
