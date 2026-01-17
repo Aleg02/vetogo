@@ -1,5 +1,7 @@
 "use client";
 
+import { normalizeUnitLabel } from "@/lib/units";
+
 /**
  * Chargement robuste du JSON depuis /public (fetch côté client),
  * avec cache en mémoire et helpers (closest weight + extraction section).
@@ -52,7 +54,8 @@ export function formatNum(n: number | undefined | null, digits = 0) {
 
 export function unitLine(value: number | undefined, unit?: string) {
   if (typeof value !== "number" || Number.isNaN(value)) return "—";
-  return `${formatNum(value, value < 1 ? 2 : 0)}${unit ? ` ${unit}` : ""}`;
+  const normalizedUnit = normalizeUnitLabel(unit);
+  return `${formatNum(value, value < 1 ? 2 : 0)}${normalizedUnit ? ` ${normalizedUnit}` : ""}`;
 }
 
 export function calcVolumeFromConc(
